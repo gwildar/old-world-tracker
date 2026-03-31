@@ -1,4 +1,5 @@
 import './style.css'
+import { version } from '../package.json'
 import { PHASES, getAllSubPhases } from './phases.js'
 import { LORES, getSpellTypeLabel } from './spells.js'
 import { parseArmyList, getCasters, getShootingUnits, getMovementUnits, getCombatUnits } from './army.js'
@@ -54,7 +55,7 @@ function renderSetupScreen() {
   app.innerHTML = `
     <div class="min-h-dvh flex flex-col">
       <header class="p-4 border-b border-wh-border">
-        <h1 class="text-2xl font-bold text-wh-accent text-center">The Old World — Turn Tracker</h1>
+        <h1 class="text-2xl font-bold text-wh-accent text-center">The Old World — Turn Tracker <span class="text-xs text-wh-muted font-normal">v${version}</span></h1>
       </header>
 
       <main class="flex-1 p-4 max-w-2xl mx-auto w-full">
