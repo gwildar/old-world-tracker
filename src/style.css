@@ -1,0 +1,35 @@
+@import "tailwindcss";
+
+@theme {
+  --color-wh-bg: #1a1a2e;
+  --color-wh-surface: #16213e;
+  --color-wh-card: #1e2a47;
+  --color-wh-border: #2a3a5c;
+  --color-wh-text: #e2e8f0;
+  --color-wh-muted: #94a3b8;
+  --color-wh-accent: #c9a84c;
+  --color-wh-accent-dim: #a08535;
+  --color-wh-red: #dc2626;
+  --color-wh-green: #22c55e;
+  --color-wh-blue: #3b82f6;
+  --color-wh-purple: #a855f7;
+  --color-wh-phase-strategy: #8b5cf6;
+  --color-wh-phase-movement: #22c55e;
+  --color-wh-phase-shooting: #ef4444;
+  --color-wh-phase-combat: #f59e0b;
+}
+
+body {
+  background-color: var(--color-wh-bg);
+  color: var(--color-wh-text);
+  font-family: system-ui, -apple-system, sans-serif;
+  margin: 0;
+  min-height: 100dvh;
+}
+
+.spell-type-assailment { color: #ef4444; }
+.spell-type-conveyance { color: #3b82f6; }
+.spell-type-enchantment { color: #22c55e; }
+.spell-type-hex { color: #a855f7; }
+.spell-type-magic-missile { color: #f59e0b; }
+.spell-type-magical-vortex { color: #ec4899; }
