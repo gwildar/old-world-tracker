@@ -435,13 +435,11 @@ function renderPhaseContext(army, subPhase) {
   let html = ''
 
   // Existing type-based contexts
-  if (subPhase.showCasters) html += renderCasterContext(army, ['enchantment', 'hex', 'magical-vortex'])
+  if (subPhase.showCasters) html += renderCasterContext(army, ['enchantment', 'hex'])
   if (subPhase.showShooting) html += renderShootingContext(army)
-  if (subPhase.showMovement) html += renderMovementContext(army)
-  if (subPhase.id === 'declare-charges') html += renderChargeContext(army)
 
   // Spell type contexts for specific sub-phases
-  if (subPhase.id === 'choose-target') html += renderCasterContext(army, ['magic-missile'])
+  if (subPhase.id === 'choose-target') html += renderCasterContext(army, ['magic-missile', 'magical-vortex'])
   if (subPhase.id === 'remaining-moves') html += renderCasterContext(army, ['conveyance'])
   if (subPhase.id === 'choose-fight') html += renderCasterContext(army, ['assailment'])
 
@@ -606,11 +604,10 @@ function renderChargeContext(army) {
       <div class="space-y-1">
         ${units.map(u => {
           const mv = u.stats?.[0]?.M
-          if (mv == null) return ''
           const allRules = [...parseUnitRules(u.specialRules), ...u.equipment]
           const hasSwiftstride = allRules.some(r => normaliseRuleName(r).toLowerCase() === 'swiftstride')
-          const maxCharge = hasSwiftstride ? Number(mv) + 6 + 3 : Number(mv) + 6
-          const chargeStr = hasSwiftstride ? `M${mv}+6+3` : `M${mv}+6`
+          const maxCharge = mv != null ? (hasSwiftstride ? Number(mv) + 6 + 3 : Number(mv) + 6) : null
+          const chargeStr = mv != null ? (hasSwiftstride ? `M${mv}+6+3` : `M${mv}+6`) : null
           return `
             <div class="flex justify-between items-center text-sm py-1 px-2 rounded bg-wh-card">
               <div>
@@ -620,12 +617,15 @@ function renderChargeContext(army) {
                 ${hasSwiftstride ? '<span class="text-wh-phase-movement ml-1 text-xs">Swiftstride</span>' : ''}
               </div>
               <div class="text-right">
-                <span class="text-wh-phase-combat font-mono text-xs">max ${maxCharge}"</span>
-                <span class="text-wh-muted font-mono text-xs ml-1">(${chargeStr})</span>
+                ${maxCharge != null
+                  ? `<span class="text-wh-phase-combat font-mono text-xs">max ${maxCharge}"</span>
+                     <span class="text-wh-muted font-mono text-xs ml-1">(${chargeStr})</span>`
+                  : `<span class="text-wh-muted font-mono text-xs">M?${hasSwiftstride ? '+6+3' : '+6'}</span>`
+                }
               </div>
             </div>
           `
-        }).filter(Boolean).join('')}
+        }).join('')}
       </div>
     </div>
   `

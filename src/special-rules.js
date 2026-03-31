@@ -69,6 +69,17 @@ export const SPECIAL_RULES = [
     ],
   },
   {
+    name: 'Invocation of Nehek',
+    phases: [
+      {
+        phaseId: 'strategy',
+        subPhaseId: 'command',
+        description:
+          'If not engaged, resurrect D3 + Wizard Level Wounds of Infantry, or Wizard Level Wounds of Monstrous/Cavalry, or 1 Wound of Behemoth/War Machine, in a friendly Necromantic Undead unit within 12". Requires Ld test.',
+      },
+    ],
+  },
+  {
     name: 'Rallying Cry',
     phases: [
       {
@@ -173,6 +184,12 @@ export const SPECIAL_RULES = [
   {
     name: 'Swiftstride',
     phases: [
+      {
+        phaseId: 'movement',
+        subPhaseId: 'declare-charges',
+        description:
+          'Max declarable charge range is M+6+3" (instead of M+6").',
+      },
       {
         phaseId: 'movement',
         subPhaseId: 'charge-moves',
