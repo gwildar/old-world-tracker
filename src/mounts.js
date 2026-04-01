@@ -67,7 +67,7 @@ export const TROOP_TYPE_RULES = {
   HCa: [],
   MCa: ['Fear'],
   MCr: ['Fear', 'Large Target'],
-  Be: ['Terror', 'Large Target'],
+  Be: ['Terror', 'Large Target', 'Lumbering'],
 }
 
 export function findMount(name) {

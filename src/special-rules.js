@@ -244,6 +244,17 @@ export const SPECIAL_RULES = [
     ],
   },
   {
+    name: 'Lumbering',
+    phases: [
+      {
+        phaseId: 'movement',
+        subPhaseId: 'remaining-moves',
+        description:
+          'After moving, unless it charged, marched or fled, a Lumbering model may pivot about its centre to change its facing by up to 90°.',
+      },
+    ],
+  },
+  {
     name: 'Dragged Along',
     phases: [
       {
