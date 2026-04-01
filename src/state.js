@@ -3,6 +3,8 @@ const KEYS = {
   spellSelections: 'tow-spell-selections',
   phaseIndex: 'tow-phase-index',
   round: 'tow-round',
+  opponentTurn: 'tow-opponent-turn',
+  firstTurn: 'tow-first-turn',
 }
 
 function load(key, fallback) {
@@ -59,10 +61,29 @@ export function saveRound(round) {
   save(KEYS.round, round)
 }
 
+// Opponent turn
+export function getIsOpponentTurn() {
+  return load(KEYS.opponentTurn, false)
+}
+
+export function saveIsOpponentTurn(value) {
+  save(KEYS.opponentTurn, value)
+}
+
+// First turn (who goes first: 'you' or 'opponent')
+export function getFirstTurn() {
+  return load(KEYS.firstTurn, null)
+}
+
+export function saveFirstTurn(value) {
+  save(KEYS.firstTurn, value)
+}
+
 // Reset game (keeps army)
 export function resetGame() {
   save(KEYS.phaseIndex, 0)
   save(KEYS.round, 1)
+  save(KEYS.opponentTurn, false)
 }
 
 // Clear all app state

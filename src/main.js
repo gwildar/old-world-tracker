@@ -47,6 +47,8 @@ import {
   getSpellSelections, saveSpellSelections,
   getPhaseIndex, savePhaseIndex,
   getRound, saveRound, resetGame,
+  getIsOpponentTurn, saveIsOpponentTurn,
+  getFirstTurn, saveFirstTurn,
 } from './state.js'
 
 const app = document.getElementById('app')
@@ -80,8 +82,12 @@ function render() {
   const army = getArmy()
   if (!army) {
     renderSetupScreen()
-  } else {
+  } else if (!getFirstTurn()) {
     renderSetupScreen()
+  } else if (getIsOpponentTurn()) {
+    renderOpponentTurnScreen(army)
+  } else {
+    renderGameScreen(army)
   }
 }
 
@@ -726,7 +732,7 @@ function renderMagicItemsContext(army, phaseId, subPhaseId) {
       const item = findMagicItem(cleanName)
       if (item) {
         if (!item.phases.includes(phaseId)) continue
-        if (item.subPhases && !item.subPhases.includes(subPhaseId)) continue
+        if (subPhaseId && item.subPhases && !item.subPhases.includes(subPhaseId)) continue
         const key = item.name
         if (!grouped[key]) grouped[key] = { item, units: [] }
         if (!grouped[key].units.includes(unit.name)) grouped[key].units.push(unit.name)
@@ -899,7 +905,14 @@ function handleFile(file, errorEl) {
 
 function bindArmyActions() {
   document.getElementById('start-game-btn').addEventListener('click', () => {
-    renderGameScreen(getArmy())
+    const firstTurn = getFirstTurn()
+    if (!firstTurn) {
+      renderFirstTurnScreen(getArmy())
+    } else if (getIsOpponentTurn()) {
+      renderOpponentTurnScreen(getArmy())
+    } else {
+      renderGameScreen(getArmy())
+    }
   })
 
   document.getElementById('replace-army-btn').addEventListener('click', () => {
@@ -966,12 +979,15 @@ function bindGameActions(army) {
     const idx = getPhaseIndex()
     if (idx < allSubPhases.length - 1) {
       savePhaseIndex(idx + 1)
+      renderGameScreen(army)
     } else {
-      // End of turn — next round
+      // End of your turn — switch to opponent's turn
       savePhaseIndex(0)
-      saveRound(getRound() + 1)
+      saveIsOpponentTurn(true)
+      // Increment round if you went second (opponent went first)
+      if (getFirstTurn() === 'opponent') saveRound(getRound() + 1)
+      renderOpponentTurnScreen(army)
     }
-    renderGameScreen(army)
   })
 
   document.getElementById('manage-army-btn')?.addEventListener('click', () => {
@@ -981,7 +997,246 @@ function bindGameActions(army) {
   document.getElementById('new-game-btn')?.addEventListener('click', () => {
     if (confirm('Start a new game? This will reset the round counter.')) {
       resetGame()
+      saveFirstTurn(null)
+      renderFirstTurnScreen(army)
+    }
+  })
+}
+
+// ─── First Turn Screen ─────────────────────────────────────────────────────
+
+function renderFirstTurnScreen(army) {
+  app.innerHTML = `
+    <div class="min-h-dvh flex flex-col">
+      <header class="p-4 border-b border-wh-border">
+        <div class="flex justify-between items-center max-w-2xl mx-auto">
+          <div></div>
+          <h1 class="text-2xl font-bold text-wh-accent text-center">The Old World — Turner Overdrive</h1>
+          <div></div>
+        </div>
+      </header>
+
+      <main class="flex-1 flex items-center justify-center p-4">
+        <div class="max-w-md w-full text-center">
+          <h2 class="text-2xl font-bold text-wh-text mb-2">Who goes first?</h2>
+          <p class="text-wh-muted text-sm mb-8">${army.name} — Round 1</p>
+          <div class="flex gap-4">
+            <button id="first-you-btn"
+              class="flex-1 py-4 rounded-lg font-bold text-lg bg-wh-accent text-wh-bg hover:bg-wh-accent-dim transition-colors">
+              You
+            </button>
+            <button id="first-opponent-btn"
+              class="flex-1 py-4 rounded-lg font-bold text-lg bg-wh-surface text-wh-text border border-wh-border hover:bg-wh-border transition-colors">
+              Opponent
+            </button>
+          </div>
+        </div>
+      </main>
+    </div>
+  `
+
+  document.getElementById('first-you-btn').addEventListener('click', () => {
+    saveFirstTurn('you')
+    saveIsOpponentTurn(false)
+    savePhaseIndex(0)
+    renderGameScreen(army)
+  })
+
+  document.getElementById('first-opponent-btn').addEventListener('click', () => {
+    saveFirstTurn('opponent')
+    saveIsOpponentTurn(true)
+    savePhaseIndex(0)
+    renderOpponentTurnScreen(army)
+  })
+}
+
+// ─── Opponent Turn Screen ──────────────────────────────────────────────────
+
+function renderOpponentTurnScreen(army) {
+  const opPhaseIdx = getPhaseIndex()
+  const round = getRound()
+  const phase = PHASES[opPhaseIdx]
+  const isFirst = opPhaseIdx === 0
+  const isLast = opPhaseIdx === PHASES.length - 1
+
+  app.innerHTML = `
+    <div class="min-h-dvh flex flex-col">
+      <!-- Header -->
+      <header class="bg-wh-surface border-b border-wh-border p-3">
+        <div class="flex justify-between items-center mb-2">
+          <div class="flex items-center gap-2">
+            <button id="manage-army-btn" class="text-wh-muted hover:text-wh-accent text-sm transition-colors">
+              &#9776; Army
+            </button>
+            <span class="text-wh-muted text-sm hidden sm:inline">|</span>
+            <span class="text-sm text-wh-muted hidden sm:inline">${army.name}</span>
+          </div>
+          <div class="flex items-center gap-3">
+            <span class="font-mono text-wh-accent">Round ${round}</span>
+            <span class="text-xs text-wh-red font-semibold border border-wh-red px-2 py-0.5 rounded">Opponent</span>
+            <button id="new-game-btn"
+              class="text-xs text-wh-muted hover:text-wh-red border border-wh-border px-2 py-1 rounded transition-colors">
+              New Game
+            </button>
+          </div>
+        </div>
+
+        <!-- Phase progress -->
+        <div class="flex gap-1">
+          ${PHASES.map((p, i) => {
+            const isCurrent = i === opPhaseIdx
+            const isPast = i < opPhaseIdx
+
+            return `<div class="flex-1 text-center">
+              <div class="h-1.5 rounded-full mb-1 transition-all ${
+                isCurrent ? `${PHASE_BG[p.colour]}` :
+                isPast ? `${PHASE_BG[p.colour]} opacity-40` :
+                'bg-wh-border'
+              }"></div>
+              <span class="text-[10px] ${isCurrent ? 'text-wh-text font-semibold' : 'text-wh-muted'}">${p.name.replace(' Phase', '')}</span>
+            </div>`
+          }).join('')}
+        </div>
+      </header>
+
+      <!-- Main content -->
+      <main class="flex-1 overflow-y-auto p-4">
+        <div class="max-w-2xl mx-auto">
+          <!-- Phase heading -->
+          <div class="mb-4">
+            <span class="text-xs uppercase tracking-wider text-wh-red">Opponent's Turn</span>
+            <h2 class="text-2xl font-bold text-wh-text">${phase.name}</h2>
+            <span class="text-xs text-wh-muted">Phase ${opPhaseIdx + 1} of ${PHASES.length}</span>
+          </div>
+
+          <!-- Contextual army info -->
+          ${renderOpponentPhaseContext(army, phase)}
+        </div>
+      </main>
+
+      <!-- Footer nav -->
+      <footer class="sticky bottom-0 bg-wh-surface border-t border-wh-border p-3">
+        <div class="max-w-2xl mx-auto flex gap-3">
+          <button id="prev-btn"
+            class="flex-1 py-3 rounded-lg font-semibold text-lg transition-colors
+            ${isFirst
+              ? 'bg-wh-card text-wh-muted cursor-not-allowed opacity-50'
+              : 'bg-wh-card text-wh-text hover:bg-wh-border'}"
+            ${isFirst ? 'disabled' : ''}>
+            &#8592; Previous
+          </button>
+          <button id="next-btn"
+            class="flex-1 py-3 rounded-lg font-bold text-lg transition-colors
+            bg-wh-accent text-wh-bg hover:bg-wh-accent-dim">
+            ${isLast ? 'End Turn &#10226;' : 'Next &#8594;'}
+          </button>
+        </div>
+      </footer>
+    </div>
+  `
+
+  bindOpponentTurnActions(army)
+}
+
+function renderOpponentPhaseContext(army, phase) {
+  let html = ''
+
+  // Charge context during opponent's movement phase
+  if (phase.id === 'movement') html += renderChargeContext(army)
+
+  // Magic items for the whole phase (null subPhaseId skips subPhase filter)
+  html += renderMagicItemsContext(army, phase.id, null)
+
+  // Special rules — combined across all sub-phases into one panel
+  html += renderSpecialRulesForPhase(army, phase)
+
+  return html
+}
+
+function renderSpecialRulesForPhase(army, phase) {
+  const round = getRound()
+  const grouped = {}
+
+  for (const sub of phase.subPhases) {
+    for (const unit of army.units) {
+      const unitRules = [
+        ...parseUnitRules(unit.specialRules),
+        ...unit.equipment,
+      ]
+      const hasSwiftstride = unitRules.some(r => normaliseRuleName(r).toLowerCase() === 'swiftstride')
+      if (!hasSwiftstride && unit.mount) {
+        const mount = findMount(unit.mount)
+        if (mount?.swiftstride) unitRules.push('Swiftstride')
+      }
+
+      for (const ruleName of unitRules) {
+        const normName = normaliseRuleName(ruleName)
+        for (const rule of SPECIAL_RULES) {
+          if (!ruleMatches(rule, normName)) continue
+          for (const rulePhase of rule.phases) {
+            if (rulePhase.subPhaseId !== sub.id) continue
+            if (rulePhase.fromRound && round < rulePhase.fromRound) continue
+            const key = `${ruleName}||${rulePhase.description}`
+            if (!grouped[key]) grouped[key] = { ruleName, description: rulePhase.description, units: [] }
+            if (!grouped[key].units.includes(unit.name)) grouped[key].units.push(unit.name)
+          }
+        }
+      }
+    }
+  }
+
+  const entries = Object.values(grouped)
+  if (entries.length === 0) return ''
+
+  return `
+    <div class="bg-wh-surface rounded-lg border border-wh-accent/20 p-4 mb-4">
+      <h3 class="text-sm font-bold text-wh-accent mb-3">Special Rules This Phase</h3>
+      <div class="space-y-2">
+        ${entries.map(g => `
+          <div class="p-2 rounded bg-wh-card text-sm">
+            <span class="text-xs bg-wh-accent/20 text-wh-accent px-1.5 py-0.5 rounded">${g.ruleName}</span>
+            <p class="text-wh-muted text-xs mt-1">${g.description}</p>
+            <p class="text-wh-text text-xs mt-1">${g.units.join(', ')}</p>
+          </div>
+        `).join('')}
+      </div>
+    </div>
+  `
+}
+
+function bindOpponentTurnActions(army) {
+  document.getElementById('prev-btn')?.addEventListener('click', () => {
+    const idx = getPhaseIndex()
+    if (idx > 0) {
+      savePhaseIndex(idx - 1)
+      renderOpponentTurnScreen(army)
+    }
+  })
+
+  document.getElementById('next-btn')?.addEventListener('click', () => {
+    const idx = getPhaseIndex()
+    if (idx < PHASES.length - 1) {
+      savePhaseIndex(idx + 1)
+      renderOpponentTurnScreen(army)
+    } else {
+      // End of opponent's turn — switch to your turn
+      savePhaseIndex(0)
+      saveIsOpponentTurn(false)
+      // Increment round if opponent went second (you went first)
+      if (getFirstTurn() === 'you') saveRound(getRound() + 1)
       renderGameScreen(army)
+    }
+  })
+
+  document.getElementById('manage-army-btn')?.addEventListener('click', () => {
+    renderSetupScreen()
+  })
+
+  document.getElementById('new-game-btn')?.addEventListener('click', () => {
+    if (confirm('Start a new game? This will reset the round counter.')) {
+      resetGame()
+      saveFirstTurn(null)
+      renderFirstTurnScreen(army)
     }
   })
 }
