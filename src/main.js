@@ -492,7 +492,7 @@ function renderPhaseContext(army, phase, subPhase) {
   if (subPhase.id === 'choose-fight') html += renderCasterContext(army, ['assailment'])
 
   // Magic items context per phase
-  html += renderMagicItemsContext(army, phase.id)
+  html += renderMagicItemsContext(army, phase.id, subPhase.id)
 
   // Special rules context for ALL sub-phases
   html += renderSpecialRulesContext(army, subPhase)
@@ -716,7 +716,7 @@ function renderChargeContext(army) {
 
 // ─── Magic Items Context ────────────────────────────────────────────────────
 
-function renderMagicItemsContext(army, phaseId) {
+function renderMagicItemsContext(army, phaseId, subPhaseId) {
   const grouped = {}
 
   for (const unit of army.units) {
@@ -726,6 +726,7 @@ function renderMagicItemsContext(army, phaseId) {
       const item = findMagicItem(cleanName)
       if (item) {
         if (!item.phases.includes(phaseId)) continue
+        if (item.subPhases && !item.subPhases.includes(subPhaseId)) continue
         const key = item.name
         if (!grouped[key]) grouped[key] = { item, units: [] }
         if (!grouped[key].units.includes(unit.name)) grouped[key].units.push(unit.name)

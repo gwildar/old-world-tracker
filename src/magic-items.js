@@ -8,6 +8,9 @@
  *   effect      – full rules text
  *   phases      – array of phase IDs where the item is relevant (matches phases.js)
  *                 'combat' | 'shooting' | 'movement' | 'strategy' | 'passive'
+ *   subPhases   – optional array of sub-phase IDs for finer filtering (matches phases.js)
+ *                 when set, the item only shows in those specific sub-phases
+ *                 when absent, the item shows in all sub-phases of its phase(s)
  *   extremely   – true if the item is an "Extremely Common" magic item (no duplicate limit)
  *
  * Source: https://tow.whfb.app/magic-items
@@ -70,6 +73,7 @@ export const MAGIC_ITEMS = [
     points: 35,
     effect: 'S, -1 AP. Magical Attacks, Magic Resistance (-2).',
     phases: ['combat', 'strategy'],
+    subPhases: ['combat'],
   },
   {
     name: 'Giant Blade',
@@ -159,7 +163,7 @@ export const MAGIC_ITEMS = [
     type: 'armour',
     points: 40,
     effect: 'Gives the wearer an armour value of 3+ which cannot be improved in any way.',
-    phases: ['passive'],
+    phases: ['combat', 'shooting'],
   },
   {
     name: 'Glittering Scales',
@@ -187,21 +191,22 @@ export const MAGIC_ITEMS = [
     type: 'armour',
     points: 25,
     effect: 'Shield. The bearer has a 5+ Ward save against any wounds suffered that were caused by a Magic Missile, a Magical Vortex, or an Assailment spell.',
-    phases: ['shooting', 'strategy'],
+    phases: ['shooting'],
+    subPhases: ['combat'],
   },
   {
     name: 'Armour of Meteoric Iron',
     type: 'armour',
     points: 20,
     effect: 'Gives the wearer an armour value of 5+ which cannot be improved or reduced in any way.',
-    phases: ['passive'],
+    phases: ['combat'],
   },
   {
     name: "Trailblazer's Hauberk",
     type: 'armour',
     points: 20,
     effect: 'Infantry only. Heavy armour. The wearer gains Move Through Cover and Scouts special rules.',
-    phases: ['movement', 'passive'],
+    phases: ['movement'],
   },
   {
     name: 'Enchanted Shield',
@@ -261,6 +266,7 @@ export const MAGIC_ITEMS = [
     points: 20,
     effect: 'May purchase up to three. One gives Magic Resistance (-1), two gives (-2), three gives (-3).',
     phases: ['strategy'],
+    subPhases: ['conjuration'],
     extremely: true,
   },
   {
@@ -279,6 +285,7 @@ export const MAGIC_ITEMS = [
     points: 60,
     effect: 'Single use. May be used instead of a Wizardly dispel attempt. The spell is cast as normal. Once resolved, roll 2D6; for each 4+, the casting Wizard loses a single Wound.',
     phases: ['strategy'],
+    subPhases: ['conjuration'],
   },
   {
     name: 'Scroll of Transmogrification',
@@ -286,6 +293,7 @@ export const MAGIC_ITEMS = [
     points: 50,
     effect: 'Single use. May be used instead of a Wizardly dispel attempt. The spell is cast as normal. The casting player must then roll equal to or lower than the Wizard\'s Level on a D6. If failed, the Wizard turns into a frog (all characteristics except Wounds become 1, cannot cast/dispel/use equipment). Roll D6 each Start of Turn sub-phase; on 4+ the Wizard returns to normal.',
     phases: ['strategy'],
+    subPhases: ['conjuration', 'start-of-turn'],
   },
   {
     name: 'Wand of Jet',
@@ -293,6 +301,7 @@ export const MAGIC_ITEMS = [
     points: 45,
     effect: 'The bearer may apply a +1 modifier to any Casting or Dispel roll. If any natural double is rolled, the Wand is destroyed. Does not negate a natural double 1.',
     phases: ['strategy', 'shooting'],
+    subPhases: ['conjuration'],
   },
   {
     name: 'Staff of Quietude',
@@ -300,6 +309,7 @@ export const MAGIC_ITEMS = [
     points: 35,
     effect: 'During the Command sub-phase, the bearer can attempt a Leadership test. If passed, all Remains in Play spells currently in play are dispelled, including friendly ones.',
     phases: ['strategy'],
+    subPhases: ['command'],
   },
   {
     name: 'Lore Familiar',
@@ -314,6 +324,7 @@ export const MAGIC_ITEMS = [
     points: 30,
     effect: 'Once per turn, the bearer may re-roll a Dispel roll. All dice are re-rolled, including any bonus or discard dice.',
     phases: ['strategy', 'shooting'],
+    subPhases: ['conjuration'],
   },
   {
     name: 'Tome of Spellcraft',
@@ -321,6 +332,7 @@ export const MAGIC_ITEMS = [
     points: 30,
     effect: 'Once per turn, the bearer may re-roll a Casting roll. All dice are re-rolled, including any bonus or discard dice.',
     phases: ['strategy', 'shooting'],
+    subPhases: ['conjuration'],
   },
   {
     name: 'Dispel Scroll',
@@ -328,6 +340,7 @@ export const MAGIC_ITEMS = [
     points: 20,
     effect: 'Single use. May be used when attempting a Wizardly dispel. Roll an extra D6 on the Dispel roll and discard the lowest. If double 1 is rolled on any two dice, the Wizard is outclassed.',
     phases: ['strategy', 'shooting'],
+    subPhases: ['conjuration'],
   },
   {
     name: 'Power Scroll',
@@ -335,6 +348,7 @@ export const MAGIC_ITEMS = [
     points: 20,
     effect: 'Single use. May be used when attempting to cast a spell. Roll an extra D6 on the Casting roll and discard the lowest. If double 1 is rolled on any two dice, the spell is miscast.',
     phases: ['strategy', 'shooting'],
+    subPhases: ['conjuration'],
   },
   {
     name: 'Arcane Familiar',
@@ -349,6 +363,7 @@ export const MAGIC_ITEMS = [
     points: 5,
     effect: 'Single use. If the Wizard miscasts, they may re-roll the result on the Miscast table.',
     phases: ['strategy', 'shooting'],
+    subPhases: ['conjuration'],
   },
 
   // ─── Enchanted Items ────────────────────────────────────────────────
@@ -358,6 +373,7 @@ export const MAGIC_ITEMS = [
     points: 45,
     effect: 'The wearer is a Level 1 Wizard and knows one randomly generated spell from a Lore of Magic of your choosing. The wearer also becomes subject to the Stupidity special rule.',
     phases: ['strategy', 'shooting'],
+    subPhases: ['conjuration'],
   },
   {
     name: 'Arch-Lightning Rod',
@@ -365,6 +381,7 @@ export const MAGIC_ITEMS = [
     points: 40,
     effect: 'Single use. During the Command sub-phase, if not engaged in combat, the bearer may attempt a Leadership test (unmodified). If passed, until your next Start of Turn sub-phase enemy units cannot use the Fly (X) special rule.',
     phases: ['strategy'],
+    subPhases: ['command'],
   },
   {
     name: 'Flying Carpet',
@@ -379,6 +396,7 @@ export const MAGIC_ITEMS = [
     points: 35,
     effect: 'Single use. During the Command sub-phase, the bearer can consume it. The model immediately recovers D3 lost Wounds.',
     phases: ['strategy'],
+    subPhases: ['command'],
     extremely: true,
   },
   {
@@ -394,6 +412,7 @@ export const MAGIC_ITEMS = [
     points: 30,
     effect: 'Single use. During the Command sub-phase, the bearer can consume it. Until the end of that turn, the model has a +D3 modifier to its Attacks characteristic (max 10).',
     phases: ['strategy', 'combat'],
+    subPhases: ['command'],
   },
   {
     name: 'Potion of Strength',
@@ -401,6 +420,7 @@ export const MAGIC_ITEMS = [
     points: 25,
     effect: 'Single use. During the Command sub-phase, the bearer can consume it. Until the end of that turn, the model has a +D3 modifier to its Strength characteristic (max 10).',
     phases: ['strategy', 'combat'],
+    subPhases: ['command'],
     extremely: true,
   },
   {
@@ -409,6 +429,7 @@ export const MAGIC_ITEMS = [
     points: 20,
     effect: 'Single use. The bearer may cast a Bound spell (Power Level 1): Hex, Casting Value 8+, Range: Self. Until your next Start of Turn sub-phase, enemy Wizards within 15" when attempting to cast must increase that spell\'s casting value by 2.',
     phases: ['strategy'],
+    subPhases: ['conjuration'],
   },
   {
     name: 'Potion of Toughness',
@@ -416,6 +437,7 @@ export const MAGIC_ITEMS = [
     points: 20,
     effect: 'Single use. During the Command sub-phase, the bearer can consume it. Until the end of that turn, the model has a +D3 modifier to its Toughness characteristic (max 10).',
     phases: ['strategy', 'combat', 'shooting'],
+    subPhases: ['command'],
     extremely: true,
   },
   {
@@ -424,6 +446,7 @@ export const MAGIC_ITEMS = [
     points: 10,
     effect: 'Single use. During the Command sub-phase, the bearer can consume it. Until the end of that turn, the model has a +D3 modifier to its Initiative characteristic (max 10).',
     phases: ['strategy', 'combat'],
+    subPhases: ['command'],
     extremely: true,
   },
   {
@@ -432,6 +455,7 @@ export const MAGIC_ITEMS = [
     points: 5,
     effect: 'Single use. During the Command sub-phase, the bearer can consume it. Until the end of that turn, the model gains the Immune To Psychology special rule.',
     phases: ['strategy'],
+    subPhases: ['command'],
     extremely: true,
   },
 
@@ -498,6 +522,303 @@ export const MAGIC_ITEMS = [
     points: 25,
     effect: 'When calculating combat result, the unit may claim an additional +1 combat result point.',
     phases: ['combat'],
+  },
+
+  // ─── Dark Elves ──────────────────────────────────────────────────────
+  {
+    name: 'Executioner\'s Axe',
+    type: 'weapon',
+    points: 70,
+    effect: 'Killing Blow, Magical Attacks, Strike Last. AP -2. When making a roll To Wound, a roll of 2+ is always a success, regardless of the target\'s Toughness.',
+    phases: ['combat'],
+  },
+  {
+    name: 'Sword of Ruin',
+    type: 'weapon',
+    points: 65,
+    effect: 'Magical Attacks. No armour, Ward or Regeneration saves are permitted against wounds caused by the Sword of Ruin.',
+    phases: ['combat'],
+  },
+  {
+    name: 'Lifetaker',
+    type: 'weapon',
+    points: 35,
+    effect: 'Range 24", S3, AP -1. Armour Bane (1), Magical Attacks, Multiple Shots (D3+1), Poisoned Attacks.',
+    phases: ['shooting'],
+  },
+  {
+    name: 'Whip of Agony',
+    type: 'weapon',
+    points: 30,
+    effect: 'S+1, AP -1. Magical Attacks, Strike First. High Beastmasters only. Any enemy model that suffers one or more unsaved wounds suffers a -1 modifier to its Toughness (min 1) for the remainder of the game.',
+    phases: ['combat'],
+  },
+  {
+    name: 'Shield of Ghrond',
+    type: 'armour',
+    points: 40,
+    effect: 'Shield. All attacks directed against the bearer suffer a -1 modifier to their Strength (min 1).',
+    phases: ['combat', 'shooting'],
+  },
+  {
+    name: 'Blood Armour',
+    type: 'armour',
+    points: 30,
+    effect: 'Infantry or cavalry only. Armour value of 5+. For each unsaved wound the wearer inflicts, this armour value is improved by 1, to a maximum of 2+.',
+    phases: ['combat'],
+  },
+  {
+    name: 'Pendant of Khaeleth',
+    type: 'talisman',
+    points: 40,
+    effect: 'The bearer has a 5+ Ward save against wounds caused by attacks with S4 or lower, and a 4+ Ward save against wounds caused by attacks with S5 or higher.',
+    phases: ['combat', 'shooting'],
+  },
+  {
+    name: 'Pearl of Infinite Bleakness',
+    type: 'talisman',
+    points: 15,
+    effect: 'The bearer and any unit they join gain the Immune to Psychology special rule.',
+    phases: ['passive'],
+  },
+  {
+    name: 'Black Staff',
+    type: 'arcane-item',
+    points: 55,
+    effect: 'When the bearer casts a spell, roll an extra D6 on the Casting roll and discard the lowest. If a double 1 is rolled on any two dice, the spell is miscast.',
+    phases: ['strategy'],
+    subPhases: ['conjuration'],
+  },
+  {
+    name: 'Tome of Furion',
+    type: 'arcane-item',
+    points: 15,
+    effect: 'The bearer knows one more spell (chosen in the usual way) than is normal for their Level of Wizardry.',
+    phases: ['passive'],
+  },
+  {
+    name: 'Focus Familiar',
+    type: 'arcane-item',
+    points: 10,
+    effect: 'Single use. When casting a spell, place a marker within 12". The range and effects of the spell are measured from this marker rather than the caster.',
+    phases: ['strategy'],
+    subPhases: ['conjuration'],
+  },
+  {
+    name: 'Black Dragon Egg',
+    type: 'enchanted-item',
+    points: 35,
+    effect: 'Single use. During the Command sub-phase, the bearer may consume it. Until end of turn, the model has T6 (cannot be further improved) and gains noxious breath (-1 WS, no armour saves permitted).',
+    phases: ['strategy', 'combat'],
+    subPhases: ['command'],
+  },
+  {
+    name: 'Hydra\'s Tooth',
+    type: 'enchanted-item',
+    points: 30,
+    effect: 'Missile weapon. Range 9", S user, AP -3. Magical Attacks, Move & Shoot, Quick Shot. Can target a specific model within the target unit.',
+    phases: ['shooting'],
+  },
+  {
+    name: 'The Guiding Eye',
+    type: 'enchanted-item',
+    points: 25,
+    effect: 'Single use. The bearer and any unit they have joined may re-roll any failed rolls To Hit made during the Shooting phase.',
+    phases: ['shooting'],
+  },
+  {
+    name: 'Banner of Nagarythe',
+    type: 'banner',
+    points: 65,
+    effect: 'The unit gains the Stubborn special rule. When calculating combat result, the unit may claim an additional +1 combat result point.',
+    phases: ['combat'],
+  },
+  {
+    name: 'Standard of Slaughter',
+    type: 'banner',
+    points: 40,
+    effect: 'When the unit carrying this standard charges into combat, it gains an additional +D3 bonus to its combat result during that turn.',
+    phases: ['combat'],
+  },
+  {
+    name: 'Banner of Har Ganeth',
+    type: 'banner',
+    points: 25,
+    effect: 'The unit improves the Armour Piercing characteristic of its combat weapons by 1.',
+    phases: ['combat'],
+  },
+  {
+    name: 'Cold-Blooded Banner',
+    type: 'banner',
+    points: 20,
+    effect: 'Single use. When the unit makes any Leadership test, including Break tests, it may roll an additional D6 and discard the highest result.',
+    phases: ['combat'],
+  },
+
+  // ─── Kingdom of Bretonnia ────────────────────────────────────────────
+  {
+    name: 'Crusader\'s Lance',
+    type: 'weapon',
+    points: 60,
+    effect: 'S+2, AP -2. Armour Bane (2), Furious Charge, Hatred (all enemies), Magical Attacks. Can only be used during a turn in which the wielder charged; otherwise must use hand weapon. Errantry Crusade only; cavalry or monster only.',
+    phases: ['combat'],
+  },
+  {
+    name: 'Frontier Axe',
+    type: 'weapon',
+    points: 30,
+    effect: 'S+2, AP -3. Magical Attacks, Multiple Wounds (2), Requires Two Hands. Bretonnian Exiles only.',
+    phases: ['combat'],
+  },
+  {
+    name: 'Sword of the Stout Hearted',
+    type: 'weapon',
+    points: 25,
+    effect: 'S+2, AP -1. Armour Bane (1), Immune to Psychology, Magical Attacks, Requires Two Hands.',
+    phases: ['combat'],
+  },
+  {
+    name: 'Foebreaker',
+    type: 'weapon',
+    points: 20,
+    effect: 'S+1. When a target suffers unsaved wounds, it must pass a Toughness test or suffer -1 to WS and Attacks (min 1) until end of next Combat phase.',
+    phases: ['combat'],
+  },
+  {
+    name: 'The Dolorous Blade',
+    type: 'weapon',
+    points: 0,
+    effect: 'Two profiles, chosen at start of each combat round. Rapid Strikes: S user, AP -1, Extra Attacks (+D6), Magical Attacks. Deadly Blows: S+2, AP -1, Armour Bane (1), Magical Attacks, Multiple Wounds (2).',
+    phases: ['combat'],
+  },
+  {
+    name: 'Sorrow\'s End',
+    type: 'weapon',
+    points: 0,
+    effect: 'S+1, AP -1. Magical Attacks, Monster Slayer, Multiple Wounds (2).',
+    phases: ['combat'],
+  },
+  {
+    name: 'Anointed Armour',
+    type: 'armour',
+    points: 45,
+    effect: 'Heavy armour (5+). While the wearer maintains the Blessing of the Lady, they are immune to Killing Blow and Multiple Wounds (X). Grail Vow, infantry or cavalry only.',
+    phases: ['combat', 'shooting'],
+  },
+  {
+    name: 'Ironspike Shield',
+    type: 'armour',
+    points: 20,
+    effect: 'Shield. Whenever an opponent rolls a natural 1 To Hit or To Wound against the wielder in combat, they suffer a S3, AP -1 hit. Bretonnian Exiles only.',
+    phases: ['combat'],
+  },
+  {
+    name: 'Dragonhide Cloak',
+    type: 'talisman',
+    points: 0,
+    effect: 'AP of any non-magical weapon attacking the bearer is reduced by 2. Immune to Killing Blow and Multiple Wounds (X). 3+ Ward save against Flaming Attacks.',
+    phases: ['combat', 'shooting'],
+  },
+  {
+    name: 'Grail Pendant',
+    type: 'talisman',
+    points: 40,
+    effect: 'Single use. When the wearer loses their final Wound, roll a D6; on a 2+, that Wound is not lost. Grail Vow only.',
+    phases: ['combat', 'shooting'],
+  },
+  {
+    name: 'Lucky Heirloom',
+    type: 'talisman',
+    points: 25,
+    effect: 'Once per round, the bearer can re-roll a single failed To Hit, To Wound, Armour Save, or Ward Save roll. Bretonnian Exiles only.',
+    phases: ['combat', 'shooting'],
+  },
+  {
+    name: 'Heart of the Wilds',
+    type: 'arcane-item',
+    points: 40,
+    effect: 'The bearer gains +1 to casting rolls while within natural terrain features (woods, difficult terrain, dangerous terrain).',
+    phases: ['strategy'],
+    subPhases: ['conjuration'],
+  },
+  {
+    name: 'Diadem of Power',
+    type: 'arcane-item',
+    points: 35,
+    effect: 'When the bearer attempts to cast a Magical Vortex, Magic Missile, or Assailment spell, they gain +1 to their Casting roll. Errantry Crusade only.',
+    phases: ['strategy'],
+    subPhases: ['conjuration'],
+  },
+  {
+    name: 'Flamestrike Wand',
+    type: 'arcane-item',
+    points: 15,
+    effect: 'Single use. The bearer may cast Fireball from Battle Magic as a bound spell with Power Level 3. Bretonnian Exiles only.',
+    phases: ['strategy'],
+    subPhases: ['conjuration'],
+  },
+  {
+    name: 'The Staff of the Elements',
+    type: 'arcane-item',
+    points: 0,
+    effect: 'Lady Elisse may discard two randomly generated spells instead of one, then select two signature spells from Lore of Elementalism and/or Lore of the Lady.',
+    phases: ['passive'],
+  },
+  {
+    name: 'The Seal of Parravon',
+    type: 'enchanted-item',
+    points: 35,
+    effect: 'When the bearer makes a roll To Hit, a roll of 3+ is always a success, regardless of the target\'s WS.',
+    phases: ['combat'],
+  },
+  {
+    name: 'Crusader\'s Clarion',
+    type: 'enchanted-item',
+    points: 25,
+    effect: 'When the bearer charges, their mount and all mounts in their unit gain +1 Strength for that turn. Must be mounted on a Bretonnian Warhorse. Errantry Crusade only.',
+    phases: ['combat'],
+  },
+  {
+    name: 'Wyrmbreath Vial',
+    type: 'enchanted-item',
+    points: 20,
+    effect: 'Single use. Breath weapon with S4, AP -1. Flaming Attacks, Magical Attacks. Bretonnian Exiles only.',
+    phases: ['shooting'],
+  },
+  {
+    name: 'Chalice of Brionne',
+    type: 'enchanted-item',
+    points: 0,
+    effect: 'Within the bearer\'s Command range, enemy characters attempting to use special rules or magic items requiring a Leadership test suffer -2 to Ld (min 2).',
+    phases: ['passive'],
+  },
+  {
+    name: 'Banner of the Lady\'s Grace',
+    type: 'banner',
+    points: 75,
+    effect: 'The unit ignores all negative modifiers to its Leadership characteristic.',
+    phases: ['passive'],
+  },
+  {
+    name: 'Crusader\'s Tapestry',
+    type: 'banner',
+    points: 40,
+    effect: 'The unit gains the Frenzy special rule. Errantry Crusade only.',
+    phases: ['combat'],
+  },
+  {
+    name: 'Banner of Honourable Warfare',
+    type: 'banner',
+    points: 25,
+    effect: 'The unit must re-roll any failed To Hit rolls during the first round of combat when engaged with an enemy equipped with missile weapons.',
+    phases: ['combat'],
+  },
+  {
+    name: 'Banner of the Zealous Knight',
+    type: 'banner',
+    points: 25,
+    effect: 'The unit gains the Vanguard special rule. Bretonnian Exiles only.',
+    phases: ['movement'],
   },
 ]
 
