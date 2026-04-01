@@ -394,6 +394,7 @@ export const SPECIAL_RULES = [
       {
         phaseId: 'shooting',
         subPhaseId: 'choose-target',
+        opponentOnly: true,
         description:
           'When targeted during opponent\'s Shooting phase, unit may Fall Back in Good Order (flee away from the shooter then auto-rally).',
       },
