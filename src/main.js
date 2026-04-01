@@ -810,6 +810,11 @@ function renderSpecialRulesContext(army, subPhase) {
         }
       }
     }
+    // Terror also causes Fear
+    if (unitRules.some(r => normaliseRuleName(r).toLowerCase() === 'terror') &&
+        !unitRules.some(r => normaliseRuleName(r).toLowerCase() === 'fear')) {
+      unitRules.push('Fear')
+    }
 
     for (const ruleName of unitRules) {
       const normName = normaliseRuleName(ruleName)
@@ -1191,6 +1196,11 @@ function renderSpecialRulesForPhase(army, phase) {
             unitRules.push(`Impact Hits (${mount.impactHits})`)
           }
         }
+      }
+      // Terror also causes Fear
+      if (unitRules.some(r => normaliseRuleName(r).toLowerCase() === 'terror') &&
+          !unitRules.some(r => normaliseRuleName(r).toLowerCase() === 'fear')) {
+        unitRules.push('Fear')
       }
 
       for (const ruleName of unitRules) {
