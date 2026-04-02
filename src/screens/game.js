@@ -3,7 +3,7 @@ import { getPhaseIndex, savePhaseIndex, getRound, saveRound, getIsOpponentTurn, 
 import { PHASE_BG, PHASE_TEXT } from '../helpers.js'
 import { renderCasterContext } from '../context/caster.js'
 import { renderShootingContext } from '../context/shooting.js'
-import { renderCombatWeaponsContext, renderCombatLeadershipContext } from '../context/combat-weapons.js'
+import { renderCombatWeaponsContext, renderCombatResultContext, renderCombatLeadershipContext } from '../context/combat-weapons.js'
 import { renderChargeContext } from '../context/charge.js'
 import { renderMagicItemsContext } from '../context/items.js'
 import { renderSpecialRulesContext } from '../context/special-rules-context.js'
@@ -131,7 +131,8 @@ function renderPhaseContext(army, phase, subPhase) {
     html += renderCasterContext(army, ['assailment'])
     html += renderCombatWeaponsContext(army)
   }
-  if (subPhase.id === 'combat-result' || subPhase.id === 'break-test') html += renderCombatLeadershipContext(army)
+  if (subPhase.id === 'combat-result') html += renderCombatResultContext(army)
+  if (subPhase.id === 'break-test') html += renderCombatLeadershipContext(army)
 
   if (subPhase.id !== 'remove-casualties') html += renderMagicItemsContext(army, phase.id, subPhase.id)
   html += renderSpecialRulesContext(army, subPhase)

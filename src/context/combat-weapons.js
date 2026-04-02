@@ -436,6 +436,51 @@ export function renderCombatWeaponsContext(army) {
   `
 }
 
+export function renderCombatResultContext(army) {
+  if (army.units.length === 0) return ''
+
+  const entries = []
+  for (const u of army.units) {
+    const bonuses = []
+    let total = 0
+
+    if (u.hasStandard) { bonuses.push('Standard +1'); total += 1 }
+    if (u.hasMusician) { bonuses.push('Musician') }
+
+    entries.push({
+      name: u.name, strength: u.strength,
+      total, bonuses,
+    })
+  }
+
+  const deduped = {}
+  for (const e of entries) {
+    const key = `${e.name}||${e.total}||${e.bonuses.join(',')}`
+    if (!deduped[key]) deduped[key] = { ...e, merged: false }
+    else deduped[key].merged = true
+  }
+
+  const rows = Object.values(deduped).sort((a, b) => b.total - a.total)
+  if (rows.length === 0) return ''
+
+  return `
+    <div class="bg-wh-surface rounded-lg border border-wh-phase-combat/30 p-4 mb-4">
+      <h3 class="text-sm font-bold text-wh-phase-combat mb-3">Static Combat Result</h3>
+      <div class="space-y-1">
+        ${rows.map(r => `
+          <div class="p-2 rounded bg-wh-card text-sm">
+            <div class="flex items-center gap-2">
+              <span class="text-wh-text">${r.name}${!r.merged && r.strength > 1 ? ` x${r.strength}` : ''}</span>
+              <span class="text-wh-phase-combat font-mono text-xs ml-auto">+${r.total}</span>
+            </div>
+            ${r.bonuses.length > 0 ? `<p class="text-xs text-wh-muted mt-0.5">${r.bonuses.join(', ')}</p>` : ''}
+          </div>
+        `).join('')}
+      </div>
+    </div>
+  `
+}
+
 export function renderCombatLeadershipContext(army) {
   if (army.units.length === 0) return ''
 

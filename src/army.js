@@ -51,6 +51,9 @@ function parseUnit(raw, category) {
     magicItems: [],
     magicWeapons: [],
     banners: [],
+    hasStandard: false,
+    hasMusician: false,
+    isBSB: false,
     hasLoreFamiliar: false,
     mount: null,
     hasBarding: false,
@@ -105,10 +108,15 @@ function parseUnit(raw, category) {
     }
   }
 
-  // Command group magic items
+  // Command group
   if (Array.isArray(raw.command)) {
     for (const cmd of raw.command) {
-      if (cmd.active && cmd.magic?.selected) {
+      if (!cmd.active) continue
+      const cmdName = (cmd.name_en || '').toLowerCase()
+      if (cmdName.includes('standard bearer')) unit.hasStandard = true
+      if (cmdName.includes('musician')) unit.hasMusician = true
+      if (cmdName.includes('battle standard bearer')) unit.isBSB = true
+      if (cmd.magic?.selected) {
         for (const item of cmd.magic.selected) {
           unit.magicItems.push(`${item.name_en} (${cmd.name_en})`)
           if (item.type === 'banner') {
