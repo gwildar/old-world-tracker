@@ -258,11 +258,25 @@ function hasPoisonedAttacks(unit) {
   return !RANGED_WEAPON_NAMES.some(w => qualifier.includes(w))
 }
 
+function detectItemBonuses(unit) {
+  let armourBane = 0
+  const strengthMods = []
+  for (const itemName of unit.magicItems) {
+    const mi = MAGIC_ITEM_MAP[normaliseItemName(itemName)]
+    if (mi?.armourBane) armourBane += mi.armourBane
+    if (mi?.strengthMod) strengthMods.push(mi.strengthMod)
+  }
+  return { armourBane, strengthMods }
+}
+
 function buildRiderTags(unit) {
   const tags = []
   if (hasRiderMagicalAttacks(unit)) tags.push('<span class="text-wh-phase-combat font-mono ml-1">\u2728 Magical</span>')
   if (hasFuriousCharge(unit)) tags.push('<span class="text-wh-phase-combat font-mono ml-1">\u{1F4A5} +1A furious</span>')
   if (hasPoisonedAttacks(unit)) tags.push('<span class="text-wh-phase-combat font-mono ml-1">\u2620\uFE0F Poison</span>')
+  const { armourBane, strengthMods } = detectItemBonuses(unit)
+  if (armourBane > 0) tags.push(`<span class="text-wh-phase-combat font-mono ml-1">AB(${armourBane})</span>`)
+  for (const sm of strengthMods) tags.push(`<span class="text-wh-phase-combat font-mono ml-1">S${sm}</span>`)
   return tags.join('')
 }
 
@@ -351,10 +365,15 @@ const COMBAT_RELEVANT_RULES = [
 function extractCombatRules(unit) {
   if (!unit.specialRules) return []
   const parts = unit.specialRules.split(',').map(s => s.trim()).filter(Boolean)
-  return parts.filter(rule => {
-    const lower = rule.toLowerCase().replace(/\s*\([^)]*\)/g, '').trim()
-    return COMBAT_RELEVANT_RULES.some(cr => lower.includes(cr))
-  })
+  const results = []
+  for (const rule of parts) {
+    const lower = rule.toLowerCase().replace(/\s*\([^)]*\)/g, '').replace(/\s*\{[^}]*\}/g, '').trim()
+    if (COMBAT_RELEVANT_RULES.some(cr => lower.includes(cr))) {
+      // Clean: strip {renegade} etc, keep (X) params
+      results.push(rule.replace(/\s*\{[^}]*\}/g, '').trim())
+    }
+  }
+  return results
 }
 
 function detectMagicResistance(unit) {

@@ -14,6 +14,8 @@
  *   extremely   – true if the item is an "Extremely Common" magic item (no duplicate limit)
  *   armourBase  – optional, base armour value provided (e.g. 5 for heavy armour, 4 for full plate)
  *   armourMod   – optional, modifier to armour save (negative = better, e.g. -1 improves by 1)
+ *   armourBane  – optional, grants Armour Bane (X) to unit
+ *   strengthMod – optional, modifier to Strength (e.g. '+1' or '+1 on charge')
  *
  * Source: https://tow.whfb.app/magic-items
  */
@@ -516,6 +518,7 @@ export const MAGIC_ITEMS = [
     points: 40,
     effect: 'The unit gains the Armour Bane (2) special rule.',
     phases: ['combat'],
+    armourBane: 2,
   },
   {
     name: 'Banner of Swirling Wind',
@@ -601,8 +604,9 @@ export const MAGIC_ITEMS = [
     name: 'Pendant of Khaeleth',
     type: 'talisman',
     points: 40,
-    effect: 'The bearer has a 5+ Ward save against wounds caused by attacks with S4 or lower, and a 4+ Ward save against wounds caused by attacks with S5 or higher.',
+    effect: '5+ Ward vs S4 or lower, 4+ Ward vs S5 or higher.',
     phases: ['combat', 'shooting'],
+    ward: '5+ (4+ vs S5+)',
   },
   {
     name: 'Pearl of Infinite Bleakness',
@@ -931,7 +935,8 @@ export const MAGIC_ITEMS = [
     points: 30,
     effect: 'The unit gains +1 Strength on a turn in which it charged. The unit also gains Impetuous.',
     phases: ['combat'],
-  },
+  
+    strengthMod: '+1 on charge',},
   {
     name: 'Banner of Chalons',
     type: 'banner',
@@ -1470,7 +1475,8 @@ export const MAGIC_ITEMS = [
     points: 15,
     effect: '+1 Strength, Magic Resistance (-1). If the wearer rolls a natural 1 To Hit during Combat, the gauntlets shatter.',
     phases: ['combat'],
-  },
+  
+    strengthMod: '+1',},
   {
     name: 'The Lammasu\'s Beard',
     type: 'banner',
@@ -1722,7 +1728,8 @@ export const MAGIC_ITEMS = [
     points: 35,
     effect: 'The wearer gains Armour Bane (1) and Impact Hits (D3) with AP -2.',
     phases: ['combat'],
-  },
+  
+    armourBane: 1,},
   {
     name: 'Hail of Doom Arrow',
     type: 'enchanted-item',
@@ -1801,7 +1808,8 @@ export const MAGIC_ITEMS = [
     points: 15,
     effect: 'Alter Kindred. Infantry or cavalry only. +1 Strength and +1 Toughness.',
     phases: ['passive'],
-  },
+  
+    strengthMod: '+1',},
   {
     name: 'Blight-Tipped Arrows',
     type: 'enchanted-item',
@@ -1836,7 +1844,8 @@ export const MAGIC_ITEMS = [
     points: 10,
     effect: 'Alter Kindred. Gains Armour Bane (1) and may re-roll failed To Hit rolls during a challenge.',
     phases: ['combat'],
-  },
+  
+    armourBane: 1,},
   {
     name: 'A Resplendence of Luminescents',
     type: 'enchanted-item',
@@ -2182,7 +2191,8 @@ export const MAGIC_ITEMS = [
     points: 35,
     effect: 'All models in the unit gain +1 Strength during a turn in which they charged.',
     phases: ['combat'],
-  },
+  
+    strengthMod: '+1 on charge',},
   {
     name: 'Da Spider Banner',
     type: 'banner',
@@ -3391,7 +3401,8 @@ export const MAGIC_ITEMS = [
     points: 35,
     effect: 'Mutation. +1 Strength (excluding mount).',
     phases: ['combat'],
-  },
+  
+    strengthMod: '+1',},
   {
     name: 'Pelt of Midnight',
     type: 'enchanted-item',

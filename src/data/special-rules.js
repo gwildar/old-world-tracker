@@ -14,7 +14,7 @@
 export const SPECIAL_RULES = [
   // ─── Deployment / Pre-game ────────────────────────────────────────
   {
-    name: 'Scouts',
+    id: 'scouts', displayName: 'Scouts',
     phases: [
       {
         phaseId: null,
@@ -25,7 +25,7 @@ export const SPECIAL_RULES = [
     ],
   },
   {
-    name: 'Vanguard',
+    id: 'vanguard', displayName: 'Vanguard',
     phases: [
       {
         phaseId: null,
@@ -38,7 +38,7 @@ export const SPECIAL_RULES = [
 
   // ─── Strategy Phase ───────────────────────────────────────────────
   {
-    name: 'Stupidity',
+    id: 'stupidity', displayName: 'Stupidity',
     phases: [
       {
         phaseId: 'strategy',
@@ -50,7 +50,7 @@ export const SPECIAL_RULES = [
     ],
   },
   {
-    name: 'Ambushers',
+    id: 'ambushers', displayName: 'Ambushers',
     aliases: ['Ambush'],
     phases: [
       {
@@ -70,7 +70,7 @@ export const SPECIAL_RULES = [
     ],
   },
   {
-    name: 'Invocation of Nehek',
+    id: 'invocation of nehek', displayName: 'Invocation of Nehek',
     phases: [
       {
         phaseId: 'strategy',
@@ -81,7 +81,7 @@ export const SPECIAL_RULES = [
     ],
   },
   {
-    name: 'Rallying Cry',
+    id: 'rallying cry', displayName: 'Rallying Cry',
     phases: [
       {
         phaseId: 'strategy',
@@ -93,7 +93,7 @@ export const SPECIAL_RULES = [
     ],
   },
   {
-    name: 'Frenzy',
+    id: 'frenzy', displayName: 'Frenzy',
     phases: [
       {
         phaseId: 'movement',
@@ -118,7 +118,7 @@ export const SPECIAL_RULES = [
 
   // ─── Movement Phase ───────────────────────────────────────────────
   {
-    name: 'Impetuous',
+    id: 'impetuous', displayName: 'Impetuous',
     phases: [
       {
         phaseId: 'movement',
@@ -130,7 +130,7 @@ export const SPECIAL_RULES = [
     ],
   },
   {
-    name: 'Counter Charge',
+    id: 'counter charge', displayName: 'Counter Charge',
     phases: [
       {
         phaseId: 'movement',
@@ -142,7 +142,7 @@ export const SPECIAL_RULES = [
     ],
   },
   {
-    name: 'Fire & Flee',
+    id: 'fire & flee', displayName: 'Fire & Flee',
     phases: [
       {
         phaseId: 'movement',
@@ -154,7 +154,7 @@ export const SPECIAL_RULES = [
     ],
   },
   {
-    name: 'Feigned Flight',
+    id: 'feigned flight', displayName: 'Feigned Flight',
     phases: [
       {
         phaseId: 'movement',
@@ -165,7 +165,7 @@ export const SPECIAL_RULES = [
     ],
   },
   {
-    name: 'Random Movement',
+    id: 'random movement', displayName: 'Random Movement',
     phases: [
       {
         phaseId: 'movement',
@@ -176,7 +176,7 @@ export const SPECIAL_RULES = [
     ],
   },
   {
-    name: 'Drilled',
+    id: 'drilled', displayName: 'Drilled',
     phases: [
       {
         phaseId: 'movement',
@@ -187,7 +187,7 @@ export const SPECIAL_RULES = [
     ],
   },
   {
-    name: 'Swiftstride',
+    id: 'swiftstride', displayName: 'Swiftstride',
     phases: [
       {
         phaseId: 'movement',
@@ -212,7 +212,7 @@ export const SPECIAL_RULES = [
     ],
   },
   {
-    name: 'Fly',
+    id: 'fly', displayName: 'Fly',
     phases: [
       {
         phaseId: 'movement',
@@ -231,7 +231,7 @@ export const SPECIAL_RULES = [
     ],
   },
   {
-    name: 'Fast Cavalry',
+    id: 'fast cavalry', displayName: 'Fast Cavalry',
     phases: [
       {
         phaseId: 'movement',
@@ -242,7 +242,7 @@ export const SPECIAL_RULES = [
     ],
   },
   {
-    name: 'Move Through Cover',
+    id: 'move through cover', displayName: 'Move Through Cover',
     phases: [
       {
         phaseId: 'movement',
@@ -254,7 +254,7 @@ export const SPECIAL_RULES = [
     ],
   },
   {
-    name: 'Lumbering',
+    id: 'lumbering', displayName: 'Lumbering',
     phases: [
       {
         phaseId: 'movement',
@@ -265,7 +265,7 @@ export const SPECIAL_RULES = [
     ],
   },
   {
-    name: 'Dragged Along',
+    id: 'dragged along', displayName: 'Dragged Along',
     phases: [
       {
         phaseId: 'movement',
@@ -278,7 +278,7 @@ export const SPECIAL_RULES = [
 
   // ─── Shooting Phase ───────────────────────────────────────────────
   {
-    name: 'Stony Stare',
+    id: 'stony stare', displayName: 'Stony Stare',
     phases: [
       {
         phaseId: 'combat',
@@ -289,7 +289,7 @@ export const SPECIAL_RULES = [
     ],
   },
   {
-    name: 'Cleaving Blow',
+    id: 'cleaving blow', displayName: 'Cleaving Blow',
     phases: [
       {
         phaseId: 'combat',
@@ -300,7 +300,7 @@ export const SPECIAL_RULES = [
     ],
   },
   {
-    name: 'Breath Weapon',
+    id: 'breath weapon', displayName: 'Breath Weapon',
     phases: [
       {
         phaseId: 'shooting',
@@ -311,7 +311,7 @@ export const SPECIAL_RULES = [
     ],
   },
   {
-    name: 'Volley Fire',
+    id: 'volley fire', displayName: 'Volley Fire',
     phases: [
       {
         phaseId: 'shooting',
@@ -322,7 +322,7 @@ export const SPECIAL_RULES = [
     ],
   },
   {
-    name: 'Move & Shoot',
+    id: 'move & shoot', displayName: 'Move & Shoot',
     phases: [
       {
         phaseId: 'shooting',
@@ -333,7 +333,7 @@ export const SPECIAL_RULES = [
     ],
   },
   {
-    name: 'Move or Shoot',
+    id: 'move or shoot', displayName: 'Move or Shoot',
     phases: [
       {
         phaseId: 'shooting',
@@ -344,7 +344,7 @@ export const SPECIAL_RULES = [
     ],
   },
   {
-    name: 'Multiple Shots',
+    id: 'multiple shots', displayName: 'Multiple Shots',
     phases: [
       {
         phaseId: 'shooting',
@@ -355,7 +355,7 @@ export const SPECIAL_RULES = [
     ],
   },
   {
-    name: 'Quick Shot',
+    id: 'quick shot', displayName: 'Quick Shot',
     phases: [
       {
         phaseId: 'shooting',
@@ -366,7 +366,7 @@ export const SPECIAL_RULES = [
     ],
   },
   {
-    name: 'Ignores Cover',
+    id: 'ignores cover', displayName: 'Ignores Cover',
     phases: [
       {
         phaseId: 'shooting',
@@ -377,7 +377,7 @@ export const SPECIAL_RULES = [
     ],
   },
   {
-    name: 'Ponderous',
+    id: 'ponderous', displayName: 'Ponderous',
     phases: [
       {
         phaseId: 'shooting',
@@ -388,7 +388,7 @@ export const SPECIAL_RULES = [
     ],
   },
   {
-    name: 'Cumbersome',
+    id: 'cumbersome', displayName: 'Cumbersome',
     phases: [
       {
         phaseId: 'movement',
@@ -399,7 +399,7 @@ export const SPECIAL_RULES = [
     ],
   },
   {
-    name: 'Evasive',
+    id: 'evasive', displayName: 'Evasive',
     phases: [
       {
         phaseId: 'shooting',
@@ -411,7 +411,7 @@ export const SPECIAL_RULES = [
     ],
   },
   {
-    name: 'Reserve Move',
+    id: 'reserve move', displayName: 'Reserve Move',
     phases: [
       {
         phaseId: 'shooting',
@@ -424,7 +424,7 @@ export const SPECIAL_RULES = [
 
   // ─── Combat Phase ─────────────────────────────────────────────────
   {
-    name: 'Strike First',
+    id: 'strike first', displayName: 'Strike First',
     phases: [
       {
         phaseId: 'combat',
@@ -435,7 +435,7 @@ export const SPECIAL_RULES = [
     ],
   },
   {
-    name: 'Strike Last',
+    id: 'strike last', displayName: 'Strike Last',
     phases: [
       {
         phaseId: 'combat',
@@ -446,7 +446,7 @@ export const SPECIAL_RULES = [
     ],
   },
   {
-    name: 'Extra Attacks',
+    id: 'extra attacks', displayName: 'Extra Attacks',
     phases: [
       {
         phaseId: 'combat',
@@ -457,7 +457,7 @@ export const SPECIAL_RULES = [
     ],
   },
   {
-    name: 'Random Attacks',
+    id: 'random attacks', displayName: 'Random Attacks',
     phases: [
       {
         phaseId: 'combat',
@@ -468,7 +468,7 @@ export const SPECIAL_RULES = [
     ],
   },
   {
-    name: 'Furious Charge',
+    id: 'furious charge', displayName: 'Furious Charge',
     phases: [
       {
         phaseId: 'combat',
@@ -479,7 +479,7 @@ export const SPECIAL_RULES = [
     ],
   },
   {
-    name: 'First Charge',
+    id: 'first charge', displayName: 'First Charge',
     phases: [
       {
         phaseId: 'combat',
@@ -490,7 +490,7 @@ export const SPECIAL_RULES = [
     ],
   },
   {
-    name: 'Eternal Hatred',
+    id: 'eternal hatred', displayName: 'Eternal Hatred',
     phases: [
       {
         phaseId: 'combat',
@@ -501,7 +501,7 @@ export const SPECIAL_RULES = [
     ],
   },
   {
-    name: 'Murderous',
+    id: 'murderous', displayName: 'Murderous',
     phases: [
       {
         phaseId: 'combat',
@@ -512,7 +512,7 @@ export const SPECIAL_RULES = [
     ],
   },
   {
-    name: 'Hatred',
+    id: 'hatred', displayName: 'Hatred',
     phases: [
       {
         phaseId: 'combat',
@@ -523,7 +523,7 @@ export const SPECIAL_RULES = [
     ],
   },
   {
-    name: 'Killing Blow',
+    id: 'killing blow', displayName: 'Killing Blow',
     phases: [
       {
         phaseId: 'combat',
@@ -534,7 +534,7 @@ export const SPECIAL_RULES = [
     ],
   },
   {
-    name: 'Monster Slayer',
+    id: 'monster slayer', displayName: 'Monster Slayer',
     phases: [
       {
         phaseId: 'combat',
@@ -545,7 +545,7 @@ export const SPECIAL_RULES = [
     ],
   },
   {
-    name: 'Fear',
+    id: 'fear', displayName: 'Fear',
     phases: [
       {
         phaseId: 'movement',
@@ -563,7 +563,7 @@ export const SPECIAL_RULES = [
     ],
   },
   {
-    name: 'Terror',
+    id: 'terror', displayName: 'Terror',
     phases: [
       {
         phaseId: 'movement',
@@ -581,7 +581,7 @@ export const SPECIAL_RULES = [
     ],
   },
   {
-    name: 'Fight in Extra Rank',
+    id: 'fight in extra rank', displayName: 'Fight in Extra Rank',
     phases: [
       {
         phaseId: 'combat',
@@ -592,7 +592,7 @@ export const SPECIAL_RULES = [
     ],
   },
   {
-    name: 'Shieldwall',
+    id: 'shieldwall', displayName: 'Shieldwall',
     phases: [
       {
         phaseId: 'combat',
@@ -603,7 +603,7 @@ export const SPECIAL_RULES = [
     ],
   },
   {
-    name: 'Stubborn',
+    id: 'stubborn', displayName: 'Stubborn',
     phases: [
       {
         phaseId: 'combat',
@@ -614,7 +614,7 @@ export const SPECIAL_RULES = [
     ],
   },
   {
-    name: 'Unbreakable',
+    id: 'unbreakable', displayName: 'Unbreakable',
     phases: [
       {
         phaseId: 'combat',
@@ -625,7 +625,7 @@ export const SPECIAL_RULES = [
     ],
   },
   {
-    name: 'Unstable',
+    id: 'unstable', displayName: 'Unstable',
     phases: [
       {
         phaseId: 'combat',
@@ -636,7 +636,7 @@ export const SPECIAL_RULES = [
     ],
   },
   {
-    name: 'Timmm-berrr!',
+    id: 'timmm-berrr!', displayName: 'Timmm-berrr!',
     phases: [
       {
         phaseId: 'combat',
@@ -648,7 +648,7 @@ export const SPECIAL_RULES = [
   },
 
   {
-    name: 'Wailing Dirge',
+    id: 'wailing dirge', displayName: 'Wailing Dirge',
     phases: [
       {
         phaseId: 'combat',
@@ -661,7 +661,7 @@ export const SPECIAL_RULES = [
 
   // ─── Shooting & Combat (wound/save modifiers) ────────────────────
   {
-    name: 'Poisoned Attacks',
+    id: 'poisoned attacks', displayName: 'Poisoned Attacks',
     phases: [
       {
         phaseId: 'shooting',
@@ -684,7 +684,7 @@ export const SPECIAL_RULES = [
     ],
   },
   {
-    name: 'Flaming Attacks',
+    id: 'flaming attacks', displayName: 'Flaming Attacks',
     phases: [
       {
         phaseId: 'shooting',
@@ -701,7 +701,7 @@ export const SPECIAL_RULES = [
     ],
   },
   {
-    name: 'Multiple Wounds',
+    id: 'multiple wounds', displayName: 'Multiple Wounds',
     phases: [
       {
         phaseId: 'shooting',
@@ -718,7 +718,7 @@ export const SPECIAL_RULES = [
     ],
   },
   {
-    name: 'Regeneration',
+    id: 'regeneration', displayName: 'Regeneration',
     phases: [
       {
         phaseId: 'shooting',
@@ -737,7 +737,7 @@ export const SPECIAL_RULES = [
 
   // ─── Kingdom of Bretonnia ─────────────────────────────────────────
   {
-    name: 'Blessings of the Lady',
+    id: 'blessings of the lady', displayName: 'Blessings of the Lady',
     phases: [
       {
         phaseId: 'combat',
@@ -748,7 +748,7 @@ export const SPECIAL_RULES = [
     ],
   },
   {
-    name: 'Finest Warhorses',
+    id: 'finest warhorses', displayName: 'Finest Warhorses',
     phases: [
       {
         phaseId: 'movement',
@@ -778,7 +778,7 @@ export const SPECIAL_RULES = [
     ],
   },
   {
-    name: 'Earn Your Spurs',
+    id: 'earn your spurs', displayName: 'Earn Your Spurs',
     phases: [
       {
         phaseId: 'combat',
@@ -789,7 +789,7 @@ export const SPECIAL_RULES = [
     ],
   },
   {
-    name: 'Beguiling Aura',
+    id: 'beguiling aura', displayName: 'Beguiling Aura',
     phases: [
       {
         phaseId: 'combat',
@@ -812,7 +812,7 @@ export const SPECIAL_RULES = [
     ],
   },
   {
-    name: 'The Grail Vow',
+    id: 'the grail vow', displayName: 'The Grail Vow',
     phases: [
       {
         phaseId: 'combat',
@@ -823,7 +823,7 @@ export const SPECIAL_RULES = [
     ],
   },
   {
-    name: 'The Questing Vow',
+    id: 'the questing vow', displayName: 'The Questing Vow',
     phases: [
       {
         phaseId: 'combat',
@@ -845,7 +845,7 @@ export const SPECIAL_RULES = [
     ],
   },
   {
-    name: 'Guardian of the Sacred Sites',
+    id: 'guardian of the sacred sites', displayName: 'Guardian of the Sacred Sites',
     phases: [
       {
         phaseId: 'strategy',
@@ -857,7 +857,7 @@ export const SPECIAL_RULES = [
     ],
   },
   {
-    name: 'Aura of the Fay',
+    id: 'aura of the fay', displayName: 'Aura of the Fay',
     phases: [
       {
         phaseId: 'strategy',
@@ -869,7 +869,7 @@ export const SPECIAL_RULES = [
     ],
   },
   {
-    name: 'Arcane Backlash',
+    id: 'arcane backlash', displayName: 'Arcane Backlash',
     phases: [
       {
         phaseId: 'strategy',
@@ -897,161 +897,161 @@ export const SPECIAL_RULES = [
 
   // ─── Passive / always-on rules ────────────────────────────────────
   {
-    name: 'Armoured Hide',
+    id: 'armoured hide', displayName: 'Armoured Hide',
     passive: true,
     phases: [],
     description:
       'Improves armour value by X. Models without armour are treated as having armour value 7+.',
   },
   {
-    name: 'Close Order',
+    id: 'close order', displayName: 'Close Order',
     passive: true,
     phases: [],
     description: 'Unit may adopt Close Order formation (ranks and files, base-to-base).',
   },
   {
-    name: 'Open Order',
+    id: 'open order', displayName: 'Open Order',
     passive: true,
     phases: [],
     description: 'Unit may adopt Open Order formation.',
   },
   {
-    name: 'Skirmishers',
+    id: 'skirmishers', displayName: 'Skirmishers',
     passive: true,
     phases: [],
     description: 'Unit may adopt Skirmish formation (loose group, increased manoeuvrability).',
   },
   {
-    name: 'Ethereal',
+    id: 'ethereal', displayName: 'Ethereal',
     passive: true,
     phases: [],
     description:
       'Treats all terrain as open ground. Can only be wounded by Magical attacks. Non-Ethereal characters cannot join.',
   },
   {
-    name: 'Large Target',
+    id: 'large target', displayName: 'Large Target',
     passive: true,
     phases: [],
     description:
       'No cover benefit. LoS can be drawn over/through non-Large Target units. Shooters get +1 rank when targeting.',
   },
   {
-    name: 'Flammable',
+    id: 'flammable', displayName: 'Flammable',
     passive: true,
     phases: [],
     description: 'Cannot make Regeneration saves against Flaming attacks.',
   },
   {
-    name: 'Warp-spawned',
+    id: 'warp-spawned', displayName: 'Warp-spawned',
     passive: true,
     phases: [],
     description:
       'Cannot make Regeneration saves against Magical attacks. Non-Warp-spawned characters cannot join.',
   },
   {
-    name: 'Magical Attacks',
+    id: 'magical attacks', displayName: 'Magical Attacks',
     passive: true,
     phases: [],
     description:
       'All attacks are Magical. All spells and magic item hits are inherently Magical.',
   },
   {
-    name: 'Immune to Psychology',
+    id: 'immune to psychology', displayName: 'Immune to Psychology',
     passive: true,
     phases: [],
     description:
       'Auto-passes Fear, Panic, Terror tests (if majority). Cannot choose Flee as a charge reaction.',
   },
   {
-    name: 'Magic Resistance',
+    id: 'magic resistance', displayName: 'Magic Resistance',
     passive: true,
     phases: [],
     description:
       'Enemy casting rolls targeting this unit suffer -X penalty. Does not stack (use highest).',
   },
   {
-    name: 'Requires Two Hands',
+    id: 'requires two hands', displayName: 'Requires Two Hands',
     passive: true,
     phases: [],
     description: 'Cannot use a shield in combat. Shield still protects against shooting/magic.',
   },
   {
-    name: 'Horde',
+    id: 'horde', displayName: 'Horde',
     passive: true,
     phases: [],
     description: 'Max Rank Bonus increased by 1.',
   },
   {
-    name: 'Warband',
+    id: 'warband', displayName: 'Warband',
     passive: true,
     phases: [],
     description:
       'Ld bonus = current Rank Bonus (max Ld 10). May re-roll Charge rolls. Bonus does not apply to Restraint or Impetuous tests.',
   },
   {
-    name: 'Levies',
+    id: 'levies', displayName: 'Levies',
     passive: true,
     phases: [],
     description:
       'Cannot benefit from Inspiring Presence or Hold your Ground. Other units ignore this unit\'s rout for Panic.',
   },
   {
-    name: 'Mercenaries',
+    id: 'mercenaries', displayName: 'Mercenaries',
     passive: true,
     phases: [],
     description:
       'Cannot benefit from Inspiring Presence or Hold your Ground. Cannot be joined by characters from a different army list.',
   },
   {
-    name: 'Loner',
+    id: 'loner', displayName: 'Loner',
     passive: true,
     phases: [],
     description:
       'Cannot be General. Cannot join a unit without Loner, and vice versa.',
   },
   {
-    name: 'Veteran',
+    id: 'veteran', displayName: 'Veteran',
     passive: true,
     phases: [],
     description:
       'If majority, unit may re-roll failed Leadership tests (not Break tests).',
   },
   {
-    name: 'Chariot Runners',
+    id: 'chariot runners', displayName: 'Chariot Runners',
     passive: true,
     phases: [],
     description:
       'Friendly chariots can draw LoS over/through and move through this unit (Skirmish formation). Unit coherency extends to friendly chariots within 1".',
   },
   {
-    name: 'Detachment',
+    id: 'detachment', displayName: 'Detachment',
     passive: true,
     phases: [],
     description:
       'Unit can be fielded as a detachment alongside a parent regiment.',
   },
   {
-    name: 'Regimental Unit',
+    id: 'regimental unit', displayName: 'Regimental Unit',
     passive: true,
     phases: [],
     description: 'Unit can be accompanied by detachments.',
   },
   {
-    name: 'Motley Crew',
+    id: 'motley crew', displayName: 'Motley Crew',
     passive: true,
     phases: [],
     description:
       'Unit may include differently equipped models or mixed troop types. Separate attack rolls per type; casualties split evenly.',
   },
   {
-    name: 'Monster Handlers',
+    id: 'monster handlers', displayName: 'Monster Handlers',
     passive: true,
     phases: [],
     description:
       'Handlers add attacks to monster. Wounds allocated: 1-4 monster, 5+ handler. If monster dies, handlers die.',
   },
   {
-    name: 'Howdah',
+    id: 'howdah', displayName: 'Howdah',
     passive: true,
     phases: [],
     description:
@@ -1104,7 +1104,7 @@ export function rulesForSubPhase(subPhaseId) {
   for (const rule of SPECIAL_RULES) {
     for (const p of rule.phases) {
       if (p.subPhaseId === subPhaseId) {
-        results.push({ name: rule.name, description: p.description })
+        results.push({ name: rule.displayName, description: p.description })
       }
     }
   }
@@ -1121,7 +1121,7 @@ export function rulesForPhase(phaseId) {
   for (const rule of SPECIAL_RULES) {
     for (const p of rule.phases) {
       if (p.phaseId === phaseId) {
-        results.push({ name: rule.name, subPhaseId: p.subPhaseId, description: p.description })
+        results.push({ name: rule.displayName, subPhaseId: p.subPhaseId, description: p.description })
       }
     }
   }
@@ -1135,5 +1135,5 @@ export function rulesForPhase(phaseId) {
  */
 export function findRule(name) {
   const lower = name.toLowerCase()
-  return SPECIAL_RULES.find((r) => r.name.toLowerCase() === lower)
+  return SPECIAL_RULES.find((r) => r.id.toLowerCase() === lower)
 }

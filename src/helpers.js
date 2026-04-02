@@ -84,7 +84,7 @@ export function normaliseRuleName(name) {
 }
 
 export function ruleMatches(rule, normName) {
-  if (rule.name.toLowerCase() === normName.toLowerCase()) return true
+  if (rule.id === normName.toLowerCase()) return true
   if (Array.isArray(rule.aliases)) {
     return rule.aliases.some(a => a.toLowerCase() === normName.toLowerCase())
   }
