@@ -26,7 +26,7 @@ for (const item of MAGIC_ITEMS) {
 }
 
 function normaliseItemName(name) {
-  return name.toLowerCase().replace(/\*$/, '')
+  return name.replace(/\s*\(.*$/, '').toLowerCase().replace(/\*$/, '')
 }
 
 // Items whose effect is fully represented by MR on the header
@@ -63,11 +63,14 @@ function calculateArmourSave(unit) {
     }
   }
 
-  // Armoured Hide gives base armour of 7 - X (models without armour treated as 7+)
+  // Armoured Hide stacks with armour as a modifier; without armour it gives a base save of 7-X
   const armouredHide = detectArmouredHide(unit)
   if (armouredHide > 0) {
-    const hideVal = 7 - armouredHide
-    if (best === null || hideVal < best) best = hideVal
+    if (best === null) {
+      best = 7 - armouredHide
+    } else {
+      best -= armouredHide
+    }
   }
 
   // Natural armour save from unit profile (e.g. Bastiladon 3+, Stegadon 4+)
@@ -79,9 +82,14 @@ function calculateArmourSave(unit) {
 
   if (best === null) return null
 
-  // Shield from equipment or options
+  // Shield from equipment, options, or magic items
   const allGear = [...unit.equipment, ...unit.armour].map(g => g.toLowerCase())
-  const hasShield = allGear.some(g => g.split(',').some(p => p.trim() === 'shield' || p.trim() === 'shields'))
+  const hasMundaneShield = allGear.some(g => g.split(',').some(p => p.trim() === 'shield' || p.trim() === 'shields'))
+  const hasMagicShield = unit.magicItems.some(itemName => {
+    const mi = MAGIC_ITEM_MAP[normaliseItemName(itemName)]
+    return mi?.type === 'armour' && mi.effect?.startsWith('Shield.')
+  })
+  const hasShield = hasMundaneShield || hasMagicShield
   if (hasShield) best -= 1
   if (unit.hasBarding) best -= 1
   best += mod
@@ -227,8 +235,9 @@ function detectSingleUseItems(unit) {
 }
 
 function hasRiderMagicalAttacks(unit) {
-  // Magic weapon equipped — rider only
   for (const itemName of unit.magicItems) {
+    // Champion items only apply to the champion, not the unit
+    if (itemName.includes('(champion)') || itemName.includes('(Champion)')) continue
     const mi = MAGIC_ITEM_MAP[normaliseItemName(itemName)]
     if (mi?.type === 'weapon' && mi.phases?.includes('combat')) return true
     if (mi?.type !== 'weapon' && mi?.effect?.includes('Magical Attacks')) return true
@@ -553,6 +562,9 @@ export function renderCombatWeaponsContext(army) {
         s: champion.S || riderS,
         a: champion.A || '?',
         weapons: championWeapons || riderWeapons,
+        tags: championWeapons
+          ? (championWeapons.some(w => isWeaponMagical(w)) ? '<span class="text-wh-phase-combat font-mono ml-1">\u2728 Magical</span>' : '')
+          : null,
       } : null,
       riderName: champion ? stats.Name : null,
     })
@@ -597,7 +609,7 @@ export function renderCombatWeaponsContext(army) {
                 </div>
               ` : ''}
               <div class="mt-1 ml-2 space-y-0.5">
-                ${r.champion ? r.champion.weapons.map(w => renderWeaponLine(r.champion.i, r.champion.ws, r.champion.s, r.champion.a, w, r.champion.name, r.riderTags)).join('') : ''}
+                ${r.champion ? r.champion.weapons.map(w => renderWeaponLine(r.champion.i, r.champion.ws, r.champion.s, r.champion.a, w, r.champion.name, r.champion.tags !== null ? r.champion.tags : r.riderTags)).join('') : ''}
                 ${r.riderWeapons.map(w => renderWeaponLine(r.riderI, r.riderWS, r.riderS, r.riderA, w, r.riderName, r.riderTags)).join('')}
                 ${r.crew.map(c => renderWeaponLine(c.i, c.ws, c.s, c.a, HAND_WEAPON, c.name)).join('')}
                 ${r.mountWeapons.length > 0

@@ -252,6 +252,48 @@ describe('Combat phase with Dark Elves', () => {
     expect(knightsCard.textContent).toContain('Dread Knight')
   })
 
+  it('shows MR from champion magic items on unit card', () => {
+    renderGameScreen(army)
+    const combatPanel = getApp().querySelector('.border-wh-phase-combat\\/30')
+    const knightsCard = [...combatPanel.querySelectorAll('.bg-wh-card')]
+      .find(el => el.textContent.includes('Cold One Knight'))
+    expect(knightsCard).toBeTruthy()
+    expect(knightsCard.textContent).toContain('MR:-2')
+  })
+
+  it('only shows Magical on champion weapon line, not rank-and-file', () => {
+    renderGameScreen(army)
+    const combatPanel = getApp().querySelector('.border-wh-phase-combat\\/30')
+    const knightsCard = [...combatPanel.querySelectorAll('.bg-wh-card')]
+      .find(el => el.textContent.includes('Cold One Knight'))
+    expect(knightsCard).toBeTruthy()
+    const weaponLines = [...knightsCard.querySelectorAll('.text-xs')]
+    const champLine = weaponLines.find(el => el.textContent.includes('Spelleater Axe'))
+    const lanceLine = weaponLines.find(el => el.textContent.includes('Lance'))
+    expect(champLine.textContent).toContain('Magical')
+    expect(lanceLine.textContent).not.toContain('Magical')
+  })
+
+  it('stacks Armoured Hide with armour for Cold One Knights', () => {
+    renderGameScreen(army)
+    const combatPanel = getApp().querySelector('.border-wh-phase-combat\\/30')
+    const knightsCard = [...combatPanel.querySelectorAll('.bg-wh-card')]
+      .find(el => el.textContent.includes('Cold One Knight'))
+    expect(knightsCard).toBeTruthy()
+    // Full plate (4+) + Armoured Hide 1 (-1) + shield (-1) = 2+
+    expect(knightsCard.textContent).toContain('AS:2+')
+  })
+
+  it('includes magic shield in armour save calculation', () => {
+    renderGameScreen(army)
+    const combatPanel = getApp().querySelector('.border-wh-phase-combat\\/30')
+    const dreadlordCard = [...combatPanel.querySelectorAll('.bg-wh-card')]
+      .find(el => el.textContent.includes('Dark Elf Dreadlord'))
+    expect(dreadlordCard).toBeTruthy()
+    // Full plate (4+) + Shield of Ghrond (-1) = 3+
+    expect(dreadlordCard.textContent).toContain('AS:3+')
+  })
+
   it('does not show Magical Attacks for shooting-only weapons like Sword of Sorrow', () => {
     renderGameScreen(army)
     const combatPanel = getApp().querySelector('.border-wh-phase-combat\\/30')
