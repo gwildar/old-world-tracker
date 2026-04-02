@@ -235,7 +235,7 @@ function mergeStrength(baseS, weaponS) {
 
 function renderWeaponLine(initiative, ws, s, attacks, w, label, tags) {
   const displayS = mergeStrength(s, w.s)
-  return `<div class="text-xs">
+  return `<div class="text-xs mb-1">
     <span class="text-wh-phase-combat font-mono">I${initiative}</span>
     <span class="text-wh-phase-combat font-mono ml-1">A${attacks}</span>
     <span class="text-wh-muted font-mono ml-1">WS${ws}</span>
@@ -244,7 +244,7 @@ function renderWeaponLine(initiative, ws, s, attacks, w, label, tags) {
     <span class="text-wh-text ml-1">${w.name}</span>
     ${w.ap && w.ap !== '—' ? `<span class="text-wh-muted font-mono ml-1">AP${w.ap}</span>` : ''}
     ${tags || ''}
-    ${w.rules ? `<div class="text-wh-muted ml-1">${w.rules}</div>` : ''}
+    ${w.rules ? `<div class="text-wh-muted">${w.rules}</div>` : ''}
   </div>`
 }
 
