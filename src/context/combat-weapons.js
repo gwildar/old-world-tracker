@@ -616,16 +616,14 @@ export function renderCombatWeaponsContext(army) {
       <div class="space-y-2">
         ${rows.map(r => `
           <div class="p-2 rounded bg-wh-card">
-            <div class="flex items-center gap-2 flex-wrap">
-              <span class="text-wh-text font-semibold text-sm">${r.unitName}${r.mount ? ` (${r.mount})` : ''}${!r.merged && r.strength > 1 ? ` x${r.strength}` : ''}</span>
+            <div class="text-wh-text font-semibold text-sm">${r.unitName}${r.mount ? ` (${r.mount})` : ''}${!r.merged && r.strength > 1 ? ` x${r.strength}` : ''}</div>
+            <div class="flex items-center gap-2 flex-wrap mt-0.5">
               <span class="text-wh-muted font-mono text-xs">T:${r.t}</span>
               <span class="text-wh-muted font-mono text-xs">W:${r.w}</span>
-              <span class="ml-auto flex items-center gap-2">
-                ${r.as ? `<span class="text-wh-muted font-mono text-xs">AS:${r.as}</span>` : ''}
-                ${r.mr ? `<span class="text-wh-muted font-mono text-xs">MR:${r.mr}</span>` : ''}
-                ${r.ward ? `<span class="text-wh-muted font-mono text-xs">Ward:${r.ward}</span>` : ''}
-                ${r.regen ? `<span class="text-wh-muted font-mono text-xs">Regen:${r.regen}</span>` : ''}
-              </span>
+              ${r.as ? `<span class="text-wh-muted font-mono text-xs">AS:${r.as}</span>` : ''}
+              ${r.mr ? `<span class="text-wh-muted font-mono text-xs">MR:${r.mr}</span>` : ''}
+              ${r.ward ? `<span class="text-wh-muted font-mono text-xs">Ward:${r.ward}</span>` : ''}
+              ${r.regen ? `<span class="text-wh-muted font-mono text-xs">Regen:${r.regen}</span>` : ''}
             </div>
               ${r.singleUseItems.length > 0 ? `
                 <div class="mt-1 ml-2">
