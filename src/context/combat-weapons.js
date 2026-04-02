@@ -635,8 +635,12 @@ export function renderCombatResultContext(army) {
     const bonuses = []
     let total = 0
 
+    const hasCloseOrder = u.specialRules?.toLowerCase().includes('close order')
+    if (hasCloseOrder) { bonuses.push('Close Order +1'); total += 1 }
     if (u.hasStandard) { bonuses.push('Standard +1'); total += 1 }
     if (u.hasMusician) { bonuses.push('Musician') }
+
+    if (total === 0 && !u.hasMusician) continue
 
     entries.push({
       name: u.name, strength: u.strength,
@@ -656,7 +660,7 @@ export function renderCombatResultContext(army) {
 
   return `
     <div class="bg-wh-surface rounded-lg border border-wh-phase-combat/30 p-4 mb-4">
-      <h3 class="text-sm font-bold text-wh-phase-combat mb-3">Static Combat Result</h3>
+      <h3 class="text-sm font-bold text-wh-phase-combat mb-3">Static Combat Bonuses</h3>
       <div class="space-y-1">
         ${rows.map(r => `
           <div class="p-2 rounded bg-wh-card text-sm">

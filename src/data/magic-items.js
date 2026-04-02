@@ -1407,6 +1407,7 @@ export const MAGIC_ITEMS = [
     points: 50,
     effect: 'Full plate armour. The wearer gains Immune to Psychology and Magic Resistance (-2).',
     phases: ['combat', 'shooting'],
+    armourBase: 4,
   },
   {
     name: 'The Mask of the Furnace',
@@ -1601,6 +1602,7 @@ export const MAGIC_ITEMS = [
     effect: 'Light armour (6+). The wearer gains Regeneration (5+).',
     phases: ['combat', 'shooting'],
     regen: '5+',
+    armourBase: 6,
   },
   {
     name: 'Railarian\'s Mantle',
@@ -1608,6 +1610,7 @@ export const MAGIC_ITEMS = [
     points: 35,
     effect: 'Light armour (6+). When within 6" of a woodland terrain feature, the wearer gains a 4+ Ward save.',
     phases: ['combat', 'shooting'],
+    armourBase: 6,
   },
   {
     name: 'Cloak of Tumbling Leaves',
@@ -1615,6 +1618,7 @@ export const MAGIC_ITEMS = [
     points: 30,
     effect: 'Light armour. The wearer gains Fly (10) and Swiftstride. Cannot join a unit.',
     phases: ['passive'],
+    armourBase: 6,
   },
   {
     name: 'Glamourweave',
@@ -2012,6 +2016,7 @@ export const MAGIC_ITEMS = [
     points: 35,
     effect: 'Black Orc and Orc Bosses only (infantry, cavalry, or chariot). Full plate armour. +1 Toughness.',
     phases: ['combat', 'shooting'],
+    armourBase: 4,
   },
   {
     name: 'Armour of Mork',
@@ -2020,6 +2025,7 @@ export const MAGIC_ITEMS = [
     points: 30,
     effect: 'Heavy armour (5+). The wearer gains Magic Resistance (-2).',
     phases: ['combat', 'shooting'],
+    armourBase: 5,
   },
   {
     name: 'Spiteful Shield',
@@ -2300,6 +2306,7 @@ export const MAGIC_ITEMS = [
     points: 70,
     effect: 'Full plate armour (4+). During Combat, enemy models must re-roll successful To Hit rolls against the wearer.',
     phases: ['combat'],
+    armourBase: 4,
   },
   {
     name: 'Daemonic Platemail',
@@ -2307,6 +2314,7 @@ export const MAGIC_ITEMS = [
     points: 50,
     effect: 'Infantry or cavalry only. Full plate armour (4+). +1 Toughness and +1 Initiative.',
     phases: ['combat', 'shooting'],
+    armourBase: 4,
   },
   {
     name: 'Mighty Serpent\'s Scalemail',
@@ -2314,6 +2322,7 @@ export const MAGIC_ITEMS = [
     points: 40,
     effect: 'Wolves of the Sea only. Heavy armour (5+). The wearer gains Strike First.',
     phases: ['combat', 'shooting'],
+    armourBase: 5,
   },
   {
     name: 'Crimson Armour of Dargan',
@@ -2321,6 +2330,7 @@ export const MAGIC_ITEMS = [
     points: 40,
     effect: 'Infantry or cavalry only. Heavy armour (5+). Immune to Multiple Wounds (X); loses only a single Wound from such attacks.',
     phases: ['passive'],
+    armourBase: 5,
   },
   {
     name: 'Talisman of the Carrion Crow',
@@ -2636,6 +2646,7 @@ export const MAGIC_ITEMS = [
     effect: 'Heavy armour. 6+ Ward save. Immune to Killing Blow; if struck, may attempt armour and Regeneration saves normally, losing only a single Wound if unsaved.',
     phases: ['combat', 'shooting'],
     ward: '6+',
+    armourBase: 5,
   },
   {
     name: 'Shield of the Gorgon',
@@ -2651,6 +2662,7 @@ export const MAGIC_ITEMS = [
     effect: 'Light armour that may be worn by an Imperial Wizard without penalty. 5+ Ward save.',
     phases: ['combat', 'shooting'],
     ward: '5+',
+    armourBase: 6,
   },
   {
     name: 'Twice-Blessed Armour',
@@ -2659,6 +2671,7 @@ export const MAGIC_ITEMS = [
     effect: 'Full plate armour (4+). The wearer may cast Hammerhand (Lore of Battle Magic) as a Bound Spell with Power Level 2.',
     phases: ['combat', 'strategy'],
     subPhases: ['conjuration'],
+    armourBase: 4,
   },
   {
     name: 'The Griffon Helm',
@@ -2917,6 +2930,7 @@ export const MAGIC_ITEMS = [
     points: 40,
     effect: 'Infantry or cavalry only. Heavy armour (5+). Immune to Killing Blow; may make normal armour and Regeneration saves, losing only a single Wound if unsaved.',
     phases: ['combat'],
+    armourBase: 5,
   },
   {
     name: 'Armour of Caledor',
@@ -2925,6 +2939,7 @@ export const MAGIC_ITEMS = [
     effect: 'Full plate armour (4+). 5+ Ward save.',
     phases: ['combat', 'shooting'],
     ward: '5+',
+    armourBase: 4,
   },
   {
     name: 'The Golden Shield',
@@ -3258,6 +3273,7 @@ export const MAGIC_ITEMS = [
     effect: 'Full plate armour. A Wizard may equip without penalty. 5+ Ward save.',
     phases: ['combat', 'shooting'],
     ward: '5+',
+    armourBase: 4,
   },
   {
     name: 'Pelt of the Dark Young',
@@ -3275,6 +3291,7 @@ export const MAGIC_ITEMS = [
     effect: 'Heavy armour. A Wizard may equip without penalty. 5+ Ward save.',
     phases: ['combat', 'shooting'],
     ward: '5+',
+    armourBase: 5,
   },
   {
     name: 'The Blackened Plate',
@@ -3282,6 +3299,7 @@ export const MAGIC_ITEMS = [
     points: 25,
     effect: 'Full plate armour. 3+ Ward save against Flaming Attacks.',
     phases: ['combat', 'shooting'],
+    armourBase: 4,
   },
   {
     name: 'The Fur of Sharggu',
@@ -3917,6 +3935,7 @@ export const MAGIC_ITEMS = [
     effect: 'Heavy armour. May be purchased and worn by a Wizard even if they do not normally have the option to wear armour, with no casting penalty.',
     phases: ['passive'],
     extremely: true,
+    armourBase: 5,
   },
   {
     name: 'Cautious Shield',

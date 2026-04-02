@@ -174,10 +174,13 @@ export const PHASES = [
         rules: [
           'Each side totals combat result points:',
           '\u2022 Wounds caused (unsaved)',
+          '\u2022 Overkill caused (unsaved) max +5',
           '\u2022 Rank bonus (up to +3 for additional ranks)',
-          '\u2022 Standard bearer (+1)',
-          '\u2022 Flank or rear charge bonus',
-          '\u2022 High ground, outnumber, etc.',
+          '\u2022 Standard bearer +1, Battle Standard +1',
+          '\u2022 Flank +1, Rear +2 charge bonus',
+          '\u2022 High ground +1',
+          '\u2022 Close order +1',
+          '\u2022 Massed Infantry +1 if higher Unit Strength',
           'The side with the higher total wins the combat.',
         ],
 
