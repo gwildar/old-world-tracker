@@ -898,9 +898,10 @@ export const SPECIAL_RULES = [
       },
       {
         phaseId: 'movement',
+        subPhaseId: 'remaining-moves',
         opponentOnly: true,
         description:
-          '+1 to Dispel rolls. On any natural double (except double 1), the spell is unbound and the casting Wizard loses a Wound.',
+          '+1 to Dispel rolls vs Conveyance spells. On any natural double (except double 1), the spell is unbound and the casting Wizard loses a Wound.',
       },
       {
         phaseId: 'shooting',

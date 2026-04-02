@@ -389,11 +389,10 @@ const COMBAT_RELEVANT_RULES = [
   'beguiling aura', 'killing blow',
   'poisoned attacks', 'flaming attacks', 'immune to psychology',
   'stubborn', 'unbreakable', 'frenzy', 'hatred', 'eternal hatred',
-  'first charge', 'counter charge', 'impetuous',
+  'first charge', 'counter charge',
   'cleaving blow', 'multiple wounds', 'shield of the lady',
   'aura of the lady', 'living saints', 'murderous',
-  'elven reflexes', 'mighty constitution', 'valour of ages',
-  "knight's vow", "crusader's zeal",
+  'elven reflexes', 'mighty constitution', 'valour of ages'
 ]
 
 function extractCombatRules(unit) {
