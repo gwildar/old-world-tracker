@@ -424,17 +424,6 @@ export const SPECIAL_RULES = [
 
   // ─── Combat Phase ─────────────────────────────────────────────────
   {
-    name: 'Impact Hits',
-    phases: [
-      {
-        phaseId: 'combat',
-        subPhaseId: 'choose-fight',
-        description:
-          'If charged 3"+, auto-hit at unmodified S before challenges (step 1.1). Number of hits = X.',
-      },
-    ],
-  },
-  {
     name: 'Strike First',
     phases: [
       {

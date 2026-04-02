@@ -35,9 +35,9 @@ function calculateArmourSave(unit) {
   let best = null
   let mod = 0
 
-  // Base armour from armour list
+  // Base armour from armour list — strip (Scaly skin), *, etc. before matching
   for (const a of unit.armour) {
-    for (const part of a.split(',').map(s => s.trim().toLowerCase())) {
+    for (const part of a.split(',').map(s => s.trim().toLowerCase().replace(/\s*\([^)]*\)/g, '').replace(/\*$/, '').trim())) {
       if (ARMOUR_BASE[part] !== undefined) {
         const val = ARMOUR_BASE[part]
         if (best === null || val < best) best = val
@@ -62,6 +62,13 @@ function calculateArmourSave(unit) {
   if (armouredHide > 0) {
     const hideVal = 7 - armouredHide
     if (best === null || hideVal < best) best = hideVal
+  }
+
+  // Natural armour save from unit profile (e.g. Bastiladon 3+, Stegadon 4+)
+  const naturalAS = unit.stats?.[0]?.AS
+  if (naturalAS) {
+    const val = parseInt(naturalAS)
+    if (best === null || val < best) best = val
   }
 
   if (best === null) return null
@@ -263,6 +270,11 @@ function getChampionWeapons(unit) {
   return null
 }
 
+function findCrewProfiles(unit) {
+  if (!unit.stats?.[0]?.crewed || unit.stats.length < 2) return []
+  return unit.stats.slice(1).filter(s => s.A && s.A !== '-')
+}
+
 function findEmbeddedMount(unit) {
   if (!unit.stats || unit.stats.length < 2) return null
   // Look for a mount profile: T is "-" or "(+N)", Ld is "-", not the first line
@@ -281,7 +293,7 @@ const COMBAT_RELEVANT_RULES = [
   'beguiling aura', 'killing blow',
   'poisoned attacks', 'flaming attacks', 'immune to psychology',
   'stubborn', 'unbreakable', 'frenzy', 'hatred', 'eternal hatred',
-  'first charge', 'counter charge', 'impact hits',
+  'first charge', 'counter charge',
   'multiple wounds', 'regeneration', 'shield of the lady',
   'aura of the lady', 'living saints', 'murderous',
 ]
@@ -313,6 +325,12 @@ function detectStompFromRules(unit) {
   return match ? match[1] : null
 }
 
+function detectImpactHitsFromRules(unit) {
+  if (!unit.specialRules) return null
+  const match = unit.specialRules.match(/Impact Hits\s*\(([^)]+)\)/i)
+  return match ? match[1] : null
+}
+
 export function renderCombatWeaponsContext(army) {
   if (army.units.length === 0) return ''
 
@@ -330,10 +348,12 @@ export function renderCombatWeaponsContext(army) {
         riderWeapons: [HAND_WEAPON], riderA: '?',
         mountWeapons: [], mountA: null, mountS: null, mountI: null, mountWS: null, mountName: null,
         stomp: detectStompFromRules(u),
+        impactHits: detectImpactHitsFromRules(u),
         singleUseItems: suItems,
         itemNames: buildItemNames(u).filter(n => !suNames.has(n.toLowerCase())),
         riderTags: buildRiderTags(u),
         combatRules: extractCombatRules(u),
+        crew: [],
       })
       continue
     }
@@ -348,6 +368,9 @@ export function renderCombatWeaponsContext(army) {
     // Check for champion profile (non-character units only)
     const champion = u.category !== 'characters' ? findChampion(u) : null
     const championWeapons = champion ? getChampionWeapons(u) : null
+
+    // Check for crew profiles (monsters with crew)
+    const crew = findCrewProfiles(u)
 
     const baseT = parseInt(stats.T) || 0
     const baseW = parseInt(stats.W) || 0
@@ -418,6 +441,7 @@ export function renderCombatWeaponsContext(army) {
       mountName,
       mountArmourBane,
       stomp: mount?.stomp || mountStomp || detectStompFromRules(u),
+      impactHits: mount?.impactHits || embedded?.mountData?.impactHits || detectImpactHitsFromRules(u),
       singleUseItems: (() => { const items = detectSingleUseItems(u); return items })(),
       itemNames: (() => {
         const suItems = detectSingleUseItems(u)
@@ -426,6 +450,7 @@ export function renderCombatWeaponsContext(army) {
       })(),
       riderTags: buildRiderTags(u),
       combatRules: extractCombatRules(u),
+      crew: crew.map(c => ({ name: c.Name, i: c.I, ws: c.WS, s: c.S, a: c.A })),
       champion: champion ? {
         name: champion.Name,
         i: champion.I || riderI,
@@ -479,10 +504,11 @@ export function renderCombatWeaponsContext(army) {
               <div class="mt-1 ml-2 space-y-0.5">
                 ${r.champion ? r.champion.weapons.map(w => renderWeaponLine(r.champion.i, r.champion.ws, r.champion.s, r.champion.a, w, r.champion.name, r.riderTags)).join('') : ''}
                 ${r.riderWeapons.map(w => renderWeaponLine(r.riderI, r.riderWS, r.riderS, r.riderA, w, r.riderName, r.riderTags)).join('')}
+                ${r.crew.map(c => renderWeaponLine(c.i, c.ws, c.s, c.a, HAND_WEAPON, c.name)).join('')}
                 ${r.mountWeapons.length > 0
                   ? renderMountWeapons(r.mountWeapons, r.mountA, r.mountS, r.mountI || r.riderI, r.mountWS || r.riderWS)
                   : r.mountA ? renderWeaponLine(r.mountI || r.riderI, r.mountWS || r.riderWS, r.mountS, r.mountA, { name: r.mountName || 'Mount', s: '', ap: '—', rules: r.mountArmourBane ? `Armour Bane (${r.mountArmourBane})` : '' }) : ''}
-                ${r.stomp ? `<div class="text-xs"><span class="text-wh-phase-combat">\u{1F9B6} Stomp ${r.stomp}</span></div>` : ''}
+                ${r.stomp || r.impactHits ? `<div class="text-xs text-wh-phase-combat">${r.stomp ? `\u{1F9B6} Stomp ${r.stomp}` : ''}${r.stomp && r.impactHits ? ' | ' : ''}${r.impactHits ? `\u{1F4A5} Impact ${r.impactHits}` : ''}</div>` : ''}
                 ${r.itemNames.length > 0 ? `<div class="text-xs text-wh-muted mt-0.5">${r.itemNames.join(', ')}</div>` : ''}
                 ${r.combatRules.length > 0 ? `<div class="text-xs text-wh-accent mt-0.5">${r.combatRules.join(', ')}</div>` : ''}
               </div>

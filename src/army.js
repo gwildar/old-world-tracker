@@ -179,15 +179,21 @@ function parseUnit(raw, category) {
     unit.stats = raw.profile.stats
   } else {
     const baseId = (raw.id || '').split('.')[0]
-    if (UNIT_STATS[baseId]) {
-      unit.stats = UNIT_STATS[baseId]
-    } else {
-      // Fallback: try name_en as slug (handles OWB ID typos)
-      const nameSlug = (raw.name_en || '').toLowerCase().replace(/\s+/g, '-')
-      if (UNIT_STATS[nameSlug]) {
-        unit.stats = UNIT_STATS[nameSlug]
-      }
+    const lookup = UNIT_STATS[baseId]
+      || UNIT_STATS[baseId.replace(/s$/, '')]
+      || UNIT_STATS[(raw.name_en || '').toLowerCase().replace(/\s*\{[^}]*\}/g, '').replace(/\s+/g, '-').trim()]
+    if (lookup) {
+      unit.stats = lookup
     }
+  }
+
+  // Display name: custom name > stats name (singular) > cleaned name_en
+  if (raw.name) {
+    unit.name = raw.name
+  } else if (unit.stats?.[0]?.Name) {
+    unit.name = unit.stats[0].Name
+  } else {
+    unit.name = (raw.name_en || 'Unknown').replace(/\s*\{[^}]*\}/g, '').trim()
   }
 
   // Detachments

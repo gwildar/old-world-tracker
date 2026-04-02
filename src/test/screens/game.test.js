@@ -125,7 +125,7 @@ describe('Shooting phase with Bretonnia charge army', () => {
   it('shows merged squires with BS from rules-index', () => {
     renderGameScreen(army)
     const text = getApp().textContent
-    expect(text).toContain('Squires')
+    expect(text).toContain('Squire')
     expect(text).toContain('BS3')
     expect(text).toContain('Longbow')
   })
@@ -134,7 +134,7 @@ describe('Shooting phase with Bretonnia charge army', () => {
     renderGameScreen(army)
     const text = getApp().textContent
     // 3 squire units merged — should not show x10 or x30
-    expect(text).not.toMatch(/Squires\s*x\d/)
+    expect(text).not.toMatch(/Squire\s*x\d/)
   })
 })
 
