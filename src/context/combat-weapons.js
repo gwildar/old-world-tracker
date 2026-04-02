@@ -57,6 +57,13 @@ function calculateArmourSave(unit) {
     }
   }
 
+  // Armoured Hide gives base armour of 7 - X (models without armour treated as 7+)
+  const armouredHide = detectArmouredHide(unit)
+  if (armouredHide > 0) {
+    const hideVal = 7 - armouredHide
+    if (best === null || hideVal < best) best = hideVal
+  }
+
   if (best === null) return null
 
   // Shield from equipment or options
@@ -270,6 +277,42 @@ function findEmbeddedMount(unit) {
   return null
 }
 
+const COMBAT_RELEVANT_RULES = [
+  'beguiling aura', 'killing blow',
+  'poisoned attacks', 'flaming attacks', 'immune to psychology',
+  'stubborn', 'unbreakable', 'frenzy', 'hatred', 'eternal hatred',
+  'first charge', 'counter charge', 'impact hits',
+  'multiple wounds', 'regeneration', 'shield of the lady',
+  'aura of the lady', 'living saints', 'murderous',
+]
+
+function extractCombatRules(unit) {
+  if (!unit.specialRules) return []
+  const parts = unit.specialRules.split(',').map(s => s.trim()).filter(Boolean)
+  return parts.filter(rule => {
+    const lower = rule.toLowerCase().replace(/\s*\([^)]*\)/g, '').trim()
+    return COMBAT_RELEVANT_RULES.some(cr => lower.includes(cr))
+  })
+}
+
+function detectMagicResistance(unit) {
+  if (!unit.specialRules) return null
+  const match = unit.specialRules.match(/Magic Resistance\s*\((-?\d+)\)/i)
+  return match ? match[1] : null
+}
+
+function detectArmouredHide(unit) {
+  if (!unit.specialRules) return 0
+  const match = unit.specialRules.match(/Armoured Hide\s*\((\d+)\)/i)
+  return match ? parseInt(match[1]) : 0
+}
+
+function detectStompFromRules(unit) {
+  if (!unit.specialRules) return null
+  const match = unit.specialRules.match(/Stomp Attacks\s*\(([^)]+)\)/i)
+  return match ? match[1] : null
+}
+
 export function renderCombatWeaponsContext(army) {
   if (army.units.length === 0) return ''
 
@@ -278,15 +321,19 @@ export function renderCombatWeaponsContext(army) {
   for (const u of army.units) {
     const stats = u.stats?.[0]
     if (!stats) {
+      const suItems = detectSingleUseItems(u)
+      const suNames = new Set(suItems.map(i => i.name.toLowerCase()))
       entries.push({
         unitName: u.name, strength: u.strength, mount: null,
         riderI: '?', riderWS: '?', riderS: '?', t: '?', w: '?',
-        as: calculateArmourSave(u), ward: detectWard(u), regen: detectRegen(u), iNum: 0,
+        as: calculateArmourSave(u), mr: detectMagicResistance(u), ward: detectWard(u), regen: detectRegen(u), iNum: 0,
         riderWeapons: [HAND_WEAPON], riderA: '?',
-        mountWeapons: [], mountA: null, mountS: null, mountI: null, mountWS: null, mountName: null, stomp: null,
-        singleUseItems: detectSingleUseItems(u),
-        itemNames: buildItemNames(u),
+        mountWeapons: [], mountA: null, mountS: null, mountI: null, mountWS: null, mountName: null,
+        stomp: detectStompFromRules(u),
+        singleUseItems: suItems,
+        itemNames: buildItemNames(u).filter(n => !suNames.has(n.toLowerCase())),
         riderTags: buildRiderTags(u),
+        combatRules: extractCombatRules(u),
       })
       continue
     }
@@ -357,6 +404,7 @@ export function renderCombatWeaponsContext(army) {
       t: isRiddenMonster ? `${baseT + mount.tBonus}` : stats.T || '?',
       w: isRiddenMonster ? `${baseW + mount.wBonus}` : stats.W || '?',
       as: calculateArmourSave(u),
+      mr: detectMagicResistance(u),
       ward: detectWard(u),
       regen: detectRegen(u),
       iNum: Math.max(parseInt(riderI) || 0, mountI || 0),
@@ -369,10 +417,15 @@ export function renderCombatWeaponsContext(army) {
       mountWS,
       mountName,
       mountArmourBane,
-      stomp: mount?.stomp || mountStomp || null,
-      singleUseItems: detectSingleUseItems(u),
-      itemNames: buildItemNames(u),
+      stomp: mount?.stomp || mountStomp || detectStompFromRules(u),
+      singleUseItems: (() => { const items = detectSingleUseItems(u); return items })(),
+      itemNames: (() => {
+        const suItems = detectSingleUseItems(u)
+        const suNames = new Set(suItems.map(i => i.name.toLowerCase()))
+        return buildItemNames(u).filter(n => !suNames.has(n.toLowerCase()))
+      })(),
       riderTags: buildRiderTags(u),
+      combatRules: extractCombatRules(u),
       champion: champion ? {
         name: champion.Name,
         i: champion.I || riderI,
@@ -410,10 +463,13 @@ export function renderCombatWeaponsContext(army) {
             <div class="flex items-center gap-2 flex-wrap">
               <span class="text-wh-text font-semibold text-sm">${r.unitName}${r.mount ? ` (${r.mount})` : ''}${!r.merged && r.strength > 1 ? ` x${r.strength}` : ''}</span>
               <span class="text-wh-muted font-mono text-xs">T:${r.t}</span>
-              <span class="text-wh-muted font-mono text-xs">W${r.w}</span>
-              ${r.as ? `<span class="text-wh-muted font-mono text-xs">AS:${r.as}</span>` : ''}
-              ${r.ward ? `<span class="text-wh-muted font-mono text-xs">Ward:${r.ward}</span>` : ''}
-              ${r.regen ? `<span class="text-wh-muted font-mono text-xs">Regen:${r.regen}</span>` : ''}
+              <span class="text-wh-muted font-mono text-xs">W:${r.w}</span>
+              <span class="ml-auto flex items-center gap-2">
+                ${r.as ? `<span class="text-wh-muted font-mono text-xs">AS:${r.as}</span>` : ''}
+                ${r.mr ? `<span class="text-wh-muted font-mono text-xs">MR:${r.mr}</span>` : ''}
+                ${r.ward ? `<span class="text-wh-muted font-mono text-xs">Ward:${r.ward}</span>` : ''}
+                ${r.regen ? `<span class="text-wh-muted font-mono text-xs">Regen:${r.regen}</span>` : ''}
+              </span>
             </div>
               ${r.singleUseItems.length > 0 ? `
                 <div class="mt-1 ml-2">
@@ -426,8 +482,9 @@ export function renderCombatWeaponsContext(army) {
                 ${r.mountWeapons.length > 0
                   ? renderMountWeapons(r.mountWeapons, r.mountA, r.mountS, r.mountI || r.riderI, r.mountWS || r.riderWS)
                   : r.mountA ? renderWeaponLine(r.mountI || r.riderI, r.mountWS || r.riderWS, r.mountS, r.mountA, { name: r.mountName || 'Mount', s: '', ap: '—', rules: r.mountArmourBane ? `Armour Bane (${r.mountArmourBane})` : '' }) : ''}
-                ${r.stomp ? `<div class="text-xs"><span class="text-wh-text">Stomp Attacks ${r.stomp}</span></div>` : ''}
+                ${r.stomp ? `<div class="text-xs"><span class="text-wh-phase-combat">\u{1F9B6} Stomp ${r.stomp}</span></div>` : ''}
                 ${r.itemNames.length > 0 ? `<div class="text-xs text-wh-muted mt-0.5">${r.itemNames.join(', ')}</div>` : ''}
+                ${r.combatRules.length > 0 ? `<div class="text-xs text-wh-accent mt-0.5">${r.combatRules.join(', ')}</div>` : ''}
               </div>
           </div>
         `).join('')}

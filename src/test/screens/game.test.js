@@ -160,7 +160,7 @@ describe('Combat phase with Bretonnia charge army', () => {
     const text = getApp().textContent
     // Baron on Hippogryph: W3 + (+3) = W6, T4 + (+1) = T5
     expect(text).toContain('(Hippogryph)')
-    expect(text).toContain('W6')
+    expect(text).toContain('W:6')
     expect(text).toContain('T:5')
   })
 

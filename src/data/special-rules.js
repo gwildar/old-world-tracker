@@ -86,6 +86,7 @@ export const SPECIAL_RULES = [
       {
         phaseId: 'strategy',
         subPhaseId: 'command',
+        yourTurnOnly: true,
         description:
           'During Command sub-phase, a non-engaged character nominates a fleeing friendly unit within Command range to take a Rally test. If failed, the unit may still try again in the Rally sub-phase.',
       },
@@ -122,6 +123,7 @@ export const SPECIAL_RULES = [
       {
         phaseId: 'movement',
         subPhaseId: 'declare-charges',
+        yourTurnOnly: true,
         description:
           'If able to charge, must take Ld test. If failed, must declare a charge.',
       },
@@ -215,12 +217,14 @@ export const SPECIAL_RULES = [
       {
         phaseId: 'movement',
         subPhaseId: 'remaining-moves',
+        yourTurnOnly: true,
         description:
           'Move using Fly (X) characteristic, passing freely over models/terrain. Can march within 8" of enemy without Ld test. Must start and end on ground. Cannot join units without Fly.',
       },
       {
         phaseId: 'movement',
         subPhaseId: 'charge-moves',
+        yourTurnOnly: true,
         description:
           'May charge using Fly movement, passing over intervening models and terrain.',
       },
@@ -243,6 +247,7 @@ export const SPECIAL_RULES = [
       {
         phaseId: 'movement',
         subPhaseId: 'remaining-moves',
+        yourTurnOnly: true,
         description:
           'No movement penalty for difficult/dangerous terrain. Re-roll 1s on Dangerous Terrain tests.',
       },
