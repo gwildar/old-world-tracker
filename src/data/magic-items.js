@@ -802,7 +802,8 @@ export const MAGIC_ITEMS = [
     type: 'enchanted-item',
     points: 0,
     effect: 'Within the bearer\'s Command range, enemy characters attempting to use special rules or magic items requiring a Leadership test suffer -2 to Ld (min 2).',
-    phases: ['passive'],
+    phases: ['strategy', 'combat'],
+    opponentOnly: true,
   },
   {
     name: 'Banner of the Lady\'s Grace',

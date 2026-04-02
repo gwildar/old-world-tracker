@@ -152,7 +152,7 @@ describe('Combat phase with Bretonnia charge army', () => {
     const text = getApp().textContent
     expect(text).toContain('Combat Units')
     expect(text).toContain('I5')
-    expect(text).toContain('T4')
+    expect(text).toContain('T:4')
   })
 
   it('shows ridden monster with combined wounds and mount name', () => {
@@ -161,7 +161,7 @@ describe('Combat phase with Bretonnia charge army', () => {
     // Baron on Hippogryph: W3 + (+3) = W6, T4 + (+1) = T5
     expect(text).toContain('(Hippogryph)')
     expect(text).toContain('W6')
-    expect(text).toContain('T5')
+    expect(text).toContain('T:5')
   })
 
   it('shows attacks next to weapon line', () => {
@@ -175,7 +175,7 @@ describe('Combat phase with Bretonnia charge army', () => {
     renderGameScreen(army)
     // Baron: heavy armour (5+) + shield (-1) + barding (-1) = 3+
     const text = getApp().textContent
-    expect(text).toContain('AS3+')
+    expect(text).toContain('AS:3+')
   })
 
   it('does not show unit count for merged Knights Errant', () => {

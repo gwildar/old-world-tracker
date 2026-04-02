@@ -1,6 +1,9 @@
 import { LORES } from './data/spells.js'
 import { findMount } from './data/mounts.js'
 import { UNIT_STATS } from './data/units.js'
+import { MAGIC_ITEMS } from './data/magic-items.js'
+
+const MAGIC_ITEM_NAMES = new Set(MAGIC_ITEMS.map(i => i.name.toLowerCase()))
 
 const UNIT_CATEGORIES = ['characters', 'core', 'special', 'rare', 'mercenaries', 'allies', 'lords', 'heroes']
 
@@ -74,6 +77,14 @@ function parseUnit(raw, category) {
     const activeOpts = raw.options.filter(o => o.active)
     for (const opt of activeOpts) {
       unit.equipment.push(opt.name_en)
+    }
+  }
+
+  // Detect magic items embedded in equipment strings (named characters)
+  const equipParts = unit.equipment.flatMap(e => e.split(',').map(s => s.trim()))
+  for (const part of equipParts) {
+    if (MAGIC_ITEM_NAMES.has(part.toLowerCase()) && !unit.magicItems.includes(part)) {
+      unit.magicItems.push(part)
     }
   }
 

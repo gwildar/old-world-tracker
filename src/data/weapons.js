@@ -75,10 +75,10 @@ export const COMBAT_WEAPONS = {
   'flails': { name: 'Flail', s: 'S+2', ap: '-2', rules: 'Armour Bane (1), Requires Two Hands. S and Armour Bane only vs charged enemies.' },
   'morning star': { name: 'Morning Star', s: 'S+1', ap: '-1', rules: 'Armour Bane (1). S and Armour Bane only vs charged enemies.' },
   'morning stars': { name: 'Morning Star', s: 'S+1', ap: '-1', rules: 'Armour Bane (1). S and Armour Bane only vs charged enemies.' },
-  'lance': { name: 'Lance', s: 'S+2', ap: '-2', rules: 'Armour Bane (1). Cavalry/monster only, charge turn only.' },
-  'lances': { name: 'Lance', s: 'S+2', ap: '-2', rules: 'Armour Bane (1). Cavalry/monster only, charge turn only.' },
-  'cavalry spear': { name: 'Cavalry Spear', s: 'S+1', ap: '-1', rules: 'Fight In Extra Rank. Cavalry/monster/chariot only, charge turn only.' },
-  'cavalry spears': { name: 'Cavalry Spear', s: 'S+1', ap: '-1', rules: 'Fight In Extra Rank. Cavalry/monster/chariot only, charge turn only.' },
+  'lance': { name: 'Lance', s: 'S+2', ap: '-2', rules: 'Armour Bane (1). Charge turn only.' },
+  'lances': { name: 'Lance', s: 'S+2', ap: '-2', rules: 'Armour Bane (1). Charge turn only.' },
+  'cavalry spear': { name: 'Cavalry Spear', s: 'S+1', ap: '-1', rules: 'Fight In Extra Rank. Charge turn only.' },
+  'cavalry spears': { name: 'Cavalry Spear', s: 'S+1', ap: '-1', rules: 'Fight In Extra Rank. Charge turn only.' },
   'thrusting spear': { name: 'Thrusting Spear', s: 'S', ap: '—', rules: 'Fight In Extra Rank. Infantry only. +1 Initiative when charged in front arc.' },
   'thrusting spears': { name: 'Thrusting Spear', s: 'S', ap: '—', rules: 'Fight In Extra Rank. Infantry only. +1 Initiative when charged in front arc.' },
   'throwing spear': { name: 'Throwing Spear', s: 'S', ap: '—', rules: 'Fight In Extra Rank. Charge turn only, use hand weapon otherwise.' },
@@ -105,7 +105,7 @@ export const COMBAT_WEAPONS = {
   'wicked claws': { name: 'Wicked Claws', s: 'S', ap: '-2', rules: '' },
 
   // ─── Mount Weapons ───────────────────────────────────────────────────
-  'serrated maw': { name: 'Serrated Maw', s: 'S', ap: '—', rules: 'Armour Bane (2), Multiple Wounds (2). Must make one attack per turn with this weapon.' },
+  'serrated maw': { name: 'Serrated Maw', s: 'S', ap: '—', rules: 'Armour Bane (2), Multiple Wounds (2).', reservedAttacks: 1 },
   'mighty antlers': { name: 'Mighty Antlers', s: 'S', ap: '-1', rules: 'Armour Bane (1)' },
   'lashing talons': { name: 'Lashing Talons', s: 'S', ap: '-1', rules: 'Armour Bane (1)' },
   'serpentine tail': { name: 'Serpentine Tail', s: 'S+2', ap: '-2', rules: 'Strike Last. Must make one attack per turn with this weapon.' },

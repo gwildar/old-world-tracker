@@ -655,17 +655,6 @@ export const SPECIAL_RULES = [
 
   // ─── Shooting & Combat (wound/save modifiers) ────────────────────
   {
-    name: 'Armour Bane',
-    phases: [
-      {
-        phaseId: 'combat',
-        subPhaseId: 'choose-fight',
-        description:
-          'Natural 6 To Wound: AP improves by X.',
-      },
-    ],
-  },
-  {
     name: 'Poisoned Attacks',
     phases: [
       {

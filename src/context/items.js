@@ -11,7 +11,9 @@ export function renderMagicItemsContext(army, phaseId, subPhaseId) {
       if (item) {
         if (!item.phases.includes(phaseId)) continue
         if (subPhaseId && item.subPhases && !item.subPhases.includes(subPhaseId)) continue
+        if (subPhaseId && item.opponentOnly) continue
         if (phaseId === 'shooting' && item.type !== 'weapon') continue
+        if (subPhaseId === 'combat-result' && item.type !== 'banner') continue
         const key = item.name
         if (!grouped[key]) grouped[key] = { item, units: [] }
         if (!grouped[key].units.includes(unit.name)) grouped[key].units.push(unit.name)
