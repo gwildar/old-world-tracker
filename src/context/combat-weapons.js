@@ -243,8 +243,8 @@ function renderWeaponLine(initiative, ws, s, attacks, w, label, tags) {
     ${label ? `<span class="text-wh-accent text-xs ml-1">${label}</span> —` : ''}
     <span class="text-wh-text ml-1">${w.name}</span>
     ${w.ap && w.ap !== '—' ? `<span class="text-wh-muted font-mono ml-1">AP${w.ap}</span>` : ''}
-    ${w.rules ? `<span class="text-wh-muted ml-1">${w.rules}</span>` : ''}
     ${tags || ''}
+    ${w.rules ? `<div class="text-wh-muted ml-1">${w.rules}</div>` : ''}
   </div>`
 }
 
@@ -630,7 +630,7 @@ export function renderCombatWeaponsContext(army) {
                   ${r.singleUseItems.map(item => `<div class="text-xs"><span class="text-wh-accent">\u{1F6E1} ${item.name}</span> <span class="text-wh-muted">(single use)</span></div>`).join('')}
                 </div>
               ` : ''}
-              <div class="mt-1 ml-2 space-y-0.5">
+              <div class="mt-1">
                 ${r.champion ? r.champion.weapons.map(w => renderWeaponLine(r.champion.i, r.champion.ws, r.champion.s, r.champion.a, w, r.champion.name, r.champion.tags !== null ? r.champion.tags : r.riderTags)).join('') : ''}
                 ${r.riderWeapons.map(w => renderWeaponLine(r.riderI, r.riderWS, r.riderS, r.riderA, w, r.riderName, r.riderTags)).join('')}
                 ${r.crew.map(c => renderWeaponLine(c.i, c.ws, c.s, c.a, HAND_WEAPON, c.name)).join('')}
