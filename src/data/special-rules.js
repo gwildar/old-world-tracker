@@ -647,6 +647,18 @@ export const SPECIAL_RULES = [
     ],
   },
 
+  {
+    name: 'Wailing Dirge',
+    phases: [
+      {
+        phaseId: 'combat',
+        subPhaseId: 'choose-fight',
+        description:
+          'Range 8". Ld test at -2. Wounds = margin of failure. No armour/Regen saves. Can target units in combat.',
+      },
+    ],
+  },
+
   // ─── Shooting & Combat (wound/save modifiers) ────────────────────
   {
     name: 'Poisoned Attacks',
@@ -656,6 +668,12 @@ export const SPECIAL_RULES = [
         subPhaseId: 'roll-to-hit',
         description:
           'Natural 6 To Hit: +2 To Wound modifier. Cannot use if To Hit needs 7+ or hits automatically. Does not apply to spells or magic weapons.',
+      },
+      {
+        phaseId: 'shooting',
+        subPhaseId: 'wound-and-save',
+        description:
+          'Natural 6 To Hit: +2 To Wound modifier. Does not apply to spells or magic weapons.',
       },
       {
         phaseId: 'combat',

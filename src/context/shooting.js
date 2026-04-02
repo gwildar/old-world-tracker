@@ -30,9 +30,9 @@ export function renderShootingContext(army) {
       }
     }
 
-    // Check equipment — split comma-separated strings and match all weapons
+    // Check equipment and special rules — split comma-separated strings and match all weapons
     const matchedWeapons = new Set()
-    const allParts = u.equipment.flatMap(g => g.split(',').map(s => s.trim().toLowerCase()))
+    const allParts = [...u.equipment, u.specialRules || ''].flatMap(g => g.split(',').map(s => s.trim().toLowerCase()))
     for (const part of allParts) {
       for (const [key, weapon] of Object.entries(RANGED_WEAPONS)) {
         if (part.includes(key) && !matchedWeapons.has(weapon.name)) {

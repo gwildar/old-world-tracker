@@ -219,3 +219,28 @@ describe('Combat phase with Bretonnia charge army', () => {
     expect(text).toContain('Lance')
   })
 })
+
+describe('Vampire Counts army', () => {
+  let army
+
+  beforeEach(() => {
+    army = loadArmy('vampire-counts')
+    startGame(army)
+  })
+
+  it('shows Blood Knights with embedded Nightmare mount attacks', () => {
+    savePhaseIndex(12) // choose-fight
+    renderGameScreen(army)
+    const text = getApp().textContent
+    expect(text).toContain('Nightmare')
+    expect(text).toContain('Blood Knight')
+  })
+
+  it('shows Wailing Dirge in shooting phase', () => {
+    savePhaseIndex(8) // choose-target
+    renderGameScreen(army)
+    const text = getApp().textContent
+    expect(text).toContain('Wailing Dirge')
+    expect(text).toContain('8"')
+  })
+})

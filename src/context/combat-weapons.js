@@ -110,9 +110,36 @@ function detectRegen(unit) {
 }
 
 
+function findMagicWeapon(unit) {
+  // Check unit's magic items for a combat magic weapon with s/ap fields
+  for (const itemName of unit.magicItems) {
+    // Skip champion weapons (handled separately)
+    if (itemName.includes('(champion)') || itemName.includes('(Champion)')) continue
+    const mi = MAGIC_ITEM_MAP[normaliseItemName(itemName)]
+    if (mi?.type === 'weapon' && mi.s && mi.phases?.includes('combat')) {
+      return {
+        name: mi.name,
+        s: mi.s,
+        ap: mi.ap || '—',
+        rules: mi.effect || '',
+        attacks: mi.attacks || null,
+      }
+    }
+  }
+  return null
+}
+
 function matchRiderWeapons(unit) {
   const weapons = []
   const matched = new Set()
+
+  // Magic weapon replaces mundane weapons
+  const magicWeapon = findMagicWeapon(unit)
+  if (magicWeapon) {
+    weapons.push(magicWeapon)
+    matched.add(magicWeapon.name)
+    return { weapons, matched }
+  }
 
   const parts = unit.equipment.flatMap(g => g.split(',').map(s => s.trim()))
   for (const part of parts) {
@@ -228,7 +255,7 @@ function hasPoisonedAttacks(unit) {
 function buildRiderTags(unit) {
   const tags = []
   if (hasRiderMagicalAttacks(unit)) tags.push('<span class="text-wh-phase-combat font-mono ml-1">\u2728 Magical</span>')
-  if (hasFuriousCharge(unit)) tags.push('<span class="text-wh-phase-combat font-mono ml-1">\u{1F4A5} +1A</span>')
+  if (hasFuriousCharge(unit)) tags.push('<span class="text-wh-phase-combat font-mono ml-1">\u{1F4A5} +1A furious</span>')
   if (hasPoisonedAttacks(unit)) tags.push('<span class="text-wh-phase-combat font-mono ml-1">\u2620\uFE0F Poison</span>')
   return tags.join('')
 }
@@ -272,12 +299,16 @@ function getChampionWeapons(unit) {
   // Format in magicItems: "Spelleater Axe (Dread Knight (champion))"
   for (const itemName of unit.magicItems) {
     if (!itemName.includes('(champion)')) continue
-    // Extract the weapon name before the parenthetical
     const baseName = itemName.replace(/\s*\([^)]*\)$/, '').replace(/\s*\([^)]*\)$/, '')
     const mi = MAGIC_ITEM_MAP[normaliseItemName(baseName)]
     if (mi?.type === 'weapon') {
-      // Create a weapon-like object from the magic item
-      return [{ name: mi.name, s: '', ap: '', rules: mi.effect || '' }]
+      return [{
+        name: mi.name,
+        s: mi.s || 'S',
+        ap: mi.ap || '—',
+        rules: mi.effect || '',
+        attacks: mi.attacks || null,
+      }]
     }
   }
   return null
@@ -521,7 +552,7 @@ export function renderCombatWeaponsContext(army) {
                 ${r.mountWeapons.length > 0
                   ? renderMountWeapons(r.mountWeapons, r.mountA, r.mountS, r.mountI || r.riderI, r.mountWS || r.riderWS)
                   : r.mountA ? renderWeaponLine(r.mountI || r.riderI, r.mountWS || r.riderWS, r.mountS, r.mountA, { name: r.mountName || 'Mount', s: '', ap: '—', rules: r.mountArmourBane ? `Armour Bane (${r.mountArmourBane})` : '' }) : ''}
-                ${r.stomp || r.impactHits ? `<div class="text-xs text-wh-phase-combat">${r.stomp ? `\u{1F9B6} Stomp ${r.stomp}` : ''}${r.stomp && r.impactHits ? ' | ' : ''}${r.impactHits ? `\u{1F4A5} Impact ${r.impactHits}` : ''}</div>` : ''}
+                ${r.stomp || r.impactHits ? `<div class="text-xs text-wh-phase-combat">${r.impactHits ? `\u{1F4A5} Impact ${r.impactHits}` : ''}${r.stomp && r.impactHits ? ' | ' : ''}${r.stomp ? `\u{1F9B6} Stomp ${r.stomp}` : ''}</div>` : ''}
                 ${r.itemNames.length > 0 ? `<div class="text-xs text-wh-muted mt-0.5">${r.itemNames.join(', ')}</div>` : ''}
                 ${r.combatRules.length > 0 ? `<div class="text-xs text-wh-accent mt-0.5">${r.combatRules.join(', ')}</div>` : ''}
               </div>

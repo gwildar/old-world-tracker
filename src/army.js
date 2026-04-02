@@ -273,10 +273,10 @@ export function getCasters(army) {
 
 export function getShootingUnits(army) {
   if (!army) return []
-  const missileKeywords = ['bow', 'crossbow', 'handgun', 'pistol', 'javelin', 'sling', 'throwing', 'bolt thrower', 'cannon', 'mortar', 'catapult', 'trebuchet', 'gun', 'rifle', 'petrifying gaze', 'gaze', 'bombard', 'harpoon', 'breath', 'engine']
+  const missileKeywords = ['bow', 'crossbow', 'handgun', 'pistol', 'javelin', 'sling', 'throwing', 'bolt thrower', 'cannon', 'mortar', 'catapult', 'trebuchet', 'gun', 'rifle', 'petrifying gaze', 'gaze', 'bombard', 'harpoon', 'breath', 'engine', 'wailing']
   return army.units.filter(u => {
-    const allGear = [...u.equipment, ...u.armour].map(e => e.toLowerCase())
-    const hasRangedGear = allGear.some(g => missileKeywords.some(k => g.includes(k)))
+    const allText = [...u.equipment, ...u.armour, u.specialRules || ''].map(e => e.toLowerCase())
+    const hasRangedGear = allText.some(g => missileKeywords.some(k => g.includes(k)))
     const mountData = u.mount ? findMount(u.mount) : null
     const hasBreath = mountData?.breath != null
     return hasRangedGear || hasBreath
