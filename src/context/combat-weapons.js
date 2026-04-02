@@ -211,7 +211,7 @@ function renderWeaponLine(initiative, ws, s, attacks, w, label, tags) {
     <span class="text-wh-muted font-mono ml-1">S${displayS}</span>
     ${label ? `<span class="text-wh-accent text-xs ml-1">${label}</span> —` : ''}
     <span class="text-wh-text ml-1">${w.name}</span>
-    ${w.ap && w.ap !== '—' ? `<span class="text-wh-muted font-mono ml-1">AP ${w.ap}</span>` : ''}
+    ${w.ap && w.ap !== '—' ? `<span class="text-wh-muted font-mono ml-1">AP${w.ap}</span>` : ''}
     ${w.rules ? `<span class="text-wh-muted ml-1">${w.rules}</span>` : ''}
     ${tags || ''}
   </div>`
@@ -463,6 +463,15 @@ export function renderCombatWeaponsContext(army) {
       mountName = u.mount
       mountStomp = mount.stomp
       mountArmourBane = mount.armourBane || null
+    } else if (mount && mount.a) {
+      // Mount exists but doesn't grant T/W (e.g. howdah mounts like Ancient Stegadon)
+      mountI = mount.i
+      mountWS = mount.ws
+      mountA = mount.a
+      mountS = mount.s
+      mountName = u.mount
+      mountStomp = mount.stomp
+      mountArmourBane = mount.armourBane || null
     } else if (hasEmbeddedMount) {
       const es = embedded.statLine
       mountI = parseInt(es.I) || null
@@ -477,7 +486,7 @@ export function renderCombatWeaponsContext(army) {
     entries.push({
       unitName: u.name,
       strength: u.strength,
-      mount: isRiddenMonster ? u.mount : null,
+      mount: (isRiddenMonster || (mount && mount.a)) ? u.mount : null,
       riderI,
       riderWS,
       riderS,
