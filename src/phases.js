@@ -107,35 +107,14 @@ export const PHASES = [
     colour: 'wh-phase-shooting',
     subPhases: [
       {
-        id: 'choose-target',
-        name: 'Choose Unit & Declare Target',
+        id: 'shoot',
+        name: 'Shoot',
         rules: [
-          'Select a unit that is able to shoot.',
-          'Check range and line of sight to potential targets, then declare the target.',
-          'Cannot shoot: units that charged or marched, units engaged in combat, fleeing units.',
+          'Select a shooting unit, check range and line of sight, declare target.',
+          'Cannot shoot: units that charged or marched, engaged in combat, or fleeing.',
+          'Roll To Hit (BS-based). Modifiers: long range (\u22121), moving (\u22121), cover, etc. Natural 1 misses, natural 6 hits.',
+          'Roll To Wound (S vs T). Defender makes Armour Save (modified by AP), then Ward save.',
           'Magic Missiles are also cast during this phase.',
-        ],
-        showShooting: true,
-      },
-      {
-        id: 'roll-to-hit',
-        name: 'Roll To Hit',
-        rules: [
-          'Roll To Hit for the shooting unit (BS-based).',
-          'Not all models in a unit may be able to shoot (check arcs, range).',
-          'Apply To Hit modifiers: long range (\u22121), moving (\u22121), cover, etc.',
-          'A natural 1 always misses. A natural 6 always hits.',
-        ],
-        showShooting: true,
-      },
-      {
-        id: 'wound-and-save',
-        name: 'Roll To Wound & Armour Saves',
-        rules: [
-          'For each hit, roll To Wound (compare S vs T on the wound chart).',
-          'For each wound, the opponent may make an Armour Save.',
-          'Armour Piercing (AP) modifies the save (e.g. AP \u22121 means save worsened by 1).',
-          'Ward saves are taken after armour saves (not modified by AP).',
         ],
         showShooting: true,
       },

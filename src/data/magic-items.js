@@ -4241,6 +4241,7 @@ export const MAGIC_ITEMS = [
     points: 30,
     effect: 'Unit gains Regeneration (5+), but may only pursue D6".',
     phases: ['combat'],
+    subPhases: ['choose-fight', 'pursuit'],
     regen: '5+',
   },
   {

@@ -304,7 +304,7 @@ export const SPECIAL_RULES = [
     phases: [
       {
         phaseId: 'shooting',
-        subPhaseId: 'choose-target',
+        subPhaseId: 'shoot',
         description:
           'Once per round in Shooting phase. Place flame template from model\'s front arc. Cannot be used in combat or for Stand & Shoot.',
       },
@@ -315,7 +315,7 @@ export const SPECIAL_RULES = [
     phases: [
       {
         phaseId: 'shooting',
-        subPhaseId: 'choose-target',
+        subPhaseId: 'shoot',
         description:
           'Half the models in each rank beyond the front (rounding up) may shoot, in addition to front rank. Cannot use if moved or declared Stand & Shoot.',
       },
@@ -326,7 +326,7 @@ export const SPECIAL_RULES = [
     phases: [
       {
         phaseId: 'shooting',
-        subPhaseId: 'choose-target',
+        subPhaseId: 'shoot',
         description:
           'Weapon can be used in the Shooting phase even if the model marched.',
       },
@@ -337,7 +337,7 @@ export const SPECIAL_RULES = [
     phases: [
       {
         phaseId: 'shooting',
-        subPhaseId: 'choose-target',
+        subPhaseId: 'shoot',
         description:
           'Weapon cannot be used if the model moved for any reason this turn (including rallying or reforming).',
       },
@@ -348,7 +348,7 @@ export const SPECIAL_RULES = [
     phases: [
       {
         phaseId: 'shooting',
-        subPhaseId: 'roll-to-hit',
+        subPhaseId: 'shoot',
         description:
           'Fire X shots at -1 To Hit, or a single shot at normal BS. Entire unit must choose the same option.',
       },
@@ -359,7 +359,7 @@ export const SPECIAL_RULES = [
     phases: [
       {
         phaseId: 'shooting',
-        subPhaseId: 'roll-to-hit',
+        subPhaseId: 'shoot',
         description:
           'No -1 To Hit penalty for moving and shooting. Can Stand & Shoot regardless of distance.',
       },
@@ -370,7 +370,7 @@ export const SPECIAL_RULES = [
     phases: [
       {
         phaseId: 'shooting',
-        subPhaseId: 'roll-to-hit',
+        subPhaseId: 'shoot',
         description:
           'Ignore To Hit modifiers from partial or full cover.',
       },
@@ -381,7 +381,7 @@ export const SPECIAL_RULES = [
     phases: [
       {
         phaseId: 'shooting',
-        subPhaseId: 'roll-to-hit',
+        subPhaseId: 'shoot',
         description:
           '-2 To Hit when moving and shooting (instead of the normal -1).',
       },
@@ -403,7 +403,7 @@ export const SPECIAL_RULES = [
     phases: [
       {
         phaseId: 'shooting',
-        subPhaseId: 'choose-target',
+        subPhaseId: 'shoot',
         opponentOnly: true,
         description:
           'When targeted during opponent\'s Shooting phase, unit may Fall Back in Good Order (flee away from the shooter then auto-rally).',
@@ -676,17 +676,10 @@ export const SPECIAL_RULES = [
     phases: [
       {
         phaseId: 'shooting',
-        subPhaseId: 'roll-to-hit',
+        subPhaseId: 'shoot',
         yourTurnOnly: true,
         description:
           'Natural 6 To Hit: +2 To Wound modifier. Cannot use if To Hit needs 7+ or hits automatically. Does not apply to spells or magic weapons.',
-      },
-      {
-        phaseId: 'shooting',
-        subPhaseId: 'wound-and-save',
-        yourTurnOnly: true,
-        description:
-          'Natural 6 To Hit: +2 To Wound modifier. Does not apply to spells or magic weapons.',
       },
       {
         phaseId: 'combat',
@@ -701,7 +694,7 @@ export const SPECIAL_RULES = [
     phases: [
       {
         phaseId: 'shooting',
-        subPhaseId: 'wound-and-save',
+        subPhaseId: 'shoot',
         description:
           'Attacks are Flaming. Causes Fear in war beasts/swarms. Does not apply to spells or magic weapons.',
       },
@@ -718,7 +711,7 @@ export const SPECIAL_RULES = [
     phases: [
       {
         phaseId: 'shooting',
-        subPhaseId: 'wound-and-save',
+        subPhaseId: 'shoot',
         description:
           'Each unsaved wound is multiplied by X. Excess wounds do not spill over to other models.',
       },
@@ -735,7 +728,7 @@ export const SPECIAL_RULES = [
     phases: [
       {
         phaseId: 'shooting',
-        subPhaseId: 'wound-and-save',
+        subPhaseId: 'shoot',
         description:
           'After losing a Wound, roll D6: X+ recovers the Wound (still counts for combat result). AP rules do not affect Regeneration.',
       },
@@ -907,7 +900,7 @@ export const SPECIAL_RULES = [
       },
       {
         phaseId: 'shooting',
-        subPhaseId: 'choose-target',
+        subPhaseId: 'shoot',
         opponentOnly: true,
         description:
           '+1 to Dispel rolls vs Magic Missiles. On any natural double (except double 1), the spell is unbound and the casting Wizard loses a Wound.',
@@ -1254,7 +1247,7 @@ export const SPECIAL_RULES = [
     phases: [
       {
         phaseId: 'shooting',
-        subPhaseId: 'choose-target',
+        subPhaseId: 'shoot',
         description:
           'Lothern Sea Guard may Stand & Shoot regardless of how close the charging unit is. After resolving shooting, the unit may perform a free redress the ranks manoeuvre.',
       },

@@ -47,7 +47,7 @@ export const SPELL_TYPE_PHASES = {
   'enchantment': 'conjuration',
   'hex': 'conjuration',
   'magical-vortex': 'conjuration',
-  'magic-missile': 'choose-target',
+  'magic-missile': 'shoot',
   'conveyance': 'remaining-moves',
   'assailment': 'choose-fight',
 }

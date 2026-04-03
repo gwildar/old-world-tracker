@@ -60,7 +60,7 @@ describe('Game Screen', () => {
   describe('shooting phase', () => {
     it('shows shooting units for armies with ranged weapons', () => {
       // Navigate to Choose Target sub-phase (shooting)
-      savePhaseIndex(8) // choose-target is step 9 (index 8)
+      savePhaseIndex(8) // shoot
       renderGameScreen(army)
       expect(getApp().textContent).toContain('Shooting')
     })
@@ -81,13 +81,13 @@ describe('Game Screen', () => {
 
   describe('combat phase', () => {
     it('shows combat phase heading', () => {
-      savePhaseIndex(12) // choose-fight is step 13 (index 12)
+      savePhaseIndex(10) // choose-fight
       renderGameScreen(army)
       expect(getApp().textContent).toContain('Combat')
     })
 
     it('shows Close Order in Special Rules on combat-result step', () => {
-      savePhaseIndex(13) // combat-result is step 14 (index 13)
+      savePhaseIndex(11) // combat-result
       renderGameScreen(army)
       const specialRulesPanel = getApp().querySelector('.border-wh-accent\\/20')
       expect(specialRulesPanel).toBeTruthy()
@@ -97,7 +97,7 @@ describe('Game Screen', () => {
 
   describe('last step', () => {
     it('shows End Turn on last step', () => {
-      savePhaseIndex(15) // last step (index 15)
+      savePhaseIndex(13) // last step
       renderGameScreen(army)
       expect(getApp().querySelector('#next-btn').textContent).toContain('End Turn')
     })
@@ -125,7 +125,7 @@ describe('Shooting phase with Lizardmen', () => {
   beforeEach(() => {
     army = loadArmy('lizardmen')
     startGame(army)
-    savePhaseIndex(8) // choose-target sub-phase
+    savePhaseIndex(8) // shoot
   })
 
   it('shows Solar Engine in shooting units', () => {
@@ -169,7 +169,7 @@ describe('Shooting phase with Bretonnia charge army', () => {
   beforeEach(() => {
     army = loadArmy('bretonnia-charge')
     startGame(army)
-    savePhaseIndex(8) // choose-target sub-phase
+    savePhaseIndex(8) // shoot
   })
 
   it('shows merged squires with BS from rules-index', () => {
@@ -194,7 +194,7 @@ describe('Combat phase with Bretonnia charge army', () => {
   beforeEach(() => {
     army = loadArmy('bretonnia-charge')
     startGame(army)
-    savePhaseIndex(12) // choose-fight sub-phase
+    savePhaseIndex(10) // choose-fight
   })
 
   it('shows combat units with stats ordered by initiative', () => {
@@ -266,7 +266,7 @@ describe('Combat phase with Dark Elves', () => {
   beforeEach(() => {
     army = loadArmy('dark-elves')
     startGame(army)
-    savePhaseIndex(12) // choose-fight sub-phase
+    savePhaseIndex(10) // choose-fight
   })
 
   it('shows champion magic weapon replacing mundane weapon', () => {
@@ -340,7 +340,7 @@ describe('Vampire Counts army', () => {
   })
 
   it('shows Blood Knights with embedded Nightmare mount attacks', () => {
-    savePhaseIndex(12) // choose-fight
+    savePhaseIndex(10) // choose-fight
     renderGameScreen(army)
     const text = getApp().textContent
     expect(text).toContain('Nightmare')
@@ -348,7 +348,7 @@ describe('Vampire Counts army', () => {
   })
 
   it('shows Wailing Dirge in shooting phase', () => {
-    savePhaseIndex(8) // choose-target
+    savePhaseIndex(8) // shoot
     renderGameScreen(army)
     const text = getApp().textContent
     expect(text).toContain('Wailing Dirge')
@@ -371,7 +371,7 @@ describe('Ogre Kingdoms army', () => {
   })
 
   it('shows Ironguts with AS:5+ from innate heavy armour', () => {
-    savePhaseIndex(12) // choose-fight
+    savePhaseIndex(10) // choose-fight
     renderGameScreen(army)
     const combatPanel = getApp().querySelector('.border-wh-phase-combat\\/30')
     const irongutCard = [...combatPanel.querySelectorAll('.bg-wh-card')]
@@ -381,7 +381,7 @@ describe('Ogre Kingdoms army', () => {
   })
 
   it('shows Thundertusk Riders with AS:5+ from frozen pelt', () => {
-    savePhaseIndex(12)
+    savePhaseIndex(10)
     renderGameScreen(army)
     const combatPanel = getApp().querySelector('.border-wh-phase-combat\\/30')
     const ttCard = [...combatPanel.querySelectorAll('.bg-wh-card')]
@@ -391,7 +391,7 @@ describe('Ogre Kingdoms army', () => {
   })
 
   it('shows Cackling Blade extra attacks on Tyrant card', () => {
-    savePhaseIndex(12)
+    savePhaseIndex(10)
     renderGameScreen(army)
     const combatPanel = getApp().querySelector('.border-wh-phase-combat\\/30')
     const tyrantCard = [...combatPanel.querySelectorAll('.bg-wh-card')]
@@ -402,7 +402,7 @@ describe('Ogre Kingdoms army', () => {
   })
 
   it('shows Cannibal Totem in combat phase magic items', () => {
-    savePhaseIndex(12) // choose-fight
+    savePhaseIndex(10) // choose-fight
     renderGameScreen(army)
     const text = getApp().textContent
     expect(text).toContain('Cannibal Totem')
@@ -410,7 +410,7 @@ describe('Ogre Kingdoms army', () => {
   })
 
   it('shows Regen on Ironguts from Cannibal Totem', () => {
-    savePhaseIndex(12)
+    savePhaseIndex(10)
     renderGameScreen(army)
     const combatPanel = getApp().querySelector('.border-wh-phase-combat\\/30')
     const irongutCard = [...combatPanel.querySelectorAll('.bg-wh-card')]
@@ -420,7 +420,7 @@ describe('Ogre Kingdoms army', () => {
   })
 
   it('shows Ironblaster Rhinox with Monstrous Tusks exactly once', () => {
-    savePhaseIndex(12)
+    savePhaseIndex(10)
     renderGameScreen(army)
     const combatPanel = getApp().querySelector('.border-wh-phase-combat\\/30')
     const ironblasterCard = [...combatPanel.querySelectorAll('.bg-wh-card')]
@@ -431,7 +431,7 @@ describe('Ogre Kingdoms army', () => {
   })
 
   it('shows Thundertusk Great Tusks exactly once', () => {
-    savePhaseIndex(12)
+    savePhaseIndex(10)
     renderGameScreen(army)
     const combatPanel = getApp().querySelector('.border-wh-phase-combat\\/30')
     const ttCard = [...combatPanel.querySelectorAll('.bg-wh-card')]
@@ -442,7 +442,7 @@ describe('Ogre Kingdoms army', () => {
   })
 
   it('shows Stonehorn Horns of Stone exactly once', () => {
-    savePhaseIndex(12)
+    savePhaseIndex(10)
     renderGameScreen(army)
     const combatPanel = getApp().querySelector('.border-wh-phase-combat\\/30')
     const shCard = [...combatPanel.querySelectorAll('.bg-wh-card')]
@@ -453,7 +453,7 @@ describe('Ogre Kingdoms army', () => {
   })
 
   it('shows Ironblaster Leadbelcher crew with Hand Weapon', () => {
-    savePhaseIndex(12)
+    savePhaseIndex(10)
     renderGameScreen(army)
     const combatPanel = getApp().querySelector('.border-wh-phase-combat\\/30')
     const ironblasterCard = [...combatPanel.querySelectorAll('.bg-wh-card')]
@@ -464,7 +464,7 @@ describe('Ogre Kingdoms army', () => {
   })
 
   it('shows crew Ld for Ironblaster on break test', () => {
-    savePhaseIndex(14) // break-test
+    savePhaseIndex(12) // break-test
     renderGameScreen(army)
     const combatPanel = getApp().querySelector('.border-wh-phase-combat\\/30')
     const ironblasterCard = [...combatPanel.querySelectorAll('.bg-wh-card')]
