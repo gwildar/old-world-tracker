@@ -364,6 +364,7 @@ export const MAGIC_ITEMS = [
     effect: 'Once per turn, the bearer may re-roll a Casting roll. All dice are re-rolled, including any bonus or discard dice.',
     phases: ['strategy', 'shooting'],
     subPhases: ['conjuration'],
+    yourTurnOnly: true,
   },
   {
     name: 'Dispel Scroll',
@@ -380,6 +381,7 @@ export const MAGIC_ITEMS = [
     effect: 'Single use. May be used when attempting to cast a spell. Roll an extra D6 on the Casting roll and discard the lowest. If double 1 is rolled on any two dice, the spell is miscast.',
     phases: ['strategy', 'shooting'],
     subPhases: ['conjuration'],
+    yourTurnOnly: true,
   },
   {
     name: 'Arcane Familiar',
