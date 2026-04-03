@@ -394,8 +394,9 @@ function findEmbeddedMount(unit) {
   for (let idx = 1; idx < unit.stats.length; idx++) {
     const s = unit.stats[idx]
     if (s.Ld === '-' && (s.T === '-' || s.T?.startsWith('(+'))) {
-      // Try to match name against known mounts
-      const mount = findMount(s.Name)
+      // Try to match name against known mounts, stripping "(xN)" suffixes
+      const cleanName = s.Name.replace(/\s*\(x?\d+\)$/i, '').trim()
+      const mount = findMount(cleanName) || findMount(s.Name)
       return { statLine: s, mountData: mount }
     }
   }
@@ -520,6 +521,21 @@ export function renderCombatWeaponsContext(army) {
       }
     }
 
+    // For crewed units (stats[0].crewed), match mount weapons from the crewed stat line name
+    if (crew.length > 0 && mountWeapons.length === 0 && stats.crewed) {
+      const cleanName = stats.Name.replace(/\s*\(x?\d+\)$/i, '').trim()
+      const crewedMount = findMount(cleanName)
+      if (crewedMount?.weapons) {
+        for (const wKey of crewedMount.weapons) {
+          const weapon = COMBAT_WEAPONS[wKey]
+          if (weapon && !matched.has(weapon.name)) {
+            matched.add(weapon.name)
+            mountWeapons.push(weapon)
+          }
+        }
+      }
+    }
+
     // Default to hand weapon if no combat weapons matched
     if (riderWeapons.length === 0) riderWeapons.push(HAND_WEAPON)
 
@@ -546,6 +562,17 @@ export function renderCombatWeaponsContext(army) {
       mountName = u.mount
       mountStomp = mount.stomp
       mountArmourBane = mount.armourBane || null
+    } else if (stats.crewed && stats.A && stats.A !== '-') {
+      // Crewed unit: stats[0] is the mount/vehicle itself
+      mountI = parseInt(stats.I) || null
+      mountWS = parseInt(stats.WS) || null
+      mountA = parseInt(stats.A) || stats.A
+      mountS = parseInt(stats.S) || stats.S
+      mountName = stats.Name
+      const cleanName = stats.Name.replace(/\s*\(x?\d+\)$/i, '').trim()
+      const crewedMount = findMount(cleanName)
+      mountStomp = crewedMount?.stomp || null
+      mountArmourBane = crewedMount?.armourBane || null
     } else if (hasEmbeddedMount) {
       const es = embedded.statLine
       mountI = parseInt(es.I) || null
@@ -734,9 +761,39 @@ export function renderCombatLeadershipContext(army) {
   const rows = Object.values(deduped).sort((a, b) => b.ldNum - a.ldNum)
   if (rows.length === 0) return ''
 
+  // Find General and BSB for Inspiring Presence / Hold Your Ground
+  const general = army.units.find(u => u.isGeneral)
+  const bsb = army.units.find(u => u.isBSB)
+
+  let generalLd = null
+  let generalRange = 12
+  if (general) {
+    if (general.stats) {
+      for (const profile of general.stats) {
+        if (profile.Ld && profile.Ld !== '-') { generalLd = profile.Ld; break }
+      }
+    }
+    const hasLargeTarget = general.specialRules?.toLowerCase().includes('large target')
+      || (general.mount && findMount(general.mount)?.largeTarget)
+    if (hasLargeTarget) generalRange = 18
+  }
+
+  let bsbRange = 12
+  if (bsb) {
+    const hasLargeTarget = bsb.specialRules?.toLowerCase().includes('large target')
+      || (bsb.mount && findMount(bsb.mount)?.largeTarget)
+    if (hasLargeTarget) bsbRange = 18
+  }
+
   return `
     <div class="bg-wh-surface rounded-lg border border-wh-phase-combat/30 p-4 mb-4">
-      <h3 class="text-sm font-bold text-wh-phase-combat mb-3">Combat Units</h3>
+      <h3 class="text-sm font-bold text-wh-phase-combat mb-3">Break Test</h3>
+      ${general ? `
+        <div class="p-2 rounded bg-wh-card mb-2">
+          <p class="text-xs"><span class="font-semibold text-wh-text">Inspiring Presence:</span> <span class="text-wh-muted">Units within ${generalRange}" of ${general.name} (Ld${generalLd}) may use their Ld.</span></p>
+          ${bsb ? `<p class="text-xs mt-1"><span class="font-semibold text-wh-text">Hold Your Ground:</span> <span class="text-wh-muted">Units within ${bsbRange}" of ${bsb.name} may re-roll Break tests.</span></p>` : ''}
+        </div>
+      ` : ''}
       <div class="space-y-1">
         ${rows.map(r => `
           <div class="flex items-center gap-2 p-2 rounded bg-wh-card text-sm">

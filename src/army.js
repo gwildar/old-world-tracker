@@ -69,6 +69,7 @@ function parseUnit(raw, category) {
     banners: [],
     hasStandard: false,
     hasMusician: false,
+    isGeneral: false,
     isBSB: false,
     hasLoreFamiliar: false,
     mount: null,
@@ -129,6 +130,7 @@ function parseUnit(raw, category) {
     for (const cmd of raw.command) {
       if (!cmd.active) continue
       const cmdName = (cmd.name_en || '').toLowerCase()
+      if (cmdName === 'general') unit.isGeneral = true
       if (cmdName.includes('standard bearer')) unit.hasStandard = true
       if (cmdName.includes('musician')) unit.hasMusician = true
       if (cmdName.includes('battle standard bearer')) unit.isBSB = true

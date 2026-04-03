@@ -122,6 +122,8 @@ function renderUnitList(army) {
             <span class="text-wh-text">${u.name}</span>
             ${u.strength > 1 ? `<span class="text-wh-muted ml-1">x${u.strength}</span>` : ''}
             ${u.mount ? `<span class="text-wh-muted ml-1">(${u.mount})</span>` : ''}
+            ${u.isGeneral ? '<span class="text-wh-phase-combat ml-1 text-xs">GENERAL</span>' : ''}
+            ${u.isBSB ? '<span class="text-wh-phase-combat ml-1 text-xs">BSB</span>' : ''}
             ${u.isCaster ? '<span class="text-wh-purple ml-1 text-xs">WIZARD</span>' : ''}
             ${u.magicWeapons.length > 0 ? `<span class="text-wh-accent ml-1 text-xs">${u.magicWeapons.join(', ')}</span>` : ''}
             ${u.banners.length > 0 ? `<span class="text-wh-muted ml-1 text-xs">${u.banners.map(b => `${b.name} (${b.points}pts)`).join(', ')}</span>` : ''}

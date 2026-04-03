@@ -69,8 +69,10 @@ export const MOUNTS = [
   { name: 'Demigryph', m: 7, f: null, swiftstride: true, troopType: 'MCa', stomp: null, impactHits: null, breath: null, weapons: ['wicked claws'], ws: 4, s: 5, i: 4, a: 3, tBonus: 0, wBonus: 1 },
   { name: 'Juggernaut of Khorne', m: 7, f: null, swiftstride: true, troopType: 'MCa', stomp: null, impactHits: '2', breath: null, weapons: [], ws: 4, s: 5, i: 2, a: 2, tBonus: 1, wBonus: 1 },
   { name: 'Steed of Slaanesh', m: 9, f: null, swiftstride: true, troopType: 'LCa', stomp: null, impactHits: null, breath: null, weapons: [], ws: 3, s: 3, i: 5, a: 1, tBonus: 0, wBonus: 0 },
-  { name: 'Stonehorn', m: 7, f: null, swiftstride: true, troopType: 'Be', stomp: null, impactHits: 'D6+1', breath: null, weapons: [], ws: 3, s: 6, i: 2, a: 4, tBonus: 1, wBonus: 4 },
-  { name: 'Thundertusk', m: 6, f: null, swiftstride: true, troopType: 'Be', stomp: '3', impactHits: 'D3', breath: null, weapons: [], ws: 3, s: 6, i: 2, a: 4, tBonus: 1, wBonus: 4 },
+  { name: 'Stonehorn', m: 7, f: null, swiftstride: true, troopType: 'Be', stomp: null, impactHits: 'D6+1', breath: null, weapons: ['horns of stone'], ws: 3, s: 6, i: 2, a: 4, tBonus: 1, wBonus: 4 },
+  { name: 'Thundertusk', m: 6, f: null, swiftstride: true, troopType: 'Be', stomp: '3', impactHits: 'D3', breath: null, weapons: ['great tusks'], ws: 3, s: 6, i: 2, a: 4, tBonus: 1, wBonus: 4 },
+  { name: 'Rhinox', m: 6, f: null, swiftstride: false, troopType: 'MCa', stomp: null, impactHits: null, breath: null, weapons: ['monstrous tusks'], ws: 3, s: 5, i: 2, a: 3, tBonus: 0, wBonus: 0 },
+  { name: 'Mournfang', m: 8, f: null, swiftstride: false, troopType: 'MCa', stomp: null, impactHits: null, breath: null, weapons: ['monstrous tusks'], ws: 3, s: 5, i: 2, a: 3, tBonus: 0, wBonus: 0 },
   { name: 'Palanquin of Nurgle', m: 4, f: null, swiftstride: false, troopType: 'MCa', stomp: null, impactHits: null, breath: null, weapons: [], ws: 3, s: 3, i: 3, a: null, tBonus: 0, wBonus: 4 },
 
   // ─── Named / Unique Mounts ──────────────────────────────────────────
