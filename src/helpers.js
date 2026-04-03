@@ -1,5 +1,4 @@
 import { findMount } from './data/mounts.js'
-import RULES_INDEX from './rules-index-export.json'
 
 // Army name → rules index key overrides (both lowercase)
 const UNIT_NAME_ALIASES = {
@@ -11,15 +10,6 @@ export function resolveRulesIndexKey(name) {
   return UNIT_NAME_ALIASES[key] || key
 }
 
-export function lookupMovement(name) {
-  const entry = RULES_INDEX[resolveRulesIndexKey(name)]
-  if (!entry?.stats) return null
-  for (let i = entry.stats.length - 1; i >= 0; i--) {
-    if (entry.stats[i].M && entry.stats[i].M !== '-') return entry.stats[i].M
-  }
-  return null
-}
-
 export function resolveMovement(unit) {
   // 1. Inline stats from army file
   const inlineMv = unit.stats?.[0]?.M
@@ -28,8 +18,6 @@ export function resolveMovement(unit) {
   if (unit.mount) {
     const mount = findMount(unit.mount)
     if (mount) return String(mount.m)
-    const mountMv = lookupMovement(unit.mount)
-    if (mountMv) return mountMv
   }
   // 3. Embedded mount stat line (e.g. Blood Knights with Nightmare)
   if (unit.stats && unit.stats.length > 1) {
