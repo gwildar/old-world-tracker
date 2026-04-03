@@ -18,6 +18,18 @@ function getS(unit) {
   return null
 }
 
+function getChampionBS(unit) {
+  if (unit.category === 'characters') return null
+  if (!unit.stats || unit.stats.length < 2) return null
+  for (let idx = 1; idx < unit.stats.length; idx++) {
+    const s = unit.stats[idx]
+    if (s.Ld !== '-' && s.T !== '-' && !s.T?.startsWith('(+')) {
+      return s.BS && s.BS !== '-' ? s.BS : null
+    }
+  }
+  return null
+}
+
 function resolveStrength(weaponS, unitS) {
   if (!weaponS || !unitS) return weaponS
   if (weaponS === 'S') return unitS
@@ -36,6 +48,8 @@ export function renderShootingContext(army) {
     let matched = false
     const bs = getBS(u)
     const unitS = getS(u)
+    const champBS = getChampionBS(u)
+    const championBS = champBS && champBS !== bs ? champBS : null
 
     // Check mount breath weapon
     if (u.mount) {
@@ -44,7 +58,7 @@ export function renderShootingContext(army) {
         const breathKey = mount.breath.toLowerCase()
         const weapon = RANGED_WEAPONS[breathKey]
         if (weapon) {
-          entries.push({ unitName: u.name, strength: u.strength, bs: null, unitS, weapon })
+          entries.push({ unitName: u.name, strength: u.strength, bs: null, unitS, championBS, weapon })
           matched = true
         }
       }
@@ -65,7 +79,7 @@ export function renderShootingContext(army) {
       }
       if (bestWeapon && !matchedWeapons.has(bestWeapon.name)) {
         matchedWeapons.add(bestWeapon.name)
-        entries.push({ unitName: u.name, strength: u.strength, bs, unitS, weapon: bestWeapon })
+        entries.push({ unitName: u.name, strength: u.strength, bs, unitS, championBS, weapon: bestWeapon })
         matched = true
 
         // Include alternate profiles (e.g. scatter shot)
@@ -74,7 +88,7 @@ export function renderShootingContext(army) {
             const altWeapon = RANGED_WEAPONS[altKey]
             if (altWeapon && !matchedWeapons.has(altWeapon.name)) {
               matchedWeapons.add(altWeapon.name)
-              entries.push({ unitName: u.name, strength: u.strength, bs, unitS, weapon: altWeapon })
+              entries.push({ unitName: u.name, strength: u.strength, bs, unitS, championBS, weapon: altWeapon })
             }
           }
         }
@@ -82,7 +96,7 @@ export function renderShootingContext(army) {
     }
 
     if (!matched) {
-      entries.push({ unitName: u.name, strength: u.strength, bs, unitS, weapon: null })
+      entries.push({ unitName: u.name, strength: u.strength, bs, unitS, championBS, weapon: null })
     }
   }
 
@@ -108,7 +122,7 @@ export function renderShootingContext(army) {
   const groups = new Map()
   for (const r of weaponRows) {
     if (!groups.has(r.unitName)) {
-      groups.set(r.unitName, { strength: r.strength, merged: r.merged, weapons: [] })
+      groups.set(r.unitName, { strength: r.strength, merged: r.merged, championBS: r.championBS, weapons: [] })
     }
     groups.get(r.unitName).weapons.push(r)
   }
@@ -131,10 +145,13 @@ export function renderShootingContext(army) {
                     <span class="text-wh-phase-shooting font-mono text-xs">${r.weapon.range}</span>
                     ${r.weapon.s ? `<span class="text-wh-muted font-mono text-xs">S${resolveStrength(r.weapon.s, r.unitS)}</span>` : ''}
                     ${r.weapon.ap && r.weapon.ap !== '—' ? `<span class="text-wh-muted font-mono text-xs">AP ${r.weapon.ap}</span>` : ''}
+                    ${group.championBS ? `<div class="text-xs text-wh-muted pl-1">Champion: <span class="text-wh-phase-shooting font-mono">BS${group.championBS}</span></div>` : ''}
                   </div>
                   ${r.weapon.rules ? `<p class="text-xs text-wh-muted mt-0.5">${r.weapon.rules}</p>` : ''}
+
                 </div>
               `).join('')}
+              
             </div>
           </div>
         `).join('')}

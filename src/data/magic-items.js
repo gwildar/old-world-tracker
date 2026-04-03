@@ -526,6 +526,7 @@ export const MAGIC_ITEMS = [
     points: 30,
     effect: 'Any enemy model that shoots at the unit suffers an additional -1 To Hit modifier.',
     phases: ['shooting'],
+    opponentOnly: true,
   },
   {
     name: 'Rampaging Banner',
