@@ -17,37 +17,38 @@
  *   a           – Attacks (null if no separate attacks)
  *   tBonus      – Toughness bonus added to rider (0 if none)
  *   wBonus      – Wounds bonus added to rider (0 if none)
+ *   as          – natural armour save (null if none; rider uses mount's if better)
  *
  * Source: https://tow.whfb.app
  */
 
 export const MOUNTS = [
   // ─── Flying Mounts ───────────────────────────────────────────────────
-  { name: 'Hippogryph', m: 7, f: 9, swiftstride: true, troopType: 'MCr', stomp: 'D3', impactHits: null, breath: null, weapons: ['wicked claws', 'serrated maw'], ws: 5, s: 5, i: 5, a: 4, tBonus: 1, wBonus: 3 },
+  { name: 'Hippogryph', m: 7, f: 9, swiftstride: true, troopType: 'MCr', stomp: 'D3', impactHits: null, breath: null, weapons: ['wicked claws', 'serrated maw'], ws: 5, s: 5, i: 5, a: 4, tBonus: 1, wBonus: 3, as: 5 },
   { name: 'Royal Pegasus', m: 8, f: 10, swiftstride: true, troopType: 'MCr', stomp: '2', impactHits: null, breath: null, weapons: ['wicked claws'], ws: 4, s: 5, i: 5, a: 3, tBonus: 1, wBonus: 1 },
   { name: 'Barded Pegasus', m: 7, f: 10, swiftstride: true, troopType: 'MCa', stomp: null, impactHits: null, breath: null, weapons: [], ws: 3, s: 4, i: 4, a: 2, tBonus: 0, wBonus: 1 },
   { name: 'Pegasus', m: 8, f: 10, swiftstride: true, troopType: 'MCa', stomp: null, impactHits: null, breath: null, weapons: [], ws: 3, s: 4, i: 4, a: 2, tBonus: 0, wBonus: 1 },
   { name: 'Dark Pegasus', m: 8, f: 10, swiftstride: true, troopType: 'MCa', stomp: null, impactHits: null, breath: null, weapons: [], ws: 3, s: 4, i: 4, a: 3, tBonus: 0, wBonus: 1 },
   { name: 'Great Eagle', m: 2, f: 10, swiftstride: true, troopType: 'MCr', stomp: '1', impactHits: null, breath: null, weapons: ['wicked claws'], ws: 5, s: 4, i: 4, a: 3, tBonus: 0, wBonus: 0 },
-  { name: 'Wyvern', m: 4, f: 9, swiftstride: true, troopType: 'MCr', stomp: 'D3', impactHits: null, breath: null, weapons: ['wicked claws'], ws: 5, s: 6, i: 3, a: 3, tBonus: 1, wBonus: 4 },
-  { name: 'Manticore', m: 6, f: 9, swiftstride: true, troopType: 'MCr', stomp: 'D3', impactHits: null, breath: null, weapons: ['wicked claws'], ws: 5, s: 5, i: 5, a: 4, tBonus: 1, wBonus: 4 },
-  { name: 'Griffon', m: 6, f: 9, swiftstride: true, troopType: 'MCr', stomp: 'D3', impactHits: null, breath: null, weapons: ['wicked claws', 'serrated maw'], ws: 5, s: 5, i: 5, a: 4, tBonus: 1, wBonus: 3 },
-  { name: 'Imperial Griffon', m: 6, f: 9, swiftstride: true, troopType: 'Be', stomp: 'D3+1', impactHits: null, breath: null, weapons: ['wicked claws', 'serrated maw'], ws: 5, s: 6, i: 4, a: 4, tBonus: 1, wBonus: 4 },
+  { name: 'Wyvern', m: 4, f: 9, swiftstride: true, troopType: 'MCr', stomp: 'D3', impactHits: null, breath: null, weapons: ['wicked claws'], ws: 5, s: 6, i: 3, a: 3, tBonus: 1, wBonus: 4, as: 5 },
+  { name: 'Manticore', m: 6, f: 9, swiftstride: true, troopType: 'MCr', stomp: 'D3', impactHits: null, breath: null, weapons: ['wicked claws'], ws: 5, s: 5, i: 5, a: 4, tBonus: 1, wBonus: 4, as: 6 },
+  { name: 'Griffon', m: 6, f: 9, swiftstride: true, troopType: 'MCr', stomp: 'D3', impactHits: null, breath: null, weapons: ['wicked claws', 'serrated maw'], ws: 5, s: 5, i: 5, a: 4, tBonus: 1, wBonus: 3, as: 5 },
+  { name: 'Imperial Griffon', m: 6, f: 9, swiftstride: true, troopType: 'Be', stomp: 'D3+1', impactHits: null, breath: null, weapons: ['wicked claws', 'serrated maw'], ws: 5, s: 6, i: 4, a: 4, tBonus: 1, wBonus: 4, as: 5 },
   { name: 'Chimera', m: 6, f: 10, swiftstride: true, troopType: 'MCr', stomp: '1', impactHits: null, breath: null, weapons: ['wicked claws'], ws: 4, s: 6, i: 3, a: 6, tBonus: 0, wBonus: 0 },
   { name: 'Cockatrice', m: 4, f: 10, swiftstride: true, troopType: 'MCr', stomp: '1', impactHits: null, breath: null, weapons: ['wicked claws'], ws: 4, s: 4, i: 6, a: 6, tBonus: 0, wBonus: 0 },
   { name: 'Great Taurus', m: 6, f: 9, swiftstride: true, troopType: 'Be', stomp: 'D3', impactHits: null, breath: null, weapons: ['wicked claws'], ws: 5, s: 5, i: 3, a: 3, tBonus: 0, wBonus: 4 },
   { name: 'Lammasu', m: 6, f: 9, swiftstride: true, troopType: 'MCr', stomp: 'D3', impactHits: null, breath: null, weapons: ['wicked claws'], ws: 4, s: 5, i: 2, a: 2, tBonus: 0, wBonus: 3 },
   { name: 'Disc of Tzeentch', m: 1, f: 10, swiftstride: true, troopType: 'LCa', stomp: null, impactHits: null, breath: null, weapons: [], ws: 3, s: 4, i: 4, a: 3, tBonus: 0, wBonus: 0 },
-  { name: 'Black Dragon', m: 6, f: 10, swiftstride: true, troopType: 'Be', stomp: 'D6', impactHits: null, breath: 'Noxious Breath', weapons: ['wicked claws', 'serrated maw'], ws: 6, s: 7, i: 4, a: 6, tBonus: 3, wBonus: 6 },
-  { name: 'Star Dragon', m: 6, f: 10, swiftstride: true, troopType: 'Be', stomp: 'D6+1', impactHits: null, breath: 'Dragon Fire', weapons: ['wicked claws', 'serrated maw'], ws: 7, s: 7, i: 2, a: 6, tBonus: 3, wBonus: 6 },
-  { name: 'Sun Dragon', m: 6, f: 10, swiftstride: true, troopType: 'Be', stomp: 'D6', impactHits: null, breath: 'Dragon Fire', weapons: ['wicked claws', 'serrated maw'], ws: 5, s: 5, i: 4, a: 4, tBonus: 2, wBonus: 4 },
-  { name: 'Moon Dragon', m: 6, f: 10, swiftstride: true, troopType: 'Be', stomp: 'D6', impactHits: null, breath: 'Dragon Fire', weapons: ['wicked claws', 'serrated maw'], ws: 6, s: 6, i: 3, a: 5, tBonus: 2, wBonus: 5 },
-  { name: 'Forest Dragon', m: 6, f: 10, swiftstride: true, troopType: 'Be', stomp: 'D6', impactHits: null, breath: 'Soporific Breath', weapons: ['wicked claws', 'serrated maw'], ws: 6, s: 7, i: 4, a: 6, tBonus: 3, wBonus: 6 },
-  { name: 'Chaos Dragon', m: 6, f: 10, swiftstride: true, troopType: 'Be', stomp: 'D6', impactHits: null, breath: 'Dark Fire of Chaos', weapons: ['wicked claws', 'serrated maw'], ws: 6, s: 7, i: 4, a: 6, tBonus: 1, wBonus: 6 },
-  { name: 'Necrolith Bone Dragon', m: 6, f: 9, swiftstride: true, troopType: 'Be', stomp: 'D6', impactHits: null, breath: null, weapons: ['wicked claws'], ws: 4, s: 6, i: 2, a: 5, tBonus: 1, wBonus: 5 },
+  { name: 'Black Dragon', m: 6, f: 10, swiftstride: true, troopType: 'Be', stomp: 'D6', impactHits: null, breath: 'Noxious Breath', weapons: ['wicked claws', 'serrated maw'], ws: 6, s: 7, i: 4, a: 6, tBonus: 3, wBonus: 6, as: 4 },
+  { name: 'Star Dragon', m: 6, f: 10, swiftstride: true, troopType: 'Be', stomp: 'D6+1', impactHits: null, breath: 'Dragon Fire', weapons: ['wicked claws', 'serrated maw'], ws: 7, s: 7, i: 2, a: 6, tBonus: 3, wBonus: 6, as: 4 },
+  { name: 'Sun Dragon', m: 6, f: 10, swiftstride: true, troopType: 'Be', stomp: 'D6', impactHits: null, breath: 'Dragon Fire', weapons: ['wicked claws', 'serrated maw'], ws: 5, s: 5, i: 4, a: 4, tBonus: 2, wBonus: 4, as: 4 },
+  { name: 'Moon Dragon', m: 6, f: 10, swiftstride: true, troopType: 'Be', stomp: 'D6', impactHits: null, breath: 'Dragon Fire', weapons: ['wicked claws', 'serrated maw'], ws: 6, s: 6, i: 3, a: 5, tBonus: 2, wBonus: 5, as: 4 },
+  { name: 'Forest Dragon', m: 6, f: 10, swiftstride: true, troopType: 'Be', stomp: 'D6', impactHits: null, breath: 'Soporific Breath', weapons: ['wicked claws', 'serrated maw'], ws: 6, s: 7, i: 4, a: 6, tBonus: 3, wBonus: 6, as: 4 },
+  { name: 'Chaos Dragon', m: 6, f: 10, swiftstride: true, troopType: 'Be', stomp: 'D6', impactHits: null, breath: 'Dark Fire of Chaos', weapons: ['wicked claws', 'serrated maw'], ws: 6, s: 7, i: 4, a: 6, tBonus: 1, wBonus: 6, as: 4 },
+  { name: 'Necrolith Bone Dragon', m: 6, f: 9, swiftstride: true, troopType: 'Be', stomp: 'D6', impactHits: null, breath: null, weapons: ['wicked claws'], ws: 4, s: 6, i: 2, a: 5, tBonus: 1, wBonus: 5, as: 4 },
 
   // ─── Lizardmen Mounts ─────────────────────────────────────────────────
-  { name: 'Carnosaur', m: 7, f: null, swiftstride: true, troopType: 'Be', stomp: '2', impactHits: null, breath: null, weapons: ['slashing talons'], ws: 3, s: 7, i: 2, a: 4, tBonus: 1, wBonus: 4 },
+  { name: 'Carnosaur', m: 7, f: null, swiftstride: true, troopType: 'Be', stomp: '2', impactHits: null, breath: null, weapons: ['slashing talons'], ws: 3, s: 7, i: 2, a: 4, tBonus: 1, wBonus: 4, as: 5 },
   { name: 'Ancient Stegadon', m: 6, f: null, swiftstride: false, troopType: 'Be', stomp: 'D3+2', impactHits: 'D3+1', breath: null, weapons: ['great horns'], ws: 4, s: 6, i: 1, a: 3, tBonus: 0, wBonus: 0 },
 
   // ─── Non-Flying Mounts ───────────────────────────────────────────────
@@ -69,8 +70,8 @@ export const MOUNTS = [
   { name: 'Demigryph', m: 7, f: null, swiftstride: true, troopType: 'MCa', stomp: null, impactHits: null, breath: null, weapons: ['wicked claws'], ws: 4, s: 5, i: 4, a: 3, tBonus: 0, wBonus: 1 },
   { name: 'Juggernaut of Khorne', m: 7, f: null, swiftstride: true, troopType: 'MCa', stomp: null, impactHits: '2', breath: null, weapons: [], ws: 4, s: 5, i: 2, a: 2, tBonus: 1, wBonus: 1 },
   { name: 'Steed of Slaanesh', m: 9, f: null, swiftstride: true, troopType: 'LCa', stomp: null, impactHits: null, breath: null, weapons: [], ws: 3, s: 3, i: 5, a: 1, tBonus: 0, wBonus: 0 },
-  { name: 'Stonehorn', m: 7, f: null, swiftstride: true, troopType: 'Be', stomp: null, impactHits: 'D6+1', breath: null, weapons: ['horns of stone'], ws: 3, s: 6, i: 2, a: 4, tBonus: 1, wBonus: 4 },
-  { name: 'Thundertusk', m: 6, f: null, swiftstride: true, troopType: 'Be', stomp: '3', impactHits: 'D3', breath: null, weapons: ['great tusks'], ws: 3, s: 6, i: 2, a: 4, tBonus: 1, wBonus: 4 },
+  { name: 'Stonehorn', m: 7, f: null, swiftstride: true, troopType: 'Be', stomp: null, impactHits: 'D6+1', breath: null, weapons: ['horns of stone'], ws: 3, s: 6, i: 2, a: 4, tBonus: 1, wBonus: 4, as: 4 },
+  { name: 'Thundertusk', m: 6, f: null, swiftstride: true, troopType: 'Be', stomp: '3', impactHits: 'D3', breath: null, weapons: ['great tusks'], ws: 3, s: 6, i: 2, a: 4, tBonus: 1, wBonus: 4, as: 5 },
   { name: 'Rhinox', m: 6, f: null, swiftstride: false, troopType: 'MCa', stomp: null, impactHits: null, breath: null, weapons: ['monstrous tusks'], ws: 3, s: 5, i: 2, a: 3, tBonus: 0, wBonus: 0 },
   { name: 'Mournfang', m: 8, f: null, swiftstride: false, troopType: 'MCa', stomp: null, impactHits: null, breath: null, weapons: ['monstrous tusks'], ws: 3, s: 5, i: 2, a: 3, tBonus: 0, wBonus: 0 },
   { name: 'Palanquin of Nurgle', m: 4, f: null, swiftstride: false, troopType: 'MCa', stomp: null, impactHits: null, breath: null, weapons: [], ws: 3, s: 3, i: 3, a: null, tBonus: 0, wBonus: 4 },

@@ -95,27 +95,37 @@ function calculateArmourSave(unit) {
     if (best === null || val < best) best = val
   }
 
-  if (best === null) return null
+  // Shield, barding, and modifiers only apply to the rider's own armour
+  if (best !== null) {
+    const allGear = [...unit.equipment, ...unit.armour].map(g => g.toLowerCase())
+    const hasMundaneShield = allGear.some(g => g.split(',').some(p => p.trim() === 'shield' || p.trim() === 'shields'))
+    const hasMagicShield = unit.magicItems.some(itemName => {
+      const mi = MAGIC_ITEM_MAP[normaliseItemName(itemName)]
+      return mi?.type === 'armour' && mi.effect?.startsWith('Shield.')
+    })
+    const hasShield = hasMundaneShield || hasMagicShield
+    if (hasShield) best -= 1
+    if (unit.hasBarding) best -= 1
+    // Apply armour modifiers from special rules (e.g. Lion Cloak)
+    if (unit.specialRules) {
+      const rules = parseUnitRules(unit.specialRules)
+      for (const rule of rules) {
+        const normId = normaliseRuleName(rule).toLowerCase()
+        if (ARMOUR_MOD_RULES[normId]) best += ARMOUR_MOD_RULES[normId]
+      }
+    }
+    best += mod
+  }
 
-  // Shield from equipment, options, or magic items
-  const allGear = [...unit.equipment, ...unit.armour].map(g => g.toLowerCase())
-  const hasMundaneShield = allGear.some(g => g.split(',').some(p => p.trim() === 'shield' || p.trim() === 'shields'))
-  const hasMagicShield = unit.magicItems.some(itemName => {
-    const mi = MAGIC_ITEM_MAP[normaliseItemName(itemName)]
-    return mi?.type === 'armour' && mi.effect?.startsWith('Shield.')
-  })
-  const hasShield = hasMundaneShield || hasMagicShield
-  if (hasShield) best -= 1
-  if (unit.hasBarding) best -= 1
-  // Apply armour modifiers from special rules (e.g. Lion Cloak)
-  if (unit.specialRules) {
-    const rules = parseUnitRules(unit.specialRules)
-    for (const rule of rules) {
-      const normId = normaliseRuleName(rule).toLowerCase()
-      if (ARMOUR_MOD_RULES[normId]) best += ARMOUR_MOD_RULES[normId]
+  // Ridden monster mount's natural armour save — use if better than rider's
+  if (unit.mount) {
+    const mount = findMount(unit.mount)
+    if (mount?.as) {
+      if (best === null || mount.as < best) best = mount.as
     }
   }
-  best += mod
+
+  if (best === null) return null
   if (best < 2) best = 2
 
   return `${best}+`
