@@ -1,6 +1,6 @@
 {
   "name": "old-world-tracker",
-  "version": "1.71.2",
+  "version": "1.72.0",
   "private": true,
   "type": "module",
   "scripts": {

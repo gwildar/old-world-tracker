@@ -768,7 +768,7 @@ export function renderCombatResultContext(army) {
   `
 }
 
-export function renderCombatLeadershipContext(army) {
+export function renderCombatLeadershipContext(army, title = 'Break Test') {
   if (army.units.length === 0) return ''
 
   const deduped = {}
@@ -812,7 +812,7 @@ export function renderCombatLeadershipContext(army) {
 
   return `
     <div class="bg-wh-surface rounded-lg border border-wh-phase-combat/30 p-4 mb-4">
-      <h3 class="text-sm font-bold text-wh-phase-combat mb-3">Break Test</h3>
+      <h3 class="text-sm font-bold text-wh-phase-combat mb-3">${title}</h3>
       ${general ? `
         <div class="p-2 rounded bg-wh-card mb-2">
           <p class="text-xs"><span class="font-semibold text-wh-text">Inspiring Presence:</span> <span class="text-wh-muted">Units within ${generalRange}" of ${general.name} (Ld${generalLd}) may use their Ld.</span></p>

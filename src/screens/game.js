@@ -124,6 +124,7 @@ function renderPhaseContext(army, phase, subPhase) {
   if (subPhase.showCasters) html += renderCasterContext(army, ['enchantment', 'hex'])
   if (subPhase.showShooting) html += renderShootingContext(army)
 
+  if (subPhase.id === 'rally') html += renderCombatLeadershipContext(army, 'Rally Leadership')
   if (subPhase.id === 'declare-charges') html += renderChargeContext(army)
 
   if (subPhase.id === 'shoot') html += renderCasterContext(army, ['magic-missile', 'magical-vortex'])
