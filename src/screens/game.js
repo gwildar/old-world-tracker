@@ -1,5 +1,5 @@
 import { PHASES, getAllSubPhases } from '../phases.js'
-import { getPhaseIndex, savePhaseIndex, getRound, saveRound, getIsOpponentTurn, saveIsOpponentTurn, getFirstTurn, saveFirstTurn, resetGame, canGoBackToPreviousTurn } from '../state.js'
+import { getPhaseIndex, savePhaseIndex, getRound, saveRound, saveIsOpponentTurn, getFirstTurn, saveFirstTurn, resetGame, canGoBackToPreviousTurn } from '../state.js'
 import { PHASE_BG, PHASE_TEXT } from '../helpers.js'
 import { renderCasterContext } from '../context/caster.js'
 import { renderShootingContext } from '../context/shooting.js'

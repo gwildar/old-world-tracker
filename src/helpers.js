@@ -26,8 +26,6 @@ export function resolveMovement(unit) {
       if (s.M && s.M !== '-' && s.Ld === '-') return s.M
     }
   }
-  // 4. Unit name lookup (cavalry etc.)
-  return lookupMovement(unit.name)
 }
 
 // Spell type → sub-phase mapping

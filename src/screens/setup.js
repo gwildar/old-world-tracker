@@ -1,6 +1,6 @@
 import { version } from '../../package.json'
 import { parseArmyList, getCasters } from '../army.js'
-import { getArmy, saveArmy, clearArmy, getSpellSelections, saveSpellSelections, resetGame, getFirstTurn, getIsOpponentTurn } from '../state.js'
+import { getArmy, saveArmy, clearArmy, saveSpellSelections, resetGame, getFirstTurn, getIsOpponentTurn } from '../state.js'
 import { formatSlug } from '../helpers.js'
 import { renderSpellSelection, bindSpellSelectors } from './spell-selection.js'
 import { navigate } from '../navigate.js'

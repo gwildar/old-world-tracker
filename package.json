@@ -1,6 +1,6 @@
 {
   "name": "turner-overdrive",
-  "version": "1.72.2",
+  "version": "1.72.3",
   "private": true,
   "type": "module",
   "scripts": {
@@ -10,7 +10,10 @@
     "test": "vitest run"
   },
   "devDependencies": {
+    "@eslint/js": "^10.0.1",
     "@tailwindcss/vite": "^4.2.2",
+    "eslint": "^10.2.0",
+    "globals": "^17.4.0",
     "jsdom": "^29.0.1",
     "tailwindcss": "^4.2.2",
     "vite": "^8.0.1",
