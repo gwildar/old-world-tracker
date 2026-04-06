@@ -191,6 +191,20 @@ export const PHASES = [
       },
     ],
   },
+  {
+    id: 'scoring',
+    name: 'Scoring Phase',
+    colour: 'wh-phase-scoring',
+    subPhases: [
+      {
+        id: 'scoring',
+        name: 'Scoring',
+        rules: [
+          'Score objectives',
+        ],
+      },
+    ],
+  },
 ]
 
 export function getAllSubPhases() {
