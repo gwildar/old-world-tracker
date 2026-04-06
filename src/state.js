@@ -89,10 +89,16 @@ export function saveScores(scores) {
   save(KEYS.scores, scores)
 }
 
-export function updateScore(round, player, score) {
+export function updateScore(round, isOpponentTurn, player, score) {
+  const turnKey = isOpponentTurn ? 'opponent' : 'you'
   const scores = getScores()
-  if (!scores[round]) scores[round] = { you: 0, opponent: 0 }
-  scores[round][player] = score
+  if (!scores[round]) {
+    scores[round] = {
+      you: { you: 0, opponent: 0 },
+      opponent: { you: 0, opponent: 0 }
+    }
+  }
+  scores[round][turnKey][player] = score
   saveScores(scores)
 }
 

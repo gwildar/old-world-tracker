@@ -44,12 +44,14 @@ export const PHASE_BG = {
   'wh-phase-movement': 'bg-wh-phase-movement',
   'wh-phase-shooting': 'bg-wh-phase-shooting',
   'wh-phase-combat': 'bg-wh-phase-combat',
+  'wh-phase-scoring': 'bg-wh-phase-scoring',
 }
 export const PHASE_TEXT = {
   'wh-phase-strategy': 'text-wh-phase-strategy',
   'wh-phase-movement': 'text-wh-phase-movement',
   'wh-phase-shooting': 'text-wh-phase-shooting',
   'wh-phase-combat': 'text-wh-phase-combat',
+  'wh-phase-scoring': 'text-wh-phase-scoring',
 }
 
 export function formatSlug(slug) {

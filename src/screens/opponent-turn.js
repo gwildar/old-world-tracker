@@ -7,6 +7,7 @@ import { renderMagicItemsContext } from '../context/items.js'
 import { renderVirtuesContext } from '../context/virtues.js'
 import { renderSpecialRulesForPhase } from '../context/special-rules-context.js'
 import { renderCombatWeaponsContext, renderDefensiveStatsContext } from '../context/combat-weapons.js'
+import { renderScoringUI, bindScoringEvents } from './scoring.js'
 import { navigate } from '../navigate.js'
 
 const app = document.getElementById('app')
@@ -103,6 +104,7 @@ function renderOpponentPhaseContext(army, phase) {
   if (phase.id === 'movement') html += renderChargeContext(army)
   if (phase.id === 'shooting') html += renderDefensiveStatsContext(army)
   if (phase.id === 'combat') html += renderCombatWeaponsContext(army)
+  if (phase.id === 'scoring') html += renderScoringUI()
   html += renderMagicItemsContext(army, phase.id, null)
   html += renderVirtuesContext(army, phase.id, null)
   html += renderSpecialRulesForPhase(army, phase)
@@ -111,6 +113,8 @@ function renderOpponentPhaseContext(army, phase) {
 }
 
 function bindOpponentTurnActions(army) {
+  bindScoringEvents(army, renderOpponentTurnScreen)
+
   document.getElementById('prev-btn')?.addEventListener('click', () => {
     const idx = getPhaseIndex()
     if (idx > 0) {
