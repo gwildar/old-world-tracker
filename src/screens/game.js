@@ -89,7 +89,9 @@ export function renderGameScreen(army) {
           </div>
 
           <!-- Rules -->
-          <div class="bg-wh-surface rounded-lg border border-wh-border p-4 mb-4">
+          <details class="mb-4">
+          <summary>Rules Summary</summary>
+          <div class="bg-wh-surface rounded-lg border border-wh-border p-4 mt-1 mb-4">
             <ul class="space-y-2">
               ${subPhase.rules
                 .map((rule) => {
@@ -107,6 +109,7 @@ export function renderGameScreen(army) {
                 .join("")}
             </ul>
           </div>
+          </details>
 
           <!-- Contextual army info -->
           ${renderPhaseContext(army, phase, subPhase)}
