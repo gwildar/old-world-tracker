@@ -1,5 +1,5 @@
 import { getShootingUnits } from "../army.js";
-import { RANGED_WEAPONS, MISFIRE_TABLES } from "../data/weapons.js";
+import { RANGED_WEAPONS, MISFIRE_TABLES, getWeapon } from "../data/weapons.js";
 
 function getBS(unit) {
   if (!unit.stats || unit.stats.length === 0) return null;
@@ -61,7 +61,7 @@ export function renderShootingContext(army) {
       const mount = u.mount;
       if (mount?.breath) {
         const breathKey = mount.breath.toLowerCase();
-        const weapon = RANGED_WEAPONS[breathKey];
+        const weapon = getWeapon(RANGED_WEAPONS, breathKey);
         if (weapon) {
           entries.push({
             unitName: u.name,
@@ -142,7 +142,7 @@ export function renderShootingContext(army) {
           // Include alternate profiles (e.g. scatter shot)
           if (bestWeapon.altProfiles) {
             for (const altKey of bestWeapon.altProfiles) {
-              const altWeapon = RANGED_WEAPONS[altKey];
+              const altWeapon = getWeapon(RANGED_WEAPONS, altKey);
               if (altWeapon && !matchedWeapons.has(altWeapon.name)) {
                 matchedWeapons.add(altWeapon.name);
                 entries.push({

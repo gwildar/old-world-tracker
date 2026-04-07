@@ -1,4 +1,4 @@
-import { COMBAT_WEAPONS } from "../data/weapons.js";
+import { COMBAT_WEAPONS, getWeapon } from "../data/weapons.js";
 import { findMount } from "../data/mounts.js";
 
 const HAND_WEAPON = { name: "Hand Weapon", s: "S", ap: "—", rules: "" };
@@ -83,7 +83,7 @@ function matchMountWeapons(unit, alreadyMatched) {
   if (!mount?.weapons) return weapons;
 
   for (const wKey of mount.weapons) {
-    const weapon = COMBAT_WEAPONS[wKey];
+    const weapon = getWeapon(COMBAT_WEAPONS, wKey);
     if (weapon && !alreadyMatched.has(weapon.name)) {
       alreadyMatched.add(weapon.name);
       weapons.push(weapon);
@@ -297,8 +297,12 @@ function getChampionWeapons(unit) {
 }
 
 function findCrewProfiles(unit) {
-  if (!unit.stats?.[0]?.crewed || unit.stats.length < 2) return [];
-  return unit.stats.slice(1).filter((s) => s.A && s.A !== "-");
+  const stats0 = unit.stats?.[0];
+  if (!stats0 || unit.stats.length < 2) return [];
+  if (stats0.crewed || stats0.A === "-") {
+    return unit.stats.slice(1).filter((s) => s.A && s.A !== "-");
+  }
+  return [];
 }
 
 function findEmbeddedMount(unit) {
@@ -450,7 +454,7 @@ export function renderCombatWeaponsContext(army) {
       embedded.mountData?.weapons
     ) {
       for (const wKey of embedded.mountData.weapons) {
-        const weapon = COMBAT_WEAPONS[wKey];
+        const weapon = getWeapon(COMBAT_WEAPONS, wKey);
         if (weapon && !matched.has(weapon.name)) {
           matched.add(weapon.name);
           mountWeapons.push(weapon);
@@ -463,13 +467,13 @@ export function renderCombatWeaponsContext(army) {
       const crewWeaponNames = new Set();
       if (stats.weapons)
         stats.weapons.forEach((wKey) => {
-          const w = COMBAT_WEAPONS[wKey];
+          const w = getWeapon(COMBAT_WEAPONS, wKey);
           if (w) crewWeaponNames.add(w.name);
         });
       for (const c of crew) {
         if (c.weapons)
           c.weapons.forEach((wKey) => {
-            const w = COMBAT_WEAPONS[wKey];
+            const w = getWeapon(COMBAT_WEAPONS, wKey);
             if (w) crewWeaponNames.add(w.name);
           });
       }
@@ -485,8 +489,12 @@ export function renderCombatWeaponsContext(army) {
     // Crewed units with weapons on stats[0] have no rider — mount is in crew array
     if (stats.crewed && stats.weapons) riderWeapons.length = 0;
 
-    // Default to hand weapon if no combat weapons matched
-    if (riderWeapons.length === 0 && !(stats.crewed && stats.weapons))
+    // War machines (A="-") have no rider attacks — crew handles melee instead.
+    if (
+      riderWeapons.length === 0 &&
+      !(stats.crewed && stats.weapons) &&
+      stats.A !== "-"
+    )
       riderWeapons.push(HAND_WEAPON);
 
     const riderI = stats.I || "?";
@@ -606,7 +614,7 @@ export function renderCombatWeaponsContext(army) {
                 s: stats.S,
                 a: stats.A,
                 weapons: stats.weapons
-                  .map((wKey) => COMBAT_WEAPONS[wKey])
+                  .map((wKey) => getWeapon(COMBAT_WEAPONS, wKey))
                   .filter(Boolean),
               },
             ]
@@ -618,7 +626,7 @@ export function renderCombatWeaponsContext(army) {
           s: c.S,
           a: c.A,
           weapons: (c.weapons || [])
-            .map((wKey) => COMBAT_WEAPONS[wKey])
+            .map((wKey) => getWeapon(COMBAT_WEAPONS, wKey))
             .filter(Boolean),
         })),
       ],
