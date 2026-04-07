@@ -194,11 +194,7 @@ function findMagicWeaponProfiles(unit) {
   for (const itemName of unit.magicItems) {
     if (isChampionItem(itemName)) continue;
     const mi = MAGIC_ITEM_MAP[normaliseItemName(itemName)];
-    if (
-      mi?.type === "weapon" &&
-      mi.profiles &&
-      mi.phases?.includes("combat")
-    ) {
+    if (mi?.type === "weapon" && mi.profiles && mi.phases?.includes("combat")) {
       return mi.profiles.map((p) => ({
         name: p.name,
         s: p.s,
@@ -497,10 +493,7 @@ function buildItemNames(unit) {
 function filterItemNames(unit, suItems) {
   const suNames = new Set(suItems.map((i) => i.name.toLowerCase()));
   return buildItemNames(unit).filter((n) => {
-    if (
-      suNames.has(n.toLowerCase()) ||
-      MR_ITEM_NAMES.has(n.toLowerCase())
-    )
+    if (suNames.has(n.toLowerCase()) || MR_ITEM_NAMES.has(n.toLowerCase()))
       return false;
     const mi = MAGIC_ITEM_MAP[normaliseItemName(n)];
     if (mi?.type === "weapon" && mi.phases && !mi.phases.includes("combat"))
@@ -1053,8 +1046,9 @@ export function renderCombatResultContext(army) {
     });
   }
 
-  const rows = dedupe(entries, (e) =>
-    `${e.name}||${e.total}||${e.bonuses.join(",")}`
+  const rows = dedupe(
+    entries,
+    (e) => `${e.name}||${e.total}||${e.bonuses.join(",")}`,
   ).sort((a, b) => b.total - a.total);
   if (rows.length === 0) return "";
 
