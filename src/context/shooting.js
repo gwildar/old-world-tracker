@@ -1,6 +1,5 @@
 import { getShootingUnits } from "../army.js";
 import { RANGED_WEAPONS, MISFIRE_TABLES } from "../data/weapons.js";
-import { findMount } from "../data/mounts.js";
 
 function getBS(unit) {
   if (!unit.stats || unit.stats.length === 0) return null;
@@ -51,21 +50,15 @@ export function renderShootingContext(army) {
     const champBS = getChampionBS(u);
     const championBS = champBS && champBS !== bs ? champBS : null;
 
-    // Get special rules as string for compatibility with resolved schema
-    let specialRulesStr = "";
-    if (Array.isArray(u.specialRules)) {
-      specialRulesStr = u.specialRules
-        .map((r) => r.displayName || "")
-        .join(" ");
-    } else if (typeof u.specialRules === "string") {
-      specialRulesStr = u.specialRules;
-    }
+    const specialRulesStr = (u.specialRules || [])
+      .map((r) => r.displayName || "")
+      .join(" ");
     const hasArrowsOfIsha =
       specialRulesStr?.toLowerCase().includes("arrows of isha") || false;
 
     // Check mount breath weapon
     if (u.mount) {
-      const mount = typeof u.mount === "string" ? findMount(u.mount) : u.mount;
+      const mount = u.mount;
       if (mount?.breath) {
         const breathKey = mount.breath.toLowerCase();
         const weapon = RANGED_WEAPONS[breathKey];

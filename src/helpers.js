@@ -61,14 +61,6 @@ export function formatSlug(slug) {
     .join(" ");
 }
 
-export function parseUnitRules(specialRulesStr) {
-  if (!specialRulesStr) return [];
-  return specialRulesStr
-    .split(",")
-    .map((r) => r.trim())
-    .filter(Boolean);
-}
-
 export function normaliseRuleName(name) {
   // Strip parenthetical parameters: "Armour Bane (2)" → "Armour Bane"
   return name.replace(/\s*\(.*?\)\s*$/, "").trim();

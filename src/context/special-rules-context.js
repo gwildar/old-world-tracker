@@ -1,13 +1,11 @@
 import { SPECIAL_RULES } from "../data/special-rules.js";
-import { findMount, TROOP_TYPE_RULES } from "../data/mounts.js";
+import { TROOP_TYPE_RULES } from "../data/mounts.js";
 import { getRound } from "../state.js";
-import { parseUnitRules, normaliseRuleName, ruleMatches } from "../helpers.js";
+import { normaliseRuleName, ruleMatches } from "../helpers.js";
 
 function injectMountRules(unitRules, unit) {
   if (!unit.mount) return;
-  // In canonical schema, mount is already a resolved object
-  const mount =
-    typeof unit.mount === "string" ? findMount(unit.mount) : unit.mount;
+  const mount = unit.mount;
   if (!mount) return;
 
   if (
@@ -54,16 +52,8 @@ function injectTerrorFear(unitRules) {
 function buildUnitRules(unit) {
   const unitRules = [];
 
-  // In canonical schema, specialRules are already resolved objects
-  if (Array.isArray(unit.specialRules)) {
-    for (const rule of unit.specialRules) {
-      if (rule.displayName) {
-        unitRules.push(rule.displayName);
-      }
-    }
-  } else if (typeof unit.specialRules === "string") {
-    // Legacy support for string format
-    unitRules.push(...parseUnitRules(unit.specialRules));
+  for (const rule of unit.specialRules || []) {
+    if (rule.displayName) unitRules.push(rule.displayName);
   }
 
   // Add weapon names from resolved weapons
@@ -86,6 +76,29 @@ function buildUnitRules(unit) {
   injectMountRules(unitRules, unit);
   injectTerrorFear(unitRules);
   return unitRules;
+}
+
+function renderRulesBlock(grouped, title) {
+  const entries = Object.values(grouped);
+  if (entries.length === 0) return "";
+  return `
+    <div class="bg-wh-surface rounded-lg border border-wh-accent/20 p-4 mb-4">
+      <h3 class="text-sm font-bold text-wh-accent mb-3">${title}</h3>
+      <div class="space-y-2">
+        ${entries
+          .map(
+            (g) => `
+          <div class="p-2 rounded bg-wh-card text-sm">
+            <span class="text-xs bg-wh-accent/20 text-wh-accent px-1.5 py-0.5 rounded">${g.ruleName}</span>
+            <p class="text-wh-muted text-xs mt-1">${g.description}</p>
+            <p class="text-wh-text text-xs mt-1">${g.units.join(", ")}</p>
+          </div>
+        `,
+          )
+          .join("")}
+      </div>
+    </div>
+  `;
 }
 
 export function renderSpecialRulesContext(army, subPhase) {
@@ -113,9 +126,6 @@ export function renderSpecialRulesContext(army, subPhase) {
     }
   }
 
-  if (matches.length === 0) return "";
-
-  // Group by rule name + description
   const grouped = {};
   for (const m of matches) {
     const key = `${m.ruleName}||${m.description}`;
@@ -129,24 +139,7 @@ export function renderSpecialRulesContext(army, subPhase) {
       grouped[key].units.push(m.unitName);
   }
 
-  return `
-    <div class="bg-wh-surface rounded-lg border border-wh-accent/20 p-4 mb-4">
-      <h3 class="text-sm font-bold text-wh-accent mb-3">Special Rules This Step</h3>
-      <div class="space-y-2">
-        ${Object.values(grouped)
-          .map(
-            (g) => `
-          <div class="p-2 rounded bg-wh-card text-sm">
-            <span class="text-xs bg-wh-accent/20 text-wh-accent px-1.5 py-0.5 rounded">${g.ruleName}</span>
-            <p class="text-wh-muted text-xs mt-1">${g.description}</p>
-            <p class="text-wh-text text-xs mt-1">${g.units.join(", ")}</p>
-          </div>
-        `,
-          )
-          .join("")}
-      </div>
-    </div>
-  `;
+  return renderRulesBlock(grouped, "Special Rules This Step");
 }
 
 export function renderSpecialRulesForPhase(army, phase) {
@@ -180,25 +173,5 @@ export function renderSpecialRulesForPhase(army, phase) {
     }
   }
 
-  const entries = Object.values(grouped);
-  if (entries.length === 0) return "";
-
-  return `
-    <div class="bg-wh-surface rounded-lg border border-wh-accent/20 p-4 mb-4">
-      <h3 class="text-sm font-bold text-wh-accent mb-3">Special Rules This Phase</h3>
-      <div class="space-y-2">
-        ${entries
-          .map(
-            (g) => `
-          <div class="p-2 rounded bg-wh-card text-sm">
-            <span class="text-xs bg-wh-accent/20 text-wh-accent px-1.5 py-0.5 rounded">${g.ruleName}</span>
-            <p class="text-wh-muted text-xs mt-1">${g.description}</p>
-            <p class="text-wh-text text-xs mt-1">${g.units.join(", ")}</p>
-          </div>
-        `,
-          )
-          .join("")}
-      </div>
-    </div>
-  `;
+  return renderRulesBlock(grouped, "Special Rules This Phase");
 }

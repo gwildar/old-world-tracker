@@ -1,4 +1,3 @@
-import { findMount } from "./data/mounts.js";
 import { fromOwb } from "./parsers/from-owb.js";
 import { fromNewRecruit } from "./parsers/from-new-recruit.js";
 
@@ -42,8 +41,7 @@ export function getShootingUnits(army) {
 
     // Check if unit's mount has breath attack
     if (u.mount) {
-      const mountData =
-        typeof u.mount === "string" ? findMount(u.mount) : u.mount;
+      const mountData = u.mount;
       if (mountData?.breath != null) {
         return true;
       }
