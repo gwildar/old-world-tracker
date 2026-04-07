@@ -174,8 +174,20 @@ function detectRegen(unit) {
   return null;
 }
 
+function findVirtueAttacks(unit) {
+  // Check unit's magic items for a virtue with attack bonus
+  for (const itemName of unit.magicItems) {
+    const mi = MAGIC_ITEM_MAP[normaliseItemName(itemName)];
+    if (mi?.type === "virtue" && mi.attacks && mi.phases?.includes("combat")) {
+      return mi.attacks;
+    }
+  }
+  return null;
+}
+
 function findMagicWeapon(unit) {
   // Check unit's magic items for a combat magic weapon with s/ap fields
+  const virtueAttacks = findVirtueAttacks(unit);
   for (const itemName of unit.magicItems) {
     // Skip champion weapons (handled separately)
     if (itemName.includes("(champion)") || itemName.includes("(Champion)"))
@@ -187,7 +199,7 @@ function findMagicWeapon(unit) {
         s: mi.s,
         ap: mi.ap || "—",
         rules: mi.effect || "",
-        attacks: mi.attacks || null,
+        attacks: mi.attacks || virtueAttacks || null,
       };
     }
   }
@@ -217,6 +229,12 @@ function matchRiderWeapons(unit) {
         weapons.push(weapon);
       }
     }
+  }
+
+  // Apply virtue attacks to first mundane weapon
+  const virtueAttacks = findVirtueAttacks(unit);
+  if (virtueAttacks && weapons.length > 0) {
+    weapons[0] = { ...weapons[0], attacks: virtueAttacks };
   }
 
   return { weapons, matched };
@@ -914,7 +932,7 @@ export function renderCombatWeaponsContext(army) {
               ${
                 r.singleUseItems.length > 0
                   ? `
-                <div class="mt-1 ml-2">
+                <div class="mt-1">
                   ${r.singleUseItems.map((item) => `<div class="text-xs"><span class="text-wh-accent">\u{1F6E1} ${item.name}</span> <span class="text-wh-muted">(single use)</span></div>`).join("")}
                 </div>
               `
