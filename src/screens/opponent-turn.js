@@ -124,7 +124,8 @@ export function renderOpponentTurnScreen(army) {
 function renderOpponentPhaseContext(army, phase) {
   let html = "";
 
-  if (phase.id === "movement") html += renderChargeContext(army);
+  if (phase.id === "movement")
+    html += `<details><summary class="text-sm font-bold text-wh-phase-combat mb-3">Charge Distances</summary>${renderChargeContext(army)}</details>`;
   if (phase.id === "shooting") html += renderDefensiveStatsContext(army);
   if (phase.id === "combat") html += renderCombatWeaponsContext(army);
   if (phase.id === "scoring") html += renderScoringUI();
