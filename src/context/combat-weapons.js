@@ -174,6 +174,10 @@ function detectRegen(unit) {
   return null;
 }
 
+function isChampionItem(name) {
+  return name.includes("(champion)") || name.includes("(Champion)");
+}
+
 function findVirtueAttacks(unit) {
   // Check unit's magic items for a virtue with attack bonus
   for (const itemName of unit.magicItems) {
@@ -188,8 +192,7 @@ function findVirtueAttacks(unit) {
 function findMagicWeaponProfiles(unit) {
   // Check unit's magic items for a multi-profile weapon
   for (const itemName of unit.magicItems) {
-    if (itemName.includes("(champion)") || itemName.includes("(Champion)"))
-      continue;
+    if (isChampionItem(itemName)) continue;
     const mi = MAGIC_ITEM_MAP[normaliseItemName(itemName)];
     if (
       mi?.type === "weapon" &&
@@ -213,8 +216,7 @@ function findMagicWeapon(unit) {
   const virtueAttacks = findVirtueAttacks(unit);
   for (const itemName of unit.magicItems) {
     // Skip champion weapons (handled separately)
-    if (itemName.includes("(champion)") || itemName.includes("(Champion)"))
-      continue;
+    if (isChampionItem(itemName)) continue;
     const mi = MAGIC_ITEM_MAP[normaliseItemName(itemName)];
     if (mi?.type === "weapon" && mi.s && mi.phases?.includes("combat")) {
       return {
@@ -377,8 +379,7 @@ function detectSingleUseItems(unit) {
 function hasRiderMagicalAttacks(unit) {
   for (const itemName of unit.magicItems) {
     // Champion items only apply to the champion, not the unit
-    if (itemName.includes("(champion)") || itemName.includes("(Champion)"))
-      continue;
+    if (isChampionItem(itemName)) continue;
     const mi = MAGIC_ITEM_MAP[normaliseItemName(itemName)];
     if (mi?.type === "weapon" && mi.phases?.includes("combat")) return true;
     if (mi?.type !== "weapon" && mi?.effect?.includes("Magical Attacks"))
@@ -491,6 +492,21 @@ function buildItemNames(unit) {
     }
   }
   return names;
+}
+
+function filterItemNames(unit, suItems) {
+  const suNames = new Set(suItems.map((i) => i.name.toLowerCase()));
+  return buildItemNames(unit).filter((n) => {
+    if (
+      suNames.has(n.toLowerCase()) ||
+      MR_ITEM_NAMES.has(n.toLowerCase())
+    )
+      return false;
+    const mi = MAGIC_ITEM_MAP[normaliseItemName(n)];
+    if (mi?.type === "weapon" && mi.phases && !mi.phases.includes("combat"))
+      return false;
+    return true;
+  });
 }
 
 function findChampions(unit) {
@@ -640,6 +656,26 @@ function detectImpactHitsFromRules(unit) {
   return match ? match[1] : null;
 }
 
+function dedupe(entries, keyFn) {
+  const seen = {};
+  for (const e of entries) {
+    const key = keyFn(e);
+    if (!seen[key]) {
+      seen[key] = { ...e };
+    } else {
+      seen[key].merged = true;
+    }
+  }
+  return Object.values(seen);
+}
+
+function extractLd(unit) {
+  for (const profile of unit.stats || []) {
+    if (profile.Ld && profile.Ld !== "-") return profile.Ld;
+  }
+  return "?";
+}
+
 export function renderCombatWeaponsContext(army) {
   if (army.units.length === 0) return "";
 
@@ -649,7 +685,6 @@ export function renderCombatWeaponsContext(army) {
     const stats = u.stats?.[0];
     if (!stats) {
       const suItems = detectSingleUseItems(u);
-      const suNames = new Set(suItems.map((i) => i.name.toLowerCase()));
       entries.push({
         unitName: u.name,
         points: u.points,
@@ -676,21 +711,7 @@ export function renderCombatWeaponsContext(army) {
         stomp: detectStompFromRules(u),
         impactHits: detectImpactHitsFromRules(u),
         singleUseItems: suItems,
-        itemNames: buildItemNames(u).filter((n) => {
-          if (
-            suNames.has(n.toLowerCase()) ||
-            MR_ITEM_NAMES.has(n.toLowerCase())
-          )
-            return false;
-          const mi = MAGIC_ITEM_MAP[normaliseItemName(n)];
-          if (
-            mi?.type === "weapon" &&
-            mi.phases &&
-            !mi.phases.includes("combat")
-          )
-            return false;
-          return true;
-        }),
+        itemNames: filterItemNames(u, suItems),
         riderTags: buildRiderTags(u),
         combatRules: extractCombatRules(u),
         crew: [],
@@ -817,6 +838,7 @@ export function renderCombatWeaponsContext(army) {
       mountArmourBane = embedded.mountData?.armourBane || null;
     }
 
+    const suItems = detectSingleUseItems(u);
     entries.push({
       unitName: u.name,
       points: u.points,
@@ -846,29 +868,8 @@ export function renderCombatWeaponsContext(army) {
         mount?.impactHits ||
         embedded?.mountData?.impactHits ||
         detectImpactHitsFromRules(u),
-      singleUseItems: (() => {
-        const items = detectSingleUseItems(u);
-        return items;
-      })(),
-      itemNames: (() => {
-        const suItems = detectSingleUseItems(u);
-        const suNames = new Set(suItems.map((i) => i.name.toLowerCase()));
-        return buildItemNames(u).filter((n) => {
-          if (
-            suNames.has(n.toLowerCase()) ||
-            MR_ITEM_NAMES.has(n.toLowerCase())
-          )
-            return false;
-          const mi = MAGIC_ITEM_MAP[normaliseItemName(n)];
-          if (
-            mi?.type === "weapon" &&
-            mi.phases &&
-            !mi.phases.includes("combat")
-          )
-            return false;
-          return true;
-        });
-      })(),
+      singleUseItems: suItems,
+      itemNames: filterItemNames(u, suItems),
       riderTags: buildRiderTags(u),
       combatRules: extractCombatRules(u),
       crew: [
@@ -918,8 +919,7 @@ export function renderCombatWeaponsContext(army) {
   }
 
   // Deduplicate
-  const deduped = {};
-  for (const e of entries) {
+  const rows = dedupe(entries, (e) => {
     const riderWKey = e.riderWeapons
       .map((w) => w.name)
       .sort()
@@ -928,15 +928,8 @@ export function renderCombatWeaponsContext(army) {
       .map((w) => w.name)
       .sort()
       .join(",");
-    const key = `${e.unitName}||${e.riderI}||${e.riderA}||${e.t}||${e.w}||${e.as}||${riderWKey}||${mountWKey}`;
-    if (!deduped[key]) {
-      deduped[key] = { ...e, merged: false };
-    } else {
-      deduped[key].merged = true;
-    }
-  }
-
-  const rows = Object.values(deduped).sort((a, b) => b.iNum - a.iNum);
+    return `${e.unitName}||${e.riderI}||${e.riderA}||${e.t}||${e.w}||${e.as}||${riderWKey}||${mountWKey}`;
+  }).sort((a, b) => b.iNum - a.iNum);
   if (rows.length === 0) return "";
 
   return `
@@ -1060,14 +1053,9 @@ export function renderCombatResultContext(army) {
     });
   }
 
-  const deduped = {};
-  for (const e of entries) {
-    const key = `${e.name}||${e.total}||${e.bonuses.join(",")}`;
-    if (!deduped[key]) deduped[key] = { ...e, merged: false };
-    else deduped[key].merged = true;
-  }
-
-  const rows = Object.values(deduped).sort((a, b) => b.total - a.total);
+  const rows = dedupe(entries, (e) =>
+    `${e.name}||${e.total}||${e.bonuses.join(",")}`
+  ).sort((a, b) => b.total - a.total);
   if (rows.length === 0) return "";
 
   return `
@@ -1099,15 +1087,7 @@ export function renderCombatLeadershipContext(army, title = "Break Test") {
 
   const deduped = {};
   for (const u of army.units) {
-    let ld = "?";
-    if (u.stats) {
-      for (const profile of u.stats) {
-        if (profile.Ld && profile.Ld !== "-") {
-          ld = profile.Ld;
-          break;
-        }
-      }
-    }
+    const ld = extractLd(u);
     const key = `${u.name}||${ld}`;
     if (!deduped[key])
       deduped[key] = {
@@ -1198,15 +1178,7 @@ export function renderDefensiveStatsContext(army) {
     const ward = detectWard(u);
     const regen = detectRegen(u);
 
-    let ld = "?";
-    if (u.stats) {
-      for (const profile of u.stats) {
-        if (profile.Ld && profile.Ld !== "-") {
-          ld = profile.Ld;
-          break;
-        }
-      }
-    }
+    const ld = extractLd(u);
 
     const hasEvasive =
       u.specialRules?.toLowerCase().includes("evasive") || false;
@@ -1246,7 +1218,7 @@ export function renderDefensiveStatsContext(army) {
           <div class="p-2 rounded bg-wh-card">
             <div class="flex items-start gap-2 flex-wrap text-sm">
               <div class="flex flex-col">
-                <span class="text-wh-text font-semibold">${r.name}${r.mount ? ` (${r.mount})` : ""}${!r.merged && r.strength > 1 ? ` <span class="text-wh-muted font-normal">x${r.strength}</span>` : ""}</span>
+                <span class="text-wh-text font-semibold">${r.name}${r.mount ? ` <span class="font-normal text-xs">(${r.mount})</span>` : ""}${!r.merged && r.strength > 1 ? ` <span class="text-wh-muted font-normal">x${r.strength}</span>` : ""}</span>
                 <span class="text-wh-muted text-[10px] font-mono">${r.points}pts</span>
               </div>
               <div class="flex items-center gap-2 flex-wrap mt-0.5">
