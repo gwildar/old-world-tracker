@@ -185,6 +185,29 @@ function findVirtueAttacks(unit) {
   return null;
 }
 
+function findMagicWeaponProfiles(unit) {
+  // Check unit's magic items for a multi-profile weapon
+  for (const itemName of unit.magicItems) {
+    if (itemName.includes("(champion)") || itemName.includes("(Champion)"))
+      continue;
+    const mi = MAGIC_ITEM_MAP[normaliseItemName(itemName)];
+    if (
+      mi?.type === "weapon" &&
+      mi.profiles &&
+      mi.phases?.includes("combat")
+    ) {
+      return mi.profiles.map((p) => ({
+        name: p.name,
+        s: p.s,
+        ap: p.ap || "—",
+        rules: p.rules || "",
+        attacks: p.attacks || null,
+      }));
+    }
+  }
+  return null;
+}
+
 function findMagicWeapon(unit) {
   // Check unit's magic items for a combat magic weapon with s/ap fields
   const virtueAttacks = findVirtueAttacks(unit);
@@ -210,7 +233,14 @@ function matchRiderWeapons(unit) {
   const weapons = [];
   const matched = new Set();
 
-  // Magic weapon replaces mundane weapons
+  // Multi-profile magic weapons (e.g. The Dolorous Blade)
+  const magicProfiles = findMagicWeaponProfiles(unit);
+  if (magicProfiles) {
+    for (const w of magicProfiles) matched.add(w.name);
+    return { weapons: magicProfiles, matched };
+  }
+
+  // Single magic weapon replaces mundane weapons
   const magicWeapon = findMagicWeapon(unit);
   if (magicWeapon) {
     weapons.push(magicWeapon);

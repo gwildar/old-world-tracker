@@ -381,6 +381,17 @@ describe("Combat phase with Bretonnian Exiles", () => {
     expect(baronCard).toBeTruthy();
     expect(baronCard.textContent).toContain("+D3");
   });
+
+  it("shows both Dolorous Blade profiles on Green Knight combat card", () => {
+    renderGameScreen(army);
+    const combatPanel = getApp().querySelector(".border-wh-phase-combat\\/30");
+    const knightCard = [...combatPanel.querySelectorAll(".bg-wh-card")].find(
+      (el) => el.textContent.includes("Green Knight"),
+    );
+    expect(knightCard).toBeTruthy();
+    expect(knightCard.textContent).toContain("Rapid Strikes");
+    expect(knightCard.textContent).toContain("Deadly Blows");
+  });
 });
 
 describe("Vampire Counts army", () => {

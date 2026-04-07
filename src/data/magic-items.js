@@ -819,6 +819,21 @@ export const MAGIC_ITEMS = [
     effect:
       "Two profiles, chosen at start of each combat round. Rapid Strikes: S user, AP -1, Extra Attacks (+D6), Magical Attacks. Deadly Blows: S+2, AP -1, Armour Bane (1), Magical Attacks, Multiple Wounds (2).",
     phases: ["combat"],
+    profiles: [
+      {
+        name: "Rapid Strikes",
+        s: "S",
+        ap: "-1",
+        attacks: "+D6",
+        rules: "Magical Attacks",
+      },
+      {
+        name: "Deadly Blows",
+        s: "S+2",
+        ap: "-1",
+        rules: "Magical Attacks, Armour Bane (1), Multiple Wounds (2)",
+      },
+    ],
   },
   {
     name: "Sorrow's End",
