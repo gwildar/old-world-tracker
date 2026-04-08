@@ -11100,7 +11100,7 @@ export const UNIT_STATS = {
         Ld: "7",
         WS: "5",
         Name: "Exalted Alluress",
-        equipment: ["Piercing claws"],
+        equipment: [],
       },
       {
         A: "1",
@@ -11175,7 +11175,7 @@ export const UNIT_STATS = {
         Ld: "7",
         WS: "5",
         Name: "Exalted Alluress",
-        equipment: ["Piercing claws"],
+        equipment: [],
       },
       {
         A: "1",
@@ -21137,7 +21137,7 @@ export const UNIT_STATS = {
         WS: "3",
         Name: "Master Charioteer",
         Regen: "6+",
-        equipment: ["Hand weapons", "cavalry spears", "warbows"],
+        equipment: [],
       },
       {
         A: "1",
@@ -23842,7 +23842,7 @@ export const UNIT_STATS = {
         Name: "Tomb Captain",
         as: 6,
         Regen: "6+",
-        equipment: ["Hand weapons", "halberds", "shields"],
+        equipment: [],
       },
       {
         A: "1",
