@@ -38,6 +38,7 @@ export function findMount(name) {
     ? parseInt(armourBaneRule.match(/\((\d+)/)?.[1] ?? "0", 10)
     : null;
 
+  const equipment = (profile.equipment ?? []).map((e) => e.toLowerCase());
   return {
     name: profile.Name,
     m: parseInt(profile.M, 10),
@@ -50,15 +51,13 @@ export function findMount(name) {
     i: profile.I,
     a: profile.A,
     as: profile.as ?? null,
-    weapons: (profile.equipment ?? []).map((e) => e.toLowerCase()),
+    weapons: equipment,
     swiftstride:
       profile.rules?.some((r) => r.toLowerCase() === "swiftstride") ?? false,
     troopType: profile.troopType?.[0] ?? null,
     armourBane,
     f: profile.Fly ? parseInt(profile.Fly, 10) : null,
-    breath:
-      (profile.equipment ?? []).find((e) => RANGED_WEAPONS[e.toLowerCase()]) ??
-      null,
+    breath: equipment.find((e) => RANGED_WEAPONS[e]) ?? null,
   };
 }
 
