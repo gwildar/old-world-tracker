@@ -1090,10 +1090,7 @@ export const UNIT_STATS = {
         "Name": "Black Coach",
         "Regen": "6+",
         "Impact-Hits": "D6+2",
-        "equipment": [
-          "Spectral scythe",
-          "hand weapon"
-        ]
+        "equipment": []
       },
       {
         "A": "2",
@@ -1108,8 +1105,7 @@ export const UNIT_STATS = {
         "Name": "Wraith (x1)",
         "Regen": "6+",
         "equipment": [
-          "Spectral scythe",
-          "hand weapon"
+          "Spectral scythe"
         ]
       },
       {
@@ -1125,7 +1121,6 @@ export const UNIT_STATS = {
         "Name": "Nightmares (x2)",
         "Regen": "6+",
         "equipment": [
-          "Spectral scythe",
           "hand weapon"
         ]
       }
@@ -1165,10 +1160,7 @@ export const UNIT_STATS = {
         "Name": "Black Coach",
         "Regen": "6+",
         "Impact-Hits": "D6+2",
-        "equipment": [
-          "Spectral scythe",
-          "hand weapon"
-        ]
+        "equipment": []
       },
       {
         "A": "2",
@@ -1183,8 +1175,7 @@ export const UNIT_STATS = {
         "Name": "Wraith (x1)",
         "Regen": "6+",
         "equipment": [
-          "Spectral scythe",
-          "hand weapon"
+          "Spectral scythe"
         ]
       },
       {
@@ -1200,7 +1191,6 @@ export const UNIT_STATS = {
         "Name": "Nightmares (x2)",
         "Regen": "6+",
         "equipment": [
-          "Spectral scythe",
           "hand weapon"
         ]
       }
@@ -1479,10 +1469,7 @@ export const UNIT_STATS = {
         "WS": "-",
         "Name": "Chariot",
         "Impact-Hits": "D6+1",
-        "equipment": [
-          "Hand weapons",
-          "hand weapons"
-        ]
+        "equipment": []
       },
       {
         "A": "1",
@@ -1496,8 +1483,7 @@ export const UNIT_STATS = {
         "WS": "4",
         "Name": "Black Orc Crew (x2)",
         "equipment": [
-          "Hand weapons",
-          "hand weapons"
+          "Hand weapons"
         ]
       },
       {
@@ -1512,7 +1498,6 @@ export const UNIT_STATS = {
         "WS": "3",
         "Name": "War Boars (x2)",
         "equipment": [
-          "Hand weapons",
           "hand weapons"
         ]
       }
@@ -2144,11 +2129,7 @@ export const UNIT_STATS = {
         "Name": "Bloodwrack Shrine",
         "Magic-Res": "-1",
         "Impact-Hits": "D6+1",
-        "equipment": [
-          "Cavalry spears",
-          "Cavalry spear",
-          "petrifying gaze"
-        ]
+        "equipment": []
       },
       {
         "A": "1",
@@ -2163,9 +2144,7 @@ export const UNIT_STATS = {
         "Name": "Shrinekeeper (x2)",
         "Magic-Res": "-1",
         "equipment": [
-          "Cavalry spears",
-          "Cavalry spear",
-          "petrifying gaze"
+          "Cavalry spears"
         ]
       },
       {
@@ -2181,7 +2160,6 @@ export const UNIT_STATS = {
         "Name": "Bloodwrack Medusa",
         "Magic-Res": "-1",
         "equipment": [
-          "Cavalry spears",
           "Cavalry spear",
           "petrifying gaze"
         ]
@@ -3765,11 +3743,7 @@ export const UNIT_STATS = {
         "WS": "-",
         "Name": "Chariot",
         "Impact-Hits": "D6+1",
-        "equipment": [
-          "Hand weapons",
-          "halberds",
-          "hand weapon"
-        ]
+        "equipment": []
       },
       {
         "A": "1",
@@ -3784,8 +3758,7 @@ export const UNIT_STATS = {
         "Name": "Chaos Charioteer (x2)",
         "equipment": [
           "Hand weapons",
-          "halberds",
-          "hand weapon"
+          "halberds"
         ]
       },
       {
@@ -3800,8 +3773,6 @@ export const UNIT_STATS = {
         "WS": "3",
         "Name": "Chaos Steed (x2)",
         "equipment": [
-          "Hand weapons",
-          "halberds",
           "hand weapon"
         ]
       }
@@ -4751,11 +4722,7 @@ export const UNIT_STATS = {
         "WS": "-",
         "Name": "Chariot",
         "Impact-Hits": "D6+1, Chariot only",
-        "equipment": [
-          "Hand weapons",
-          "halberds",
-          "hand weapons"
-        ]
+        "equipment": []
       },
       {
         "A": "2",
@@ -4770,8 +4737,7 @@ export const UNIT_STATS = {
         "Name": "Chosen Charioteer (x2)",
         "equipment": [
           "Hand weapons",
-          "halberds",
-          "hand weapons"
+          "halberds"
         ]
       },
       {
@@ -4786,8 +4752,6 @@ export const UNIT_STATS = {
         "WS": "3",
         "Name": "Chaos Steed (x2)",
         "equipment": [
-          "Hand weapons",
-          "halberds",
           "hand weapons"
         ]
       }
@@ -5285,12 +5249,7 @@ export const UNIT_STATS = {
         "WS": "-",
         "Name": "Chariot",
         "Impact-Hits": "D6+1",
-        "equipment": [
-          "Hand weapons",
-          "cavalry spears",
-          "repeater crossbows",
-          "hand weapon"
-        ]
+        "equipment": []
       },
       {
         "A": "1",
@@ -5306,8 +5265,7 @@ export const UNIT_STATS = {
         "equipment": [
           "Hand weapons",
           "cavalry spears",
-          "repeater crossbows",
-          "hand weapon"
+          "repeater crossbows"
         ]
       },
       {
@@ -5322,9 +5280,6 @@ export const UNIT_STATS = {
         "WS": "3",
         "Name": "Cold One (x2)",
         "equipment": [
-          "Hand weapons",
-          "cavalry spears",
-          "repeater crossbows",
           "hand weapon"
         ]
       }
@@ -5683,10 +5638,7 @@ export const UNIT_STATS = {
         "Name": "Corpse Cart",
         "Regen": "6+",
         "Impact-Hits": "D3+1",
-        "equipment": [
-          "Hand weapon",
-          "Hand weapons"
-        ]
+        "equipment": []
       },
       {
         "A": "1",
@@ -5701,8 +5653,7 @@ export const UNIT_STATS = {
         "Name": "Corpsemaster (x1)",
         "Regen": "6+",
         "equipment": [
-          "Hand weapon",
-          "Hand weapons"
+          "Hand weapon"
         ]
       },
       {
@@ -5718,7 +5669,6 @@ export const UNIT_STATS = {
         "Name": "The Restless Dead",
         "Regen": "6+",
         "equipment": [
-          "Hand weapon",
           "Hand weapons"
         ]
       }
@@ -5761,10 +5711,7 @@ export const UNIT_STATS = {
         "Regen": "6+",
         "Impact-Hits": "D6+1",
         "Fly": "8",
-        "equipment": [
-          "Hand weapons",
-          "lances"
-        ]
+        "equipment": []
       },
       {
         "A": "2",
@@ -5798,8 +5745,7 @@ export const UNIT_STATS = {
         "Regen": "6+",
         "Fly": "8",
         "equipment": [
-          "Hand weapons",
-          "lances"
+          "Hand weapons"
         ]
       }
     ]
@@ -7497,10 +7443,7 @@ export const UNIT_STATS = {
         "Name": "Doomwheel",
         "Stomps": "2",
         "Impact-Hits": "D3+1",
-        "equipment": [
-          "Hand weapon",
-          "hand weapon"
-        ]
+        "equipment": []
       },
       {
         "A": "1",
@@ -7514,8 +7457,7 @@ export const UNIT_STATS = {
         "WS": "3",
         "Name": "Warlock (x1)",
         "equipment": [
-          "Hand weapon",
-          "hand weapon"
+          "Hand weapon"
         ]
       },
       {
@@ -7530,7 +7472,6 @@ export const UNIT_STATS = {
         "WS": "2",
         "Name": "Rats",
         "equipment": [
-          "Hand weapon",
           "hand weapon"
         ]
       }
@@ -7927,9 +7868,7 @@ export const UNIT_STATS = {
         "Name": "Dreadquake Mortar",
         "as": 5,
         "equipment": [
-          "Dreadquake Mortar",
-          "hand weapons",
-          "heavy armour"
+          "Dreadquake Mortar"
         ]
       },
       {
@@ -7945,7 +7884,6 @@ export const UNIT_STATS = {
         "Name": "Chaos Dwarf Crew",
         "as": 5,
         "equipment": [
-          "Dreadquake Mortar",
           "hand weapons",
           "heavy armour"
         ]
@@ -7963,7 +7901,6 @@ export const UNIT_STATS = {
         "Name": "Ogre Loader",
         "as": 5,
         "equipment": [
-          "Dreadquake Mortar",
           "hand weapons",
           "heavy armour"
         ]
@@ -8104,10 +8041,7 @@ export const UNIT_STATS = {
         "Name": "Dwarf Cart",
         "Magic-Res": "-1",
         "Impact-Hits": "D3",
-        "equipment": [
-          "Hand weapons",
-          "hand weapon"
-        ]
+        "equipment": []
       },
       {
         "A": "1",
@@ -8122,8 +8056,7 @@ export const UNIT_STATS = {
         "Name": "Dwarf Crew (x1)",
         "Magic-Res": "-1",
         "equipment": [
-          "Hand weapons",
-          "hand weapon"
+          "Hand weapons"
         ]
       },
       {
@@ -8139,7 +8072,6 @@ export const UNIT_STATS = {
         "Name": "Draft Pony",
         "Magic-Res": "-1",
         "equipment": [
-          "Hand weapons",
           "hand weapon"
         ]
       }
@@ -8958,11 +8890,7 @@ export const UNIT_STATS = {
         "Name": "War Wagon",
         "Stomps": "D3+1",
         "Impact-Hits": "D6+1, War Wagon only",
-        "equipment": [
-          "Hand weapons",
-          "assorted weapons",
-          "hand weapon"
-        ]
+        "equipment": []
       },
       {
         "A": "1",
@@ -8977,8 +8905,7 @@ export const UNIT_STATS = {
         "Name": "War Wagon Crew (x6)",
         "equipment": [
           "Hand weapons",
-          "assorted weapons",
-          "hand weapon"
+          "assorted weapons"
         ]
       },
       {
@@ -8993,8 +8920,6 @@ export const UNIT_STATS = {
         "WS": "3",
         "Name": "Barded Warhorse (x2)",
         "equipment": [
-          "Hand weapons",
-          "assorted weapons",
           "hand weapon"
         ]
       }
@@ -9235,10 +9160,7 @@ export const UNIT_STATS = {
         "WS": "-",
         "Name": "Exalted Seeker Chariot",
         "Impact-Hits": "D6+1",
-        "equipment": [
-          "Piercing claws",
-          "hand weapons"
-        ]
+        "equipment": []
       },
       {
         "A": "1",
@@ -9252,8 +9174,7 @@ export const UNIT_STATS = {
         "WS": "4",
         "Name": "Daemonette Crew (x3)",
         "equipment": [
-          "Piercing claws",
-          "hand weapons"
+          "Piercing claws"
         ]
       },
       {
@@ -9268,7 +9189,6 @@ export const UNIT_STATS = {
         "WS": "3",
         "Name": "Steed of Slaanesh (x4)",
         "equipment": [
-          "Piercing claws",
           "hand weapons"
         ]
       }
@@ -11132,9 +11052,7 @@ export const UNIT_STATS = {
         "Name": "Scraplauncher",
         "Impact-Hits": "D6+1",
         "equipment": [
-          "Scraplauncher catapult",
-          "hand weapon",
-          "throwing weapons"
+          "Scraplauncher catapult"
         ]
       },
       {
@@ -11149,7 +11067,6 @@ export const UNIT_STATS = {
         "WS": "2",
         "Name": "Gnoblar Scrapper (x7)",
         "equipment": [
-          "Scraplauncher catapult",
           "hand weapon",
           "throwing weapons"
         ]
@@ -11169,9 +11086,7 @@ export const UNIT_STATS = {
           "monstrous tusks"
         ],
         "equipment": [
-          "Scraplauncher catapult",
-          "hand weapon",
-          "throwing weapons"
+          "hand weapon"
         ]
       }
     ]
@@ -11692,12 +11607,7 @@ export const UNIT_STATS = {
         "WS": "-",
         "Name": "Chariot",
         "Impact-Hits": "D3+1",
-        "equipment": [
-          "Hand weapons",
-          "cavalry spears",
-          "shortbows",
-          "hand weapons"
-        ]
+        "equipment": []
       },
       {
         "A": "1",
@@ -11713,8 +11623,7 @@ export const UNIT_STATS = {
         "equipment": [
           "Hand weapons",
           "cavalry spears",
-          "shortbows",
-          "hand weapons"
+          "shortbows"
         ]
       },
       {
@@ -11729,9 +11638,6 @@ export const UNIT_STATS = {
         "WS": "3",
         "Name": "Giant Wolves (x2)",
         "equipment": [
-          "Hand weapons",
-          "cavalry spears",
-          "shortbows",
           "hand weapons"
         ]
       }
@@ -11945,11 +11851,7 @@ export const UNIT_STATS = {
         "WS": "-",
         "Name": "Chariot",
         "Impact-Hits": "D6+2",
-        "equipment": [
-          "Hand weapons",
-          "halberds",
-          "hand weapon"
-        ]
+        "equipment": []
       },
       {
         "A": "1",
@@ -11964,8 +11866,7 @@ export const UNIT_STATS = {
         "Name": "Chaos Charioteer (x2)",
         "equipment": [
           "Hand weapons",
-          "halberds",
-          "hand weapon"
+          "halberds"
         ]
       },
       {
@@ -11980,8 +11881,6 @@ export const UNIT_STATS = {
         "WS": "4",
         "Name": "Gorebeast (x1)",
         "equipment": [
-          "Hand weapons",
-          "halberds",
           "hand weapon"
         ]
       }
@@ -16737,11 +16636,7 @@ export const UNIT_STATS = {
         "WS": "-",
         "Name": "Lion Chariot",
         "Impact-Hits": "D6",
-        "equipment": [
-          "Hand weapons",
-          "Chracian great blades",
-          "hand weapon"
-        ]
+        "equipment": []
       },
       {
         "A": "1",
@@ -16756,8 +16651,7 @@ export const UNIT_STATS = {
         "Name": "Lion Charioteer (x2)",
         "equipment": [
           "Hand weapons",
-          "Chracian great blades",
-          "hand weapon"
+          "Chracian great blades"
         ]
       },
       {
@@ -16772,8 +16666,6 @@ export const UNIT_STATS = {
         "WS": "5",
         "Name": "War Lion (x2)",
         "equipment": [
-          "Hand weapons",
-          "Chracian great blades",
           "hand weapon"
         ]
       }
@@ -17145,12 +17037,7 @@ export const UNIT_STATS = {
         "Name": "Lothern Skycutter",
         "Impact-Hits": "D3+1",
         "Fly": "10",
-        "equipment": [
-          "Hand weapons",
-          "cavalry spears",
-          "shortbows",
-          "Wicked claws"
-        ]
+        "equipment": []
       },
       {
         "A": "1",
@@ -17167,8 +17054,7 @@ export const UNIT_STATS = {
         "equipment": [
           "Hand weapons",
           "cavalry spears",
-          "shortbows",
-          "Wicked claws"
+          "shortbows"
         ]
       },
       {
@@ -17184,9 +17070,6 @@ export const UNIT_STATS = {
         "Name": "Swiftfeather Roc (x1)",
         "Fly": "10",
         "equipment": [
-          "Hand weapons",
-          "cavalry spears",
-          "shortbows",
           "Wicked claws"
         ]
       }
@@ -18561,10 +18444,7 @@ export const UNIT_STATS = {
         "Regen": "6+",
         "Impact-Hits": "D6+1",
         "Fly": "8",
-        "equipment": [
-          "Hand weapons",
-          "lances"
-        ]
+        "equipment": []
       },
       {
         "A": "1",
@@ -18598,8 +18478,7 @@ export const UNIT_STATS = {
         "Regen": "6+",
         "Fly": "8",
         "equipment": [
-          "Hand weapons",
-          "lances"
+          "Hand weapons"
         ]
       }
     ]
@@ -20450,11 +20329,7 @@ export const UNIT_STATS = {
         "WS": "-",
         "Name": "Chariot",
         "Impact-Hits": "D6+1",
-        "equipment": [
-          "Hand weapons",
-          "cavalry spears",
-          "hand weapons"
-        ]
+        "equipment": []
       },
       {
         "A": "1",
@@ -20469,8 +20344,7 @@ export const UNIT_STATS = {
         "Name": "Orc Crew (x2)",
         "equipment": [
           "Hand weapons",
-          "cavalry spears",
-          "hand weapons"
+          "cavalry spears"
         ]
       },
       {
@@ -20485,8 +20359,6 @@ export const UNIT_STATS = {
         "WS": "3",
         "Name": "War Boars (x2)",
         "equipment": [
-          "Hand weapons",
-          "cavalry spears",
           "hand weapons"
         ]
       }
@@ -24005,13 +23877,7 @@ export const UNIT_STATS = {
         "WS": "-",
         "Name": "Chariot",
         "Impact-Hits": "D6",
-        "equipment": [
-          "Ravager harpoon",
-          "Hand weapons",
-          "cavalry spears",
-          "repeater crossbows",
-          "hand weapons"
-        ]
+        "equipment": []
       },
       {
         "A": "1",
@@ -24028,8 +23894,7 @@ export const UNIT_STATS = {
           "Ravager harpoon",
           "Hand weapons",
           "cavalry spears",
-          "repeater crossbows",
-          "hand weapons"
+          "repeater crossbows"
         ]
       },
       {
@@ -24044,10 +23909,6 @@ export const UNIT_STATS = {
         "WS": "3",
         "Name": "Dark Steed (x2)",
         "equipment": [
-          "Ravager harpoon",
-          "Hand weapons",
-          "cavalry spears",
-          "repeater crossbows",
           "hand weapons"
         ]
       }
@@ -24356,10 +24217,7 @@ export const UNIT_STATS = {
         "WS": "-",
         "Name": "Seeker Chariot",
         "Impact-Hits": "D3+1",
-        "equipment": [
-          "Piercing claws",
-          "hand weapons"
-        ]
+        "equipment": []
       },
       {
         "A": "1",
@@ -24373,8 +24231,7 @@ export const UNIT_STATS = {
         "WS": "4",
         "Name": "Daemonette Crew (x2)",
         "equipment": [
-          "Piercing claws",
-          "hand weapons"
+          "Piercing claws"
         ]
       },
       {
@@ -24389,7 +24246,6 @@ export const UNIT_STATS = {
         "WS": "3",
         "Name": "Steed of Slaanesh (x2)",
         "equipment": [
-          "Piercing claws",
           "hand weapons"
         ]
       }
@@ -26779,10 +26635,7 @@ export const UNIT_STATS = {
         "Name": "Sky Lantern",
         "Impact-Hits": "D3+1, Sky Lantern only",
         "Fly": "8",
-        "equipment": [
-          "Hand weapons",
-          "Hand weapon"
-        ]
+        "equipment": []
       },
       {
         "A": "1",
@@ -26797,8 +26650,7 @@ export const UNIT_STATS = {
         "Name": "Lantern Gunners (x4)",
         "Fly": "8",
         "equipment": [
-          "Hand weapons",
-          "Hand weapon"
+          "Hand weapons"
         ]
       },
       {
@@ -26814,7 +26666,6 @@ export const UNIT_STATS = {
         "Name": "Commander (x1)",
         "Fly": "8",
         "equipment": [
-          "Hand weapons",
           "Hand weapon"
         ]
       }
@@ -27833,10 +27684,7 @@ export const UNIT_STATS = {
         ],
         "Impact-Hits": "D6+1",
         "equipment": [
-          "Horns of stone",
-          "Hand weapon",
-          "chaintrap",
-          "harpoon launcher"
+          "Horns of stone"
         ]
       },
       {
@@ -27851,7 +27699,6 @@ export const UNIT_STATS = {
         "WS": "3",
         "Name": "Ogre Beast Rider (x1)",
         "equipment": [
-          "Horns of stone",
           "Hand weapon",
           "chaintrap",
           "harpoon launcher"
@@ -27869,7 +27716,6 @@ export const UNIT_STATS = {
         "WS": "3",
         "Name": "Ogre Crew (x1)",
         "equipment": [
-          "Horns of stone",
           "Hand weapon",
           "chaintrap",
           "harpoon launcher"
@@ -29041,10 +28887,7 @@ export const UNIT_STATS = {
         "Impact-Hits": "D3",
         "equipment": [
           "Great tusks",
-          "chill breath",
-          "Hand weapon",
-          "chaintrap",
-          "harpoon launcher"
+          "chill breath"
         ]
       },
       {
@@ -29059,8 +28902,6 @@ export const UNIT_STATS = {
         "WS": "3",
         "Name": "Ogre Beast Rider (x1)",
         "equipment": [
-          "Great tusks",
-          "chill breath",
           "Hand weapon",
           "chaintrap",
           "harpoon launcher"
@@ -29078,8 +28919,6 @@ export const UNIT_STATS = {
         "WS": "3",
         "Name": "Ogre Crew (x1)",
         "equipment": [
-          "Great tusks",
-          "chill breath",
           "Hand weapon",
           "chaintrap",
           "harpoon launcher"
@@ -29117,12 +28956,7 @@ export const UNIT_STATS = {
         "WS": "-",
         "Name": "Tiranoc Chariot",
         "Impact-Hits": "D6",
-        "equipment": [
-          "Hand weapons",
-          "cavalry spears",
-          "longbows",
-          "hand weapon"
-        ]
+        "equipment": []
       },
       {
         "A": "1",
@@ -29138,8 +28972,7 @@ export const UNIT_STATS = {
         "equipment": [
           "Hand weapons",
           "cavalry spears",
-          "longbows",
-          "hand weapon"
+          "longbows"
         ]
       },
       {
@@ -29154,9 +28987,6 @@ export const UNIT_STATS = {
         "WS": "3",
         "Name": "Elven Steed (x2)",
         "equipment": [
-          "Hand weapons",
-          "cavalry spears",
-          "longbows",
           "hand weapon"
         ]
       }
