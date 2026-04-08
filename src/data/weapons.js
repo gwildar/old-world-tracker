@@ -134,6 +134,7 @@ export const RANGED_WEAPONS = {
     ap: "—",
     rules: "Multiple Wounds (D3)",
     misfireTable: "black-powder",
+    noBS: true,
     altProfiles: ["grapeshot"],
   },
   grapeshot: {
@@ -142,16 +143,31 @@ export const RANGED_WEAPONS = {
     s: "4",
     ap: "-1",
     rules: "Cumbersome, Move or Shoot, Needs More Nails",
-    misfireTable: "black-powder",
+    noBS: true,
   },
-  mortar: { name: "Mortar", range: '12"-48"', s: "—", ap: "—", rules: "" },
-  catapult: { name: "Catapult", range: '12"-60"', s: "—", ap: "—", rules: "" },
+  mortar: {
+    name: "Mortar",
+    range: '12"-48"',
+    s: "—",
+    ap: "—",
+    rules: "",
+    noBS: true,
+  },
+  catapult: {
+    name: "Catapult",
+    range: '12"-60"',
+    s: "—",
+    ap: "—",
+    rules: "",
+    noBS: true,
+  },
   trebuchet: {
     name: "Trebuchet",
     range: '12"-60"',
     s: "—",
     ap: "—",
     rules: "",
+    noBS: true,
   },
   bombard: {
     name: "Bombard",
@@ -161,6 +177,7 @@ export const RANGED_WEAPONS = {
     rules:
       "Armour Bane (2), Cannon Fire, Cumbersome, Move or Shoot, Multiple Wounds (D3+1)",
     misfireTable: "bombard",
+    noBS: true,
     altProfiles: ["grapeshot"],
   },
 
@@ -186,6 +203,7 @@ export const RANGED_WEAPONS = {
     ap: "-3",
     rules: "Armour Bane (2), Cannon Fire, Cumbersome, Multiple Wounds (D3+1)",
     misfireTable: "ironblaster",
+    noBS: true,
     altProfiles: ["cannon of the sky-titans (scatter shot)"],
   },
   "cannon of the sky-titans (scatter shot)": {
@@ -194,6 +212,7 @@ export const RANGED_WEAPONS = {
     s: "4",
     ap: "-1",
     rules: "Breath Weapon",
+    noBS: true,
   },
   chaintrap: {
     name: "Chaintrap",
@@ -259,6 +278,7 @@ export const RANGED_WEAPONS = {
     ap: "-(-2)",
     rules:
       'Bombardment (5" blast), Cumbersome, Multiple Wounds (2) on central model',
+    noBS: true,
   },
 
   // ─── Faction-specific Ranged ─────────────────────────────────────────
