@@ -11085,9 +11085,7 @@ export const UNIT_STATS = {
         "weapons": [
           "monstrous tusks"
         ],
-        "equipment": [
-          "hand weapon"
-        ]
+        "equipment": []
       }
     ]
   },
