@@ -1,7 +1,6 @@
 // src/test/unit-stats-resolution.test.js
 import { describe, it, expect } from "vitest";
-import { resolveUnitEntry } from "../parsers/from-owb.js";
-import { findMount } from "../parsers/resolve.js";
+import { resolveUnitEntry, findMount } from "../parsers/resolve.js";
 
 describe("resolveUnitEntry", () => {
   it("returns array unchanged for non-crewed units", () => {

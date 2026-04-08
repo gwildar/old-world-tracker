@@ -11,10 +11,30 @@ const MOUNT_KEY_OVERRIDES = {
   "skeletal steed": "skeletal-steed-vampire-counts",
 };
 
-function resolveMountProfile(entry) {
+export function resolveUnitEntry(entry) {
   return Array.isArray(entry)
     ? entry
     : entry.stats.map((s) => ({ ...entry.shared, ...s }));
+}
+
+function resolveMountProfile(entry) {
+  return resolveUnitEntry(entry);
+}
+
+export function resolveStats(id, name) {
+  const baseId = (id || "").split(".")[0];
+  const slug = name?.toLowerCase().replace(/\s+/g, "-");
+  const keys = [
+    baseId,
+    baseId.replace(/s$/, ""),
+    baseId + "s",
+    slug,
+    slug?.replace(/s$/, ""),
+  ];
+  for (const key of keys) {
+    if (key && UNIT_STATS[key]) return resolveUnitEntry(UNIT_STATS[key]);
+  }
+  return [];
 }
 
 function parseBonusInt(val) {

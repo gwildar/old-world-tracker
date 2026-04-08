@@ -4,7 +4,6 @@
  * the enriched canonical schema instead of the intermediate parsed format.
  */
 
-import { UNIT_STATS } from "../data/units.js";
 import { LORES } from "../data/spells.js";
 
 // Build a map from lore display name → lore key
@@ -18,6 +17,8 @@ import {
   resolveMagicItems,
   resolveSpecialRules,
   resolveMount,
+  resolveStats,
+  resolveUnitEntry,
   computeArmourSave,
   computeWard,
   computeRegen,
@@ -30,11 +31,6 @@ import { ARMY_COMPOSITIONS } from "../data/army-compositions.js";
 import { MAGIC_ITEMS } from "../data/magic-items.js";
 
 const MAGIC_ITEM_NAMES = new Set(MAGIC_ITEMS.map((i) => i.name.toLowerCase()));
-
-export function resolveUnitEntry(entry) {
-  if (Array.isArray(entry)) return entry;
-  return entry.stats.map((s) => ({ ...entry.shared, ...s }));
-}
 
 function formatFaction(armySlug) {
   if (!armySlug) return "Unknown Faction";
@@ -172,28 +168,8 @@ function parseCanonicalUnit(raw, category) {
     }
   }
 
-  // Look up stats (fallback to UNIT_STATS if not in profile)
-  let stats = raw.profile?.stats || [];
-  if (!stats || stats.length === 0) {
-    // Try to look up in UNIT_STATS by id or slug
-    const baseId = id.split(".")[0];
-    const slugFromName = raw.name_en?.toLowerCase().replace(/\s+/g, "-");
-
-    const keyToTry = [
-      baseId,
-      baseId.replace(/s$/, ""), // Try singular form (remove trailing 's')
-      baseId + "s",
-      slugFromName,
-      slugFromName?.replace(/s$/, ""), // Try singular form of name slug
-    ];
-
-    for (const key of keyToTry) {
-      if (key && UNIT_STATS[key]) {
-        stats = resolveUnitEntry(UNIT_STATS[key]);
-        break;
-      }
-    }
-  }
+  // Look up stats from units.js (source of truth)
+  const stats = resolveStats(id, raw.name_en);
 
   // Resolve weapons and items
   const weapons = resolveWeapons(equipment, magicItemNames);
