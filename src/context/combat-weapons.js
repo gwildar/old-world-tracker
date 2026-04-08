@@ -64,7 +64,7 @@ function matchRiderWeapons(unit) {
           name: weapon.name,
           s: weapon.s || null,
           ap: weapon.ap || "—",
-          effect: weapon.rules || "",
+          rules: weapon.rules || "",
           attacks: weapon.attacks || null,
         });
       }
@@ -201,14 +201,20 @@ function hasRiderMagicalAttacks(unit) {
 }
 
 function hasFuriousCharge(unit) {
-  return (unit.specialRules || []).some((r) =>
-    r.displayName?.toLowerCase().includes("furious charge"),
+  return (
+    (unit.specialRules || []).some((r) =>
+      r.displayName?.toLowerCase().includes("furious charge"),
+    ) ||
+    (unit.mount?.furiousCharge ?? false)
   );
 }
 
 function hasFirstCharge(unit) {
-  return (unit.specialRules || []).some((r) =>
-    r.displayName?.toLowerCase().includes("first charge"),
+  return (
+    (unit.specialRules || []).some((r) =>
+      r.displayName?.toLowerCase().includes("first charge"),
+    ) ||
+    (unit.mount?.firstCharge ?? false)
   );
 }
 
@@ -390,6 +396,12 @@ function extractCombatRules(unit) {
     if (COMBAT_RELEVANT_RULES.some((cr) => lower.includes(cr))) {
       results.push(rule.displayName.replace(/\s*\{[^}]*\}/g, "").trim());
     }
+  }
+  if (
+    unit.mount?.counterCharge &&
+    !results.some((r) => r.toLowerCase().includes("counter charge"))
+  ) {
+    results.push("Counter Charge");
   }
   return results;
 }

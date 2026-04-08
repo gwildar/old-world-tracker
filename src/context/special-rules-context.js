@@ -43,6 +43,30 @@ function injectMountRules(unitRules, unit) {
   ) {
     unitRules.push(`Impact Hits (${mount.impactHits})`);
   }
+  if (
+    mount.firstCharge &&
+    !unitRules.some(
+      (r) => normaliseRuleName(r).toLowerCase() === "first charge",
+    )
+  ) {
+    unitRules.push("First Charge");
+  }
+  if (
+    mount.furiousCharge &&
+    !unitRules.some(
+      (r) => normaliseRuleName(r).toLowerCase() === "furious charge",
+    )
+  ) {
+    unitRules.push("Furious Charge");
+  }
+  if (
+    mount.counterCharge &&
+    !unitRules.some(
+      (r) => normaliseRuleName(r).toLowerCase() === "counter charge",
+    )
+  ) {
+    unitRules.push("Counter Charge");
+  }
 }
 
 function injectTerrorFear(unitRules) {
