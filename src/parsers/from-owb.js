@@ -18,7 +18,6 @@ import {
   resolveSpecialRules,
   resolveMount,
   resolveStats,
-  resolveUnitEntry,
   computeArmourSave,
   computeWard,
   computeRegen,
