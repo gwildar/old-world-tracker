@@ -83,6 +83,12 @@ describe("findMount", () => {
     expect(mount.swiftstride).toBe(true);
     expect(mount.troopType).toBe("Be");
     expect(mount.armourBane).toBeNull();
+    expect(mount.f).toBe(10);
+  });
+
+  it("returns breath weapon from equipment — Black Dragon", () => {
+    const mount = findMount("Black Dragon");
+    expect(mount.breath).toBe("noxious breath");
   });
 
   it("extracts armourBane from rules — Cold One", () => {

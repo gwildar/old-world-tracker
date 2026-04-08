@@ -55,6 +55,10 @@ export function findMount(name) {
       profile.rules?.some((r) => r.toLowerCase() === "swiftstride") ?? false,
     troopType: profile.troopType?.[0] ?? null,
     armourBane,
+    f: profile.Fly ? parseInt(profile.Fly, 10) : null,
+    breath:
+      (profile.equipment ?? []).find((e) => RANGED_WEAPONS[e.toLowerCase()]) ??
+      null,
   };
 }
 
