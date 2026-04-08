@@ -489,6 +489,10 @@ export function renderCombatWeaponsContext(army) {
     // Crewed units with weapons on stats[0] have no rider — mount is in crew array
     if (stats.crewed && stats.weapons) riderWeapons.length = 0;
 
+    // War machine bodies (A="-") do not fight — OWB may resolve default weapons onto
+    // the unit but the machine itself has no melee attacks; only crew does.
+    if (stats.crewed && stats.A === "-") riderWeapons.length = 0;
+
     // War machines (A="-") have no rider attacks — crew handles melee instead.
     if (
       riderWeapons.length === 0 &&
