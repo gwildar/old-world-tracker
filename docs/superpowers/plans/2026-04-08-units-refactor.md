@@ -12,18 +12,19 @@
 
 ## File Map
 
-| File | Change |
-|---|---|
-| `src/parsers/from-owb.js` | Extract + update `resolveUnitEntry` at line 187 |
-| `src/data/units.js` | Full rewrite via migration script, then manual equipment edits |
-| `src/test/unit-stats-resolution.test.js` | New test file for `resolveUnitEntry` |
-| `scripts/migrate-units.mjs` | One-time migration script (delete after use) |
+| File                                     | Change                                                         |
+| ---------------------------------------- | -------------------------------------------------------------- |
+| `src/parsers/from-owb.js`                | Extract + update `resolveUnitEntry` at line 187                |
+| `src/data/units.js`                      | Full rewrite via migration script, then manual equipment edits |
+| `src/test/unit-stats-resolution.test.js` | New test file for `resolveUnitEntry`                           |
+| `scripts/migrate-units.mjs`              | One-time migration script (delete after use)                   |
 
 ---
 
 ## Task 1: Export `resolveUnitEntry` and add tests
 
 **Files:**
+
 - Modify: `src/parsers/from-owb.js:185-190`
 - Create: `src/test/unit-stats-resolution.test.js`
 
@@ -114,12 +115,12 @@ export function resolveUnitEntry(entry) {
 Then update lines 185–190 (the `UNIT_STATS[key]` lookup block):
 
 ```js
-    for (const key of keyToTry) {
-      if (key && UNIT_STATS[key]) {
-        stats = resolveUnitEntry(UNIT_STATS[key]);
-        break;
-      }
-    }
+for (const key of keyToTry) {
+  if (key && UNIT_STATS[key]) {
+    stats = resolveUnitEntry(UNIT_STATS[key]);
+    break;
+  }
+}
 ```
 
 - [ ] **Step 1.4: Run tests to confirm they pass**
@@ -144,6 +145,7 @@ git commit -m "feat: add resolveUnitEntry to handle crewed unit shared fields"
 This script rewrites `units.js` in one pass: crewed units get the `{ shared, stats }` structure, and all `troopType` values are abbreviated. Equipment stays per-profile (duplicated for now — Task 3–5 fix attribution).
 
 **Files:**
+
 - Create: `scripts/migrate-units.mjs`
 - Modify: `src/data/units.js` (full rewrite by script)
 
@@ -155,26 +157,26 @@ mkdir scripts
 
 ```js
 // scripts/migrate-units.mjs
-import { UNIT_STATS } from '../src/data/units.js';
-import { writeFileSync } from 'fs';
+import { UNIT_STATS } from "../src/data/units.js";
+import { writeFileSync } from "fs";
 
 // Patterns ordered longest-first to prevent partial matches (e.g. "Character" inside "Named Character")
 const TROOP_PATTERNS = [
-  ['Named Character', 'NCh'],
-  ['Monstrous Infantry', 'MI'],
-  ['Monstrous Cavalry', 'MCa'],
-  ['Monstrous Creature', 'MCr'],
-  ['Regular Infantry', 'RI'],
-  ['Heavy Infantry', 'HI'],
-  ['Light Cavalry', 'LC'],
-  ['Heavy Cavalry', 'HC'],
-  ['Heavy Chariot', 'HCh'],
-  ['Light Chariot', 'LCh'],
-  ['War Machine', 'WM'],
-  ['War Beast', 'WB'],
-  ['Behemoth', 'Be'],
-  ['Character', 'Ch'],
-  ['Swarm', 'Sw'],
+  ["Named Character", "NCh"],
+  ["Monstrous Infantry", "MI"],
+  ["Monstrous Cavalry", "MCa"],
+  ["Monstrous Creature", "MCr"],
+  ["Regular Infantry", "RI"],
+  ["Heavy Infantry", "HI"],
+  ["Light Cavalry", "LC"],
+  ["Heavy Cavalry", "HC"],
+  ["Heavy Chariot", "HCh"],
+  ["Light Chariot", "LCh"],
+  ["War Machine", "WM"],
+  ["War Beast", "WB"],
+  ["Behemoth", "Be"],
+  ["Character", "Ch"],
+  ["Swarm", "Sw"],
 ];
 
 function abbreviateTroopType(type) {
@@ -210,7 +212,7 @@ function abbreviateTroopTypes(types) {
 function isCrewedUnit(entry) {
   if (!Array.isArray(entry) || entry.length < 2) return false;
   const first = entry[0];
-  return first.crewed === true || first.A === '-';
+  return first.crewed === true || first.A === "-";
 }
 
 function transformEntry(entry) {
@@ -232,7 +234,9 @@ function transformEntry(entry) {
   };
 
   // Strip shared fields from each profile; keep stats + Name + equipment
-  const stats = entry.map(({ crewed, rules, troopType, magic, optionalRules, ...rest }) => rest);
+  const stats = entry.map(
+    ({ crewed, rules, troopType, magic, optionalRules, ...rest }) => rest,
+  );
 
   return { shared, stats };
 }
@@ -243,11 +247,15 @@ for (const [key, entry] of Object.entries(UNIT_STATS)) {
 }
 
 const output = `export const UNIT_STATS = ${JSON.stringify(transformed, null, 2)};\n`;
-writeFileSync('./src/data/units.js', output);
+writeFileSync("./src/data/units.js", output);
 
-const crewedCount = Object.values(transformed).filter((e) => !Array.isArray(e)).length;
-console.log(`Done. Migrated ${crewedCount} crewed units. troopType abbreviated throughout.`);
-console.log('Run npm test to verify.');
+const crewedCount = Object.values(transformed).filter(
+  (e) => !Array.isArray(e),
+).length;
+console.log(
+  `Done. Migrated ${crewedCount} crewed units. troopType abbreviated throughout.`,
+);
+console.log("Run npm test to verify.");
 ```
 
 - [ ] **Step 2.2: Run the migration script**
@@ -257,6 +265,7 @@ node scripts/migrate-units.mjs
 ```
 
 Expected output:
+
 ```
 Done. Migrated 88 crewed units. troopType abbreviated throughout.
 Run npm test to verify.
@@ -311,12 +320,14 @@ These units have one vehicle/monster profile and one crew profile. The current e
 **File:** `src/data/units.js`
 
 **General rules:**
+
 - **War machines** (bolt thrower, cannon, mortar, organ gun, etc.): machine profile gets the weapon (`"Cannon"`, `"Bolt thrower"`, etc.); crew profile gets personal weapons (`"hand weapons"`, `"light armour"` if applicable).
 - **Monsters with howdah/crew** (Stegadon, Bastiladon, Arachnarok, Kharibdyss, etc.): monster profile gets natural attacks (horns, claws, venom, etc.); crew profile gets their weapons (hand weapons, javelins, bows, etc.).
 - **Single-rider vehicles** (Skull Cannon, Blood Throne, Plague Furnace, etc.): vehicle profile gets the weapon/structure; rider profile gets their weapons.
 - **Coach/chariot with 1 crew type** (Skeleton Chariot): chariot body gets `[]`; crew gets their weapons.
 
 **2-profile unit list:**
+
 ```
 ancient-stegadon, anvil-of-doom, arachnarok-spider, bastiladon,
 blood-throne-of-khorne, bolt-thrower-dwarfs, border-princes-bombard,
@@ -337,7 +348,8 @@ stegadon, troglodon, war-altar-of-sigmar, war-hydra, warp-lightning-cannon
 
 **Examples to follow:**
 
-*ancient-stegadon* — monster + skink crew:
+_ancient-stegadon_ — monster + skink crew:
+
 ```json
 "stats": [
   { "Name": "Ancient Stegadon", "equipment": ["Great horns", "giant bow"], ... },
@@ -345,7 +357,8 @@ stegadon, troglodon, war-altar-of-sigmar, war-hydra, warp-lightning-cannon
 ]
 ```
 
-*bolt-thrower-dwarfs* — machine + crew:
+_bolt-thrower-dwarfs_ — machine + crew:
+
 ```json
 "stats": [
   { "Name": "Bolt Thrower", "equipment": ["Bolt thrower"], ... },
@@ -353,7 +366,8 @@ stegadon, troglodon, war-altar-of-sigmar, war-hydra, warp-lightning-cannon
 ]
 ```
 
-*arachnarok-spider* — spider + goblin crew:
+_arachnarok-spider_ — spider + goblin crew:
+
 ```json
 "stats": [
   { "Name": "Arachnarok Spider", "equipment": ["hand weapon", "venom surge"], ... },
@@ -391,10 +405,12 @@ These are primarily chariots (chariot body + crew + animals) and some multi-comp
 **File:** `src/data/units.js`
 
 **General rules:**
+
 - **Chariots** (chaos-chariot, goblin-wolf-chariot, orc-boar-chariot, etc.): chariot body gets `[]`; crew (charioteer) gets personal weapons (hand weapons, halberds, etc.); animals (horses, wolves, boars, cold ones) get their natural attack (`"hand weapon"`, `"hooves"`, `"tusks"` etc. — these represent the animal's base attack).
 - **Other 3-profile units** (black-coach, doomwheel, gnoblar-scraplauncher, etc.): use Name fields to identify roles and attribute accordingly.
 
 **3-profile unit list:**
+
 ```
 black-coach, black-coach-renegade, black-orc-boar-chariot, bloodwrack-shrine,
 chaos-chariot, chieftain's-chariot, chosen-chaos-chariot, cold-one-chariot,
@@ -408,7 +424,8 @@ tiranoc-chariot
 
 **Examples to follow:**
 
-*chaos-chariot* — chariot body + crew + horses:
+_chaos-chariot_ — chariot body + crew + horses:
+
 ```json
 "stats": [
   { "Name": "Chariot",                  "equipment": [],                            ... },
@@ -417,7 +434,8 @@ tiranoc-chariot
 ]
 ```
 
-*black-coach* — coach body + wraith + nightmares:
+_black-coach_ — coach body + wraith + nightmares:
+
 ```json
 "stats": [
   { "Name": "Black Coach",      "equipment": [],                  ... },
@@ -426,7 +444,8 @@ tiranoc-chariot
 ]
 ```
 
-*lion-chariot-of-chrace* — chariot body + crew + lions:
+_lion-chariot-of-chrace_ — chariot body + crew + lions:
+
 ```json
 "stats": [
   { "Name": "Lion Chariot",           "equipment": [],                              ... },
@@ -463,12 +482,14 @@ The most complex units: typically a chariot body + multiple crew types + animals
 **File:** `src/data/units.js`
 
 **4-profile unit list:**
+
 ```
 burning-chariot-of-tzeentch, hellflayer-of-slaanesh, hellflayer-of-slaanesh-renegade,
 ironblaster, razorgor-chariot, skeleton-chariots, tomb-guard-chariots, tuskgor-chariot
 ```
 
 **Approach:** Search each unit in `units.js`, read all 4 Name fields to understand the structure, then split equipment:
+
 - Vehicle/chariot body → `[]`
 - Each crew type → their personal weapons
 - Each animal type → their natural attack
@@ -476,6 +497,7 @@ ironblaster, razorgor-chariot, skeleton-chariots, tomb-guard-chariots, tuskgor-c
 **Example — tuskgor-chariot** (chariot + crew + tuskgors):
 
 First look up the current combined equipment by searching for `"tuskgor-chariot"` in units.js, then split:
+
 ```json
 "stats": [
   { "Name": "Chariot",             "equipment": [],                           ... },
@@ -486,6 +508,7 @@ First look up the current combined equipment by searching for `"tuskgor-chariot"
 ```
 
 **Example — ironblaster** (cannon + crew + rhinox):
+
 ```json
 "stats": [
   { "Name": "Ironblaster",       "equipment": ["Ironblaster cannon"],       ... },

@@ -53,20 +53,21 @@ Crewed units change from a flat array to `{ shared, stats }`:
 
 ### shared block fields
 
-| Field | Always in shared | Notes |
-|---|---|---|
-| `crewed` | yes | Unit-level flag |
-| `rules` | yes | Identical across all profiles |
-| `troopType` | yes | Unit-level classification |
-| `magic` | yes | Always identical |
-| `optionalRules` | yes | Always identical |
-| `equipment` | no | Always per-profile (see below) |
+| Field           | Always in shared | Notes                          |
+| --------------- | ---------------- | ------------------------------ |
+| `crewed`        | yes              | Unit-level flag                |
+| `rules`         | yes              | Identical across all profiles  |
+| `troopType`     | yes              | Unit-level classification      |
+| `magic`         | yes              | Always identical               |
+| `optionalRules` | yes              | Always identical               |
+| `equipment`     | no               | Always per-profile (see below) |
 
 ### Equipment
 
 Equipment is always per-profile for crewed units. The current flat arrays mix monster natural attacks, crew weapons, and animal attacks — these must be manually attributed to the correct profile for all 53 crewed units.
 
 Examples:
+
 - **Arachnarok Spider**: spider → `["hand weapon", "venom surge"]`; crew → `["Hand weapons", "cavalry spears", "shortbows"]`
 - **Bastiladon**: monster → `["Thunderous bludgeon", "Ark of Sotek"]`; crew → `["Hand weapons", "javelins"]`
 - **War machines**: machine → its weapon (e.g. `["Bombard"]`); crew → `["hand weapons", "light armour"]`
@@ -80,48 +81,48 @@ troopType values are abbreviationed. Compound values (previously concatenated st
 
 ### Mapping table
 
-| Full value | Abbreviation |
-|---|---|
-| Regular Infantry | RI |
-| Heavy Infantry | HI |
-| Light Cavalry | LC |
-| Heavy Cavalry | HC |
-| Monstrous Infantry | MI |
-| Monstrous Cavalry | MCa |
-| Monstrous Creature | MCr |
-| Heavy Chariot | HCh |
-| Light Chariot | LCh |
-| War Machine | WM |
-| War Beast | WB |
-| Behemoth | Be |
-| Swarm | Sw |
-| Character | Ch |
-| Named Character | NCh |
+| Full value         | Abbreviation |
+| ------------------ | ------------ |
+| Regular Infantry   | RI           |
+| Heavy Infantry     | HI           |
+| Light Cavalry      | LC           |
+| Heavy Cavalry      | HC           |
+| Monstrous Infantry | MI           |
+| Monstrous Cavalry  | MCa          |
+| Monstrous Creature | MCr          |
+| Heavy Chariot      | HCh          |
+| Light Chariot      | LCh          |
+| War Machine        | WM           |
+| War Beast          | WB           |
+| Behemoth           | Be           |
+| Swarm              | Sw           |
+| Character          | Ch           |
+| Named Character    | NCh          |
 
 ### Compound value splitting
 
-| Before | After |
-|---|---|
-| `["Regular InfantryCharacter"]` | `["RI", "Ch"]` |
-| `["Heavy InfantryCharacter"]` | `["HI", "Ch"]` |
-| `["Heavy InfantryNamed Character"]` | `["HI", "NCh"]` |
-| `["Heavy CavalryNamed Character"]` | `["HC", "NCh"]` |
-| `["War MachineCharacter"]` | `["WM", "Ch"]` |
-| `["BehemothCharacter"]` | `["Be", "Ch"]` |
-| `["BehemothNamed Character"]` | `["Be", "NCh"]` |
-| `["Monstrous InfantryCharacter"]` | `["MI", "Ch"]` |
-| `["Monstrous CavalryNamed Character"]` | `["MCa", "NCh"]` |
-| `["Monstrous CreatureCharacter"]` | `["MCr", "Ch"]` |
-| `["Regular InfantryNamed Character"]` | `["RI", "NCh"]` |
-| `["Regular InfantryCharacter", "War Beast"]` | `["RI", "Ch", "WB"]` |
-| `["Heavy InfantryBehemothNamed Character"]` | `["HI", "Be", "NCh"]` |
-| `["Named CharacterRegular Infantry"]` | `["NCh", "RI"]` |
-| `["Named CharacterHeavy Infantry"]` | `["NCh", "HI"]` |
-| `["Light CavalryCharacter"]` | `["LC", "Ch"]` |
-| `["Light CavalryNamed Character"]` | `["LC", "NCh"]` |
-| `["Heavy CavalryCharacter"]` | `["HC", "Ch"]` |
-| `["Heavy ChariotNamed Character"]` | `["HCh", "NCh"]` |
-| `["Regular InfantryWar Beast"]` | `["RI", "WB"]` |
+| Before                                       | After                 |
+| -------------------------------------------- | --------------------- |
+| `["Regular InfantryCharacter"]`              | `["RI", "Ch"]`        |
+| `["Heavy InfantryCharacter"]`                | `["HI", "Ch"]`        |
+| `["Heavy InfantryNamed Character"]`          | `["HI", "NCh"]`       |
+| `["Heavy CavalryNamed Character"]`           | `["HC", "NCh"]`       |
+| `["War MachineCharacter"]`                   | `["WM", "Ch"]`        |
+| `["BehemothCharacter"]`                      | `["Be", "Ch"]`        |
+| `["BehemothNamed Character"]`                | `["Be", "NCh"]`       |
+| `["Monstrous InfantryCharacter"]`            | `["MI", "Ch"]`        |
+| `["Monstrous CavalryNamed Character"]`       | `["MCa", "NCh"]`      |
+| `["Monstrous CreatureCharacter"]`            | `["MCr", "Ch"]`       |
+| `["Regular InfantryNamed Character"]`        | `["RI", "NCh"]`       |
+| `["Regular InfantryCharacter", "War Beast"]` | `["RI", "Ch", "WB"]`  |
+| `["Heavy InfantryBehemothNamed Character"]`  | `["HI", "Be", "NCh"]` |
+| `["Named CharacterRegular Infantry"]`        | `["NCh", "RI"]`       |
+| `["Named CharacterHeavy Infantry"]`          | `["NCh", "HI"]`       |
+| `["Light CavalryCharacter"]`                 | `["LC", "Ch"]`        |
+| `["Light CavalryNamed Character"]`           | `["LC", "NCh"]`       |
+| `["Heavy CavalryCharacter"]`                 | `["HC", "Ch"]`        |
+| `["Heavy ChariotNamed Character"]`           | `["HCh", "NCh"]`      |
+| `["Regular InfantryWar Beast"]`              | `["RI", "WB"]`        |
 
 No code changes required — troopType in unit profiles is never read by app logic (confirmed: only `mount.troopType` in `mounts.js` uses a separate lookup with its own abbreviation scheme).
 
@@ -141,7 +142,7 @@ stats = UNIT_STATS[key];
 const entry = UNIT_STATS[key];
 stats = Array.isArray(entry)
   ? entry
-  : entry.stats.map(s => ({ ...entry.shared, ...s }));
+  : entry.stats.map((s) => ({ ...entry.shared, ...s }));
 ```
 
 After the spread, each resolved profile contains all `shared` fields plus its own stats and equipment. All existing consumers (`combat-weapons.js`, `helpers.js`, `shooting.js`, `special-rules-context.js`) continue reading `unit.stats[i].rules`, `.equipment`, `.crewed` etc. without any changes.
