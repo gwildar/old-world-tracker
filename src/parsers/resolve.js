@@ -355,6 +355,25 @@ export function computeArmourSave(
     }
   }
 
+  // Ridden monster: use mount's natural armour save if it's better than the rider's.
+  // Exception: if the rider has a magic armour item or any shield, use the rider's save.
+  if (mount?.as) {
+    const hasMagicArmourItem = magicItems.some(
+      (item) => item.armourBase !== undefined,
+    );
+    const riderHasShield =
+      hasMagicShield ||
+      equipmentStrings.some((e) => e.toLowerCase().includes("shield")) ||
+      armourStrings.some((a) => a.toLowerCase().includes("shield"));
+    if (!hasMagicArmourItem && !riderHasShield) {
+      const riderFinalAS = baseAS !== null ? baseAS + modifier : null;
+      if (riderFinalAS === null || mount.as < riderFinalAS) {
+        const clamped = Math.max(2, Math.min(6, mount.as));
+        return `${clamped}+`;
+      }
+    }
+  }
+
   if (baseAS === null) return null;
   const finalAS = baseAS + modifier;
   if (finalAS > 6) return "6+";

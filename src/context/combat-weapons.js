@@ -157,6 +157,10 @@ function renderWeaponLine(initiative, ws, s, attacks, w, label, tags) {
   const displayS = mergeStrength(s, w.s);
   const displayA = w.attacks ? `${attacks}${w.attacks}` : attacks;
   const displayRules = stripRedundantRules(w.rules, w);
+  const inlineTags =
+    typeof tags === "object" && tags !== null ? tags.inline || "" : tags || "";
+  const subLine =
+    typeof tags === "object" && tags !== null ? tags.sub || "" : "";
   return `<div class="text-xs mb-1">
     <span class="text-wh-phase-combat font-mono">I${initiative}</span>
     <span class="text-wh-phase-combat font-mono ml-1">A${displayA}</span>
@@ -165,8 +169,9 @@ function renderWeaponLine(initiative, ws, s, attacks, w, label, tags) {
     ${label ? `<span class="text-wh-accent text-xs ml-1">${label}</span>` : ""}
     <span class="text-wh-text ml-1">${w.name}</span>
     ${w.ap && w.ap !== "—" ? `<span class="text-wh-muted font-mono ml-1">AP${w.ap}</span>` : ""}
-    ${tags || ""}
+    ${inlineTags}
     ${displayRules ? `<div class="text-wh-muted">${displayRules}</div>` : ""}
+    ${subLine}
   </div>`;
 }
 
@@ -201,6 +206,12 @@ function hasFuriousCharge(unit) {
   );
 }
 
+function hasFirstCharge(unit) {
+  return (unit.specialRules || []).some((r) =>
+    r.displayName?.toLowerCase().includes("first charge"),
+  );
+}
+
 function detectItemBonuses(unit) {
   let armourBane = 0;
   const strengthMods = [];
@@ -213,29 +224,48 @@ function detectItemBonuses(unit) {
 }
 
 function buildRiderTags(unit) {
-  const tags = [];
-  if (hasRiderMagicalAttacks(unit))
-    tags.push(
-      '<span class="text-wh-phase-combat font-mono ml-1">\u2728 Magical</span>',
+  const inlineParts = [];
+  const subSpans = [];
+  if (hasRiderMagicalAttacks(unit)) {
+    inlineParts.push(
+      '<span class="text-wh-phase-combat font-mono ml-1">\u2728</span>',
     );
-  if (hasFuriousCharge(unit))
-    tags.push(
-      '<span class="text-wh-phase-combat font-mono ml-1">\u{1F4A5} +1A furious</span>',
+    subSpans.push('<span class="text-violet-400">Magical Attacks</span>');
+  }
+  if (hasFuriousCharge(unit)) {
+    inlineParts.push(
+      '<span class="text-wh-phase-combat font-mono ml-1">\u{1F4A5}</span>',
     );
-  if (unit.poisonedAttacks ?? false)
-    tags.push(
-      '<span class="text-wh-phase-combat font-mono ml-1">\u2620\uFE0F Poison</span>',
+    subSpans.push('<span class="text-orange-400">Furious Charge</span>');
+  }
+  if (unit.poisonedAttacks ?? false) {
+    inlineParts.push(
+      '<span class="text-wh-phase-combat font-mono ml-1">\u2620\uFE0F</span>',
     );
+    subSpans.push('<span class="text-green-400">Poisoned Attacks</span>');
+  }
+  if (hasFirstCharge(unit)) {
+    inlineParts.push(
+      '<span class="text-wh-phase-combat font-mono ml-1">\u26A1</span>',
+    );
+    subSpans.push('<span class="text-yellow-400">First Charge</span>');
+  }
   const { armourBane, strengthMods } = detectItemBonuses(unit);
   if (armourBane > 0)
-    tags.push(
+    inlineParts.push(
       `<span class="text-wh-phase-combat font-mono ml-1">AB(${armourBane})</span>`,
     );
   for (const sm of strengthMods)
-    tags.push(
+    inlineParts.push(
       `<span class="text-wh-phase-combat font-mono ml-1">S${sm}</span>`,
     );
-  return tags.join("");
+  return {
+    inline: inlineParts.join(""),
+    sub:
+      subSpans.length > 0
+        ? `<div class="text-xs mt-0.5">${subSpans.join('<span class="text-wh-muted">, </span>')}</div>`
+        : "",
+  };
 }
 
 function isWeaponMagical(w) {
@@ -244,8 +274,11 @@ function isWeaponMagical(w) {
 
 function buildMountWeaponTags(w) {
   if (isWeaponMagical(w))
-    return '<span class="text-wh-phase-combat font-mono ml-1">\u2728 Magical</span>';
-  return "";
+    return {
+      inline: '<span class="text-wh-phase-combat font-mono ml-1">\u2728</span>',
+      sub: '<div class="text-xs mt-0.5"><span class="text-violet-400">Magical Attacks</span></div>',
+    };
+  return { inline: "", sub: "" };
 }
 
 const COMBAT_VOWS = ["the grail vow", "the questing vow"];
@@ -324,7 +357,6 @@ const COMBAT_RELEVANT_RULES = [
   "armour bane",
   "beguiling aura",
   "killing blow",
-  "poisoned attacks",
   "flaming attacks",
   "immune to psychology",
   "stubborn",
@@ -332,7 +364,6 @@ const COMBAT_RELEVANT_RULES = [
   "frenzy",
   "hatred",
   "eternal hatred",
-  "first charge",
   "counter charge",
   "strike first",
   "strike last",
@@ -345,6 +376,7 @@ const COMBAT_RELEVANT_RULES = [
   "elven reflexes",
   "mighty constitution",
   "valour of ages",
+  "arcane backlash",
 ];
 
 function extractCombatRules(unit) {
@@ -645,8 +677,12 @@ export function renderCombatWeaponsContext(army) {
           weapons: championWeapons || riderWeapons,
           tags: championWeapons
             ? championWeapons.some((w) => isWeaponMagical(w))
-              ? '<span class="text-wh-phase-combat font-mono ml-1">\u2728 Magical</span>'
-              : ""
+              ? {
+                  inline:
+                    '<span class="text-wh-phase-combat font-mono ml-1">\u2728</span>',
+                  sub: '<div class="text-xs mt-0.5"><span class="text-violet-400">Magical Attacks</span></div>',
+                }
+              : { inline: "", sub: "" }
             : null,
         };
       }),

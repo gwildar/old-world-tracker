@@ -246,7 +246,7 @@ export function renderShootingContext(army) {
                     ${r.bs && !r.weapon?.noBS ? `<span class="text-wh-phase-shooting font-mono text-xs">BS${r.bs}</span>` : ""}
                     <span class="text-wh-phase-shooting font-mono text-xs">${r.weapon.range}</span>
                     ${r.weapon.s ? `<span class="text-wh-muted font-mono text-xs">S${resolveStrength(r.weapon.s, r.unitS)}</span>` : ""}
-                    ${r.weapon.ap && r.weapon.ap !== "—" ? `<span class="text-wh-muted font-mono text-xs">AP ${r.weapon.ap}</span>` : ""}
+                    ${r.weapon.ap && r.weapon.ap !== "—" ? `<span class="text-wh-muted font-mono text-xs">AP${r.weapon.ap}</span>` : ""}
                     ${group.championBS && !r.weapon?.noBS ? `<div class="text-xs text-wh-muted pl-1">Champion: <span class="text-wh-phase-shooting font-mono">BS${group.championBS}</span></div>` : ""}
                   </div>
                   ${r.weapon.rules ? `<p class="text-xs text-wh-muted mt-0.5">${r.weapon.rules}</p>` : ""}

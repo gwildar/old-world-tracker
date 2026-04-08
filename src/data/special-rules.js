@@ -972,7 +972,6 @@ export const SPECIAL_RULES = [
       {
         phaseId: "combat",
         subPhaseId: "choose-fight",
-        opponentOnly: true,
         description:
           "+1 to Dispel rolls vs Assailment spells. On any natural double (except double 1), the spell is unbound and the casting Wizard loses a Wound.",
       },
