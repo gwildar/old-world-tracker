@@ -13493,8 +13493,7 @@ export const UNIT_STATS = {
         "Regen": "6+",
         "Impact-Hits": "D6",
         "equipment": [
-          "Doomfire",
-          "hand weapons"
+          "Doomfire"
         ]
       },
       {
