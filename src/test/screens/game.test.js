@@ -357,6 +357,17 @@ describe("Combat phase with Dark Elves", () => {
     expect(masterCard).toBeTruthy();
     expect(masterCard.textContent).not.toContain("Magical");
   });
+
+  it("shows mount armour save (AS:4+) for Supreme Sorceress on Black Dragon", () => {
+    renderGameScreen(army);
+    const combatPanel = getApp().querySelector(".border-wh-phase-combat\\/30");
+    const sorceressCard = [...combatPanel.querySelectorAll(".bg-wh-card")].find(
+      (el) => el.textContent.includes("Supreme Sorceress"),
+    );
+    expect(sorceressCard).toBeTruthy();
+    // Sorceress has no armour — should inherit Black Dragon's natural AS:4+
+    expect(sorceressCard.textContent).toContain("AS:4+");
+  });
 });
 
 describe("Combat phase with Bretonnian Exiles", () => {

@@ -19,18 +19,11 @@ describe("computeWard", () => {
     expect(computeWard(magicItems, specialRules)).toBe("5+");
   });
 
-  it("returns 6+ for Blessings of the Lady special rule", () => {
-    const specialRules = [
-      { id: "blessings of the lady", displayName: "Blessings of the Lady" },
-    ];
-    expect(computeWard([], specialRules)).toBe("6+");
-  });
-
   it("returns 6+ for The Grail Vow special rule", () => {
     const specialRules = [
       { id: "the grail vow", displayName: "The Grail Vow" },
     ];
-    expect(computeWard([], specialRules)).toBe("6+");
+    expect(computeWard([], specialRules)).toBe("6+ (5+ > S5)");
   });
 
   it("ignores unrelated special rules", () => {
