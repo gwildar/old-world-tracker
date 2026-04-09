@@ -1,6 +1,7 @@
 import { COMBAT_WEAPONS, getWeapon } from "../data/weapons.js";
 import { findMount } from "../parsers/resolve.js";
 import { getCharacterAssignments } from "../state.js";
+import { displayUnitName } from "../utils/unit-name.js";
 
 const HAND_WEAPON = { name: "Hand Weapon", s: "S", ap: "—", rules: "" };
 
@@ -952,7 +953,7 @@ export function renderCombatWeaponsContext(army) {
             (r) => `
           <div class="p-2 rounded bg-wh-card">
             <div class="flex justify-between items-start">
-              <div class="text-wh-text font-semibold text-sm">${r.unitName}${r.mount ? ` (${r.mount})` : ""}${!r.merged && r.strength > 1 ? ` x${r.strength}` : ""}</div>
+              <div class="text-wh-text font-semibold text-sm">${displayUnitName(r.unitName, r.strength)}${r.mount ? ` (${r.mount})` : ""}${!r.merged && r.strength > 1 ? ` x${r.strength}` : ""}</div>
               <div class="text-wh-muted text-[10px] font-mono shrink-0 ml-2">${r.points}pts</div>
             </div>
             ${
@@ -969,7 +970,7 @@ export function renderCombatWeaponsContext(army) {
                 : `
                 ${renderSingleUseItems(r)}
                 <div class="mt-1">
-                  <div class="text-[9px] uppercase tracking-wide text-wh-muted mb-0.5">${r.unitName}</div>
+                  <div class="text-[9px] uppercase tracking-wide text-wh-muted mb-0.5">${displayUnitName(r.unitName, r.strength)}</div>
                   ${statRow(r.t, r.w, r.as, r.mr, r.ward, r.regen)}
                   ${renderUnitWeapons(r)}
                   ${renderCombatRulesHtml(r.combatRules)}

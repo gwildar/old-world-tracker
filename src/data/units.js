@@ -15283,7 +15283,7 @@ export const UNIT_STATS = {
       BS: "3",
       Ld: "7",
       WS: "3",
-      Name: "Outcast Wizards",
+      Name: "Outcast Wizard",
       "Magic-Res": "-1",
       rules: ["Magical Attacks", "Magic Resistance (-1)", "Untutored Arcanist"],
       equipment: ["Hand weapon"],

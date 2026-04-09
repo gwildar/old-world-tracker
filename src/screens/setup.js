@@ -1,5 +1,6 @@
 import { version } from "../../package.json";
 import { parseArmyList, getCasters } from "../army.js";
+import { displayUnitName } from "../utils/unit-name.js";
 import {
   getArmy,
   saveArmy,
@@ -161,7 +162,7 @@ function renderUnitList(army) {
           return `
         <div class="flex justify-between items-center py-1 px-2 rounded hover:bg-wh-card text-sm">
           <div>
-            <span class="text-wh-text">${u.name}</span>
+            <span class="text-wh-text">${displayUnitName(u.name, u.strength)}</span>
             ${u.strength > 1 ? `<span class="text-wh-muted ml-1">x${u.strength}</span>` : ""}
             ${u.mount ? `<span class="text-wh-muted ml-1">(${u.mount.name})</span>` : ""}
             ${u.isGeneral ? '<span class="text-wh-phase-combat ml-1 text-xs">GENERAL</span>' : ""}

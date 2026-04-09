@@ -1,4 +1,5 @@
 import { resolveMovement } from "../helpers.js";
+import { displayUnitName } from "../utils/unit-name.js";
 
 export function renderMovementStatsContext(army) {
   const rows = army.units
@@ -32,7 +33,7 @@ export function renderMovementStatsContext(army) {
           <div class="text-sm py-1 px-2 rounded bg-wh-card">
             <div class="flex justify-between items-center">
               <div class="flex flex-wrap items-center gap-1">
-                <span class="text-wh-text">${u.name}</span>
+                <span class="text-wh-text">${displayUnitName(u.name, u.strength)}</span>
                 ${u.strength > 1 ? `<span class="text-wh-muted">x${u.strength}</span>` : ""}
               </div>
               <div class="text-right">

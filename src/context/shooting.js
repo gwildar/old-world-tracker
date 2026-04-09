@@ -1,5 +1,6 @@
 import { getShootingUnits } from "../army.js";
 import { RANGED_WEAPONS, MISFIRE_TABLES, getWeapon } from "../data/weapons.js";
+import { displayUnitName } from "../utils/unit-name.js";
 
 function getBS(unit) {
   if (!unit.stats || unit.stats.length === 0) return null;
@@ -234,7 +235,7 @@ export function renderShootingContext(army) {
             ([unitName, group]) => `
           <div class="p-2 rounded bg-wh-card">
             <div class="text-sm font-semibold text-wh-text mb-1">
-              ${unitName}${!group.merged && group.strength > 1 ? ` <span class="text-wh-muted font-normal">x${group.strength}</span>` : ""}
+              ${displayUnitName(unitName, group.strength)}${!group.merged && group.strength > 1 ? ` <span class="text-wh-muted font-normal">x${group.strength}</span>` : ""}
             </div>
             <div class="space-y-1">
               ${group.weapons
@@ -267,7 +268,7 @@ export function renderShootingContext(army) {
             ? `
           <div class="p-2 rounded bg-wh-card">
             <div class="text-sm font-semibold text-wh-text mb-1">Other</div>
-            <p class="text-xs text-wh-text">${otherRows.map((r) => r.unitName + (!r.merged && r.strength > 1 ? ` x${r.strength}` : "") + (r.bs ? ` BS${r.bs}` : "")).join(", ")}</p>
+            <p class="text-xs text-wh-text">${otherRows.map((r) => displayUnitName(r.unitName, r.strength) + (!r.merged && r.strength > 1 ? ` x${r.strength}` : "") + (r.bs ? ` BS${r.bs}` : "")).join(", ")}</p>
           </div>
         `
             : ""

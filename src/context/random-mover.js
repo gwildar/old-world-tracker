@@ -1,3 +1,5 @@
+import { displayUnitName } from "../utils/unit-name.js";
+
 export function renderRandomMoverContext(army) {
   const movers = army.units.filter((u) =>
     (u.specialRules || []).some((r) => r.id === "random movement"),
@@ -15,7 +17,7 @@ export function renderRandomMoverContext(army) {
             return `
           <div class="text-sm py-1 px-2 rounded bg-wh-card flex justify-between items-center">
             <div class="flex items-center gap-1">
-              <span class="text-wh-text">${u.name}</span>
+              <span class="text-wh-text">${displayUnitName(u.name, u.strength)}</span>
               ${u.strength > 1 ? `<span class="text-wh-muted">x${u.strength}</span>` : ""}
             </div>
             <span class="text-wh-phase-movement font-mono text-xs">${rule?.displayName ?? "Random Movement"}</span>
