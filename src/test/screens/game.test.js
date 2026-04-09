@@ -883,7 +883,7 @@ describe("Combat screen with assigned characters", () => {
     expect(knightsCard.textContent).toContain("Lord Alaric");
   });
 
-  it("aggregates MR from assigned character onto host unit", () => {
+  it("shows character MR inside the host unit card", () => {
     const army = buildMinimalArmy();
     renderGameScreen(army);
     const combatPanel = getApp().querySelector(".border-wh-phase-combat\\/30");

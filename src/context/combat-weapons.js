@@ -826,7 +826,13 @@ export function renderCombatWeaponsContext(army) {
   const rows = Object.values(deduped).sort((a, b) => b.iNum - a.iNum);
   if (rows.length === 0) return "";
 
+  function renderSingleUseItems(r) {
+    if (r.singleUseItems.length === 0) return "";
+    return `<div class="mt-1">${r.singleUseItems.map((item) => `<div class="text-xs"><span class="text-wh-accent">\u{1F6E1} ${item.name}</span> <span class="text-wh-muted">(single use)</span></div>`).join("")}</div>`;
+  }
+
   function statRow(t, w, as_, mr, ward, regen) {
+    // as_ avoids shadowing the reserved word 'as'
     return `<div class="flex items-center gap-2 flex-wrap mt-0.5">
       <span class="text-wh-muted font-mono text-xs">T:${t}</span>
       <span class="text-wh-muted font-mono text-xs">W:${w}</span>
@@ -949,22 +955,14 @@ export function renderCombatWeaponsContext(army) {
               (r.assignedCharProfiles || []).length === 0
                 ? `
                 ${statRow(r.t, r.w, r.as, r.mr, r.ward, r.regen)}
-                ${
-                  r.singleUseItems.length > 0
-                    ? `<div class="mt-1">${r.singleUseItems.map((item) => `<div class="text-xs"><span class="text-wh-accent">\u{1F6E1} ${item.name}</span> <span class="text-wh-muted">(single use)</span></div>`).join("")}</div>`
-                    : ""
-                }
+                ${renderSingleUseItems(r)}
                 <div class="mt-1">
                   ${renderUnitWeapons(r)}
                   ${renderFooter(r)}
                 </div>
               `
                 : `
-                ${
-                  r.singleUseItems.length > 0
-                    ? `<div class="mt-1">${r.singleUseItems.map((item) => `<div class="text-xs"><span class="text-wh-accent">\u{1F6E1} ${item.name}</span> <span class="text-wh-muted">(single use)</span></div>`).join("")}</div>`
-                    : ""
-                }
+                ${renderSingleUseItems(r)}
                 <div class="mt-1">
                   <div class="text-[9px] uppercase tracking-wide text-wh-muted mb-0.5">${r.unitName}</div>
                   ${statRow(r.t, r.w, r.as, r.mr, r.ward, r.regen)}
