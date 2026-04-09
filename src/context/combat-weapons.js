@@ -1,7 +1,21 @@
 import { COMBAT_WEAPONS, getWeapon } from "../data/weapons.js";
 import { findMount } from "../parsers/resolve.js";
+import { getCharacterAssignments } from "../state.js";
 
 const HAND_WEAPON = { name: "Hand Weapon", s: "S", ap: "—", rules: "" };
+
+const CHARACTER_CATEGORIES = new Set(["characters", "lords", "heroes"]);
+
+function isCharacter(unit) {
+  return CHARACTER_CATEGORIES.has(unit.category);
+}
+
+function applyApMod(ap, mod) {
+  if (!mod) return ap;
+  if (!ap || ap === "—") return `${mod}`;
+  const result = parseInt(ap, 10) + mod;
+  return result >= 0 ? "—" : `${result}`;
+}
 
 function findVirtueAttacks(unit) {
   for (const item of unit.magicItems || []) {
@@ -93,7 +107,14 @@ function matchMountWeapons(unit, alreadyMatched) {
   return weapons;
 }
 
-function renderMountWeapons(weapons, mountA, mountS, mountI, mountWS) {
+function renderMountWeapons(
+  weapons,
+  mountA,
+  mountS,
+  mountI,
+  mountWS,
+  options = {},
+) {
   if (weapons.length === 0) return "";
   const totalA = parseInt(mountA) || 0;
   const reserved = weapons.filter((w) => w.reservedAttacks);
@@ -111,6 +132,7 @@ function renderMountWeapons(weapons, mountA, mountS, mountI, mountWS) {
         w,
         null,
         buildMountWeaponTags(w),
+        options,
       ),
     ),
     ...reserved.map((w) =>
@@ -122,6 +144,7 @@ function renderMountWeapons(weapons, mountA, mountS, mountI, mountWS) {
         w,
         null,
         buildMountWeaponTags(w),
+        options,
       ),
     ),
   ].join("");
@@ -153,14 +176,32 @@ function stripRedundantRules(rules, w) {
     .trim();
 }
 
-function renderWeaponLine(initiative, ws, s, attacks, w, label, tags) {
-  const displayS = mergeStrength(s, w.s);
+function renderWeaponLine(
+  initiative,
+  ws,
+  s,
+  attacks,
+  w,
+  label,
+  tags,
+  options = {},
+) {
+  const { apMod = 0, conditionalSMods = [] } = options;
+
+  let displayS = mergeStrength(s, w.s);
+  for (const mod of conditionalSMods) {
+    displayS += `${mod.numeric}*`;
+  }
+
   const displayA = w.attacks ? `${attacks}${w.attacks}` : attacks;
   const displayRules = stripRedundantRules(w.rules, w);
+  const effectiveAP = applyApMod(w.ap, apMod);
+
   const inlineTags =
     typeof tags === "object" && tags !== null ? tags.inline || "" : tags || "";
   const subLine =
     typeof tags === "object" && tags !== null ? tags.sub || "" : "";
+
   return `<div class="text-xs mb-1">
     <span class="text-wh-phase-combat font-mono">I${initiative}</span>
     <span class="text-wh-phase-combat font-mono ml-1">A${displayA}</span>
@@ -168,7 +209,7 @@ function renderWeaponLine(initiative, ws, s, attacks, w, label, tags) {
     <span class="text-wh-muted font-mono ml-1">S${displayS}</span>
     ${label ? `<span class="text-wh-accent text-xs ml-1">${label}</span>` : ""}
     <span class="text-wh-text ml-1">${w.name}</span>
-    ${w.ap && w.ap !== "—" ? `<span class="text-wh-muted font-mono ml-1">AP${w.ap}</span>` : ""}
+    ${effectiveAP && effectiveAP !== "—" ? `<span class="text-wh-muted font-mono ml-1">AP${effectiveAP}</span>` : ""}
     ${inlineTags}
     ${displayRules ? `<div class="text-wh-muted">${displayRules}</div>` : ""}
     ${subLine}
@@ -200,15 +241,37 @@ function hasRiderMagicalAttacks(unit) {
   return false;
 }
 
-function detectItemBonuses(unit) {
+function detectItemBonuses(units) {
   let armourBane = 0;
-  const strengthMods = [];
-  for (const item of unit.magicItems || []) {
-    if (item.championOnly) continue;
-    if (item.armourBane) armourBane += item.armourBane;
-    if (item.strengthMod) strengthMods.push(item.strengthMod);
+  let apMod = 0;
+  const conditionalStrengthMods = [];
+  const unconditionalStrengthMods = [];
+
+  for (const unit of units) {
+    for (const item of unit.magicItems || []) {
+      if (item.championOnly) continue;
+      if (item.armourBane) armourBane += item.armourBane;
+      if (item.apMod) apMod += item.apMod;
+      if (item.strengthMod) {
+        const m = item.strengthMod.match(/^([+-]\d+)\s*(.*)$/);
+        if (m && m[2].trim()) {
+          conditionalStrengthMods.push({
+            numeric: m[1],
+            condition: m[2].trim(),
+            source: item.name,
+          });
+        } else {
+          unconditionalStrengthMods.push(item.strengthMod);
+        }
+      }
+    }
   }
-  return { armourBane, strengthMods };
+  return {
+    armourBane,
+    apMod,
+    conditionalStrengthMods,
+    unconditionalStrengthMods,
+  };
 }
 
 function buildRiderTags(unit) {
@@ -226,12 +289,12 @@ function buildRiderTags(unit) {
     );
     subSpans.push('<span class="text-green-400">Poisoned Attacks</span>');
   }
-  const { armourBane, strengthMods } = detectItemBonuses(unit);
+  const { armourBane, unconditionalStrengthMods } = detectItemBonuses([unit]);
   if (armourBane > 0)
     inlineParts.push(
       `<span class="text-wh-phase-combat font-mono ml-1">AB(${armourBane})</span>`,
     );
-  for (const sm of strengthMods)
+  for (const sm of unconditionalStrengthMods)
     inlineParts.push(
       `<span class="text-wh-phase-combat font-mono ml-1">S${sm}</span>`,
     );
@@ -393,9 +456,58 @@ function extractCombatRules(unit) {
 export function renderCombatWeaponsContext(army) {
   if (army.units.length === 0) return "";
 
+  // Load character assignments: { charId: unitId }
+  const assignments = getCharacterAssignments();
+  const assignedCharIds = new Set(
+    Object.entries(assignments)
+      .filter(([, unitId]) => unitId)
+      .map(([charId]) => charId),
+  );
+  // Reverse map: unitId → array of assigned char unit objects
+  const unitById = Object.fromEntries(army.units.map((u) => [u.id, u]));
+  const charsByUnitId = {};
+  for (const [charId, unitId] of Object.entries(assignments)) {
+    if (!unitId) continue;
+    if (!charsByUnitId[unitId]) charsByUnitId[unitId] = [];
+    const charUnit = unitById[charId];
+    if (charUnit) charsByUnitId[unitId].push(charUnit);
+  }
+
   const entries = [];
 
   for (const u of army.units) {
+    // Skip characters that are assigned to a host unit
+    if (isCharacter(u) && assignedCharIds.has(u.id)) continue;
+
+    const assignedChars = charsByUnitId[u.id] || [];
+    const allUnitsForBonuses = [u, ...assignedChars];
+
+    // Shared computation (applies to both stats and no-stats paths)
+    const unitMRNum = u.magicResistance ? parseInt(u.magicResistance) : 0;
+    const mergedMR = unitMRNum !== 0 ? `${unitMRNum}` : null;
+    const { apMod, conditionalStrengthMods } =
+      detectItemBonuses(allUnitsForBonuses);
+    const assignedCharProfiles = assignedChars.map((char) => {
+      const cStats = char.stats?.[0];
+      const { weapons: charWeapons } = matchRiderWeapons(char);
+      return {
+        name: char.name,
+        points: char.points,
+        i: cStats?.I || "?",
+        ws: cStats?.WS || "?",
+        s: cStats?.S || "?",
+        a: cStats?.A || "?",
+        t: cStats?.T || "?",
+        w: cStats?.W || "?",
+        as: char.armourSave ?? null,
+        mr: char.magicResistance ? parseInt(char.magicResistance) : null,
+        ward: char.ward ?? null,
+        regen: char.regen ?? null,
+        weapons: charWeapons.length > 0 ? charWeapons : [HAND_WEAPON],
+        tags: buildRiderTags(char),
+      };
+    });
+
     const stats = u.stats?.[0];
     if (!stats) {
       const suItems = detectSingleUseItems(u);
@@ -411,7 +523,7 @@ export function renderCombatWeaponsContext(army) {
         t: "?",
         w: "?",
         as: u.armourSave ?? null,
-        mr: u.magicResistance ?? null,
+        mr: mergedMR,
         ward: u.ward ?? null,
         regen: u.regen ?? null,
         iNum: 0,
@@ -448,6 +560,9 @@ export function renderCombatWeaponsContext(army) {
         }),
         riderTags: buildRiderTags(u),
         combatRules: extractCombatRules(u),
+        apMod,
+        conditionalStrengthMods,
+        assignedCharProfiles,
         crew: [],
       });
       continue;
@@ -591,7 +706,7 @@ export function renderCombatWeaponsContext(army) {
       t: isRiddenMonster ? `${baseT + mount.tBonus}` : stats.T || "?",
       w: isRiddenMonster ? `${baseW + mount.wBonus}` : stats.W || "?",
       as: u.armourSave ?? null,
-      mr: u.magicResistance ?? null,
+      mr: mergedMR,
       ward: u.ward ?? null,
       regen: u.regen ?? null,
       iNum: Math.max(parseInt(riderI) || 0, mountI || 0),
@@ -683,6 +798,9 @@ export function renderCombatWeaponsContext(army) {
         };
       }),
       riderName: champions.length > 0 ? stats.Name : null,
+      apMod,
+      conditionalStrengthMods,
+      assignedCharProfiles,
     });
   }
 
@@ -708,6 +826,119 @@ export function renderCombatWeaponsContext(army) {
   const rows = Object.values(deduped).sort((a, b) => b.iNum - a.iNum);
   if (rows.length === 0) return "";
 
+  function renderSingleUseItems(r) {
+    if (r.singleUseItems.length === 0) return "";
+    return `<div class="mt-1">${r.singleUseItems.map((item) => `<div class="text-xs"><span class="text-wh-accent">\u{1F6E1} ${item.name}</span> <span class="text-wh-muted">(single use)</span></div>`).join("")}</div>`;
+  }
+
+  function statRow(t, w, as_, mr, ward, regen) {
+    // as_ avoids shadowing the reserved word 'as'
+    return `<div class="flex items-center gap-2 flex-wrap mt-0.5">
+      <span class="text-wh-muted font-mono text-xs">T:${t}</span>
+      <span class="text-wh-muted font-mono text-xs">W:${w}</span>
+      ${as_ ? `<span class="text-blue-400 font-mono text-xs">\u{1F6E1}\uFE0FAS:${as_}</span>` : ""}
+      ${mr ? `<span class="text-wh-phase-combat font-mono text-xs">\u2728MR:${mr}</span>` : ""}
+      ${ward ? `<span class="text-purple-400 font-mono text-xs">\u{1F52E}Ward:${ward}</span>` : ""}
+      ${regen ? `<span class="text-green-400 font-mono text-xs">\u{1F49A}Regen:${regen}</span>` : ""}
+    </div>`;
+  }
+
+  function renderUnitWeapons(r) {
+    return [
+      ...(r.champions || []).flatMap((ch) =>
+        ch.weapons.map((w) =>
+          renderWeaponLine(
+            ch.i,
+            ch.ws,
+            ch.s,
+            ch.a,
+            w,
+            ch.name,
+            ch.tags !== null ? ch.tags : r.riderTags,
+            { apMod: r.apMod, conditionalSMods: r.conditionalStrengthMods },
+          ),
+        ),
+      ),
+      ...r.riderWeapons.map((w) =>
+        renderWeaponLine(
+          r.riderI,
+          r.riderWS,
+          r.riderS,
+          r.riderA,
+          w,
+          r.riderName,
+          r.riderTags,
+          { apMod: r.apMod, conditionalSMods: r.conditionalStrengthMods },
+        ),
+      ),
+      ...r.crew.map((c) =>
+        c.weapons.length > 0
+          ? c.weapons
+              .map((w) =>
+                renderWeaponLine(c.i, c.ws, c.s, c.a, w, c.name, null, {
+                  apMod: r.apMod,
+                  conditionalSMods: r.conditionalStrengthMods,
+                }),
+              )
+              .join("")
+          : renderWeaponLine(c.i, c.ws, c.s, c.a, HAND_WEAPON, c.name, null, {
+              apMod: r.apMod,
+              conditionalSMods: r.conditionalStrengthMods,
+            }),
+      ),
+      r.mountWeapons.length > 0
+        ? renderMountWeapons(
+            r.mountWeapons,
+            r.mountA,
+            r.mountS,
+            r.mountI || r.riderI,
+            r.mountWS || r.riderWS,
+            { apMod: r.apMod, conditionalSMods: r.conditionalStrengthMods },
+          )
+        : r.mountA
+          ? renderWeaponLine(
+              r.mountI || r.riderI,
+              r.mountWS || r.riderWS,
+              r.mountS,
+              r.mountA,
+              {
+                name: r.mountName || "Mount",
+                s: "",
+                ap: "—",
+                rules: r.mountArmourBane
+                  ? `Armour Bane (${r.mountArmourBane})`
+                  : "",
+              },
+              null,
+              null,
+              { apMod: r.apMod, conditionalSMods: r.conditionalStrengthMods },
+            )
+          : "",
+      r.stomp || r.impactHits
+        ? `<div class="text-xs text-wh-phase-combat">${r.impactHits ? `\u{1F4A5} Impact ${r.impactHits}` : ""}${r.stomp && r.impactHits ? " | " : ""}${r.stomp ? `\u{1F9B6} Stomp ${r.stomp}` : ""}</div>`
+        : "",
+    ].join("");
+  }
+
+  function renderFooter(r) {
+    return [
+      (r.conditionalStrengthMods || []).length > 0
+        ? r.conditionalStrengthMods
+            .map(
+              (m) =>
+                `<div class="text-[10px] text-wh-muted">* ${m.source}</div>`,
+            )
+            .join("")
+        : "",
+      r.itemNames.length > 0
+        ? `<div class="text-xs text-wh-muted mt-0.5">${r.itemNames.join(", ")}</div>`
+        : "",
+      r.combatRules.length > 0
+        ? `<div class="text-xs text-wh-accent mt-0.5">${r.combatRules.join(", ")}</div>`
+        : "",
+    ].join("");
+  }
+
   return `
     <div class="bg-wh-surface rounded-lg border border-wh-phase-combat/30 p-4 mb-4">
       <h3 class="text-sm font-bold text-wh-phase-combat mb-3">Combat Units</h3>
@@ -720,74 +951,56 @@ export function renderCombatWeaponsContext(army) {
               <div class="text-wh-text font-semibold text-sm">${r.unitName}${r.mount ? ` (${r.mount})` : ""}${!r.merged && r.strength > 1 ? ` x${r.strength}` : ""}</div>
               <div class="text-wh-muted text-[10px] font-mono shrink-0 ml-2">${r.points}pts</div>
             </div>
-            <div class="flex items-center gap-2 flex-wrap mt-0.5">
-              <span class="text-wh-muted font-mono text-xs">T:${r.t}</span>
-              <span class="text-wh-muted font-mono text-xs">W:${r.w}</span>
-              ${r.as ? `<span class="text-blue-400 font-mono text-xs">\u{1F6E1}\uFE0FAS:${r.as}</span>` : ""}
-              ${r.mr ? `<span class="text-wh-phase-combat font-mono text-xs">\u2728MR:${r.mr}</span>` : ""}
-              ${r.ward ? `<span class="text-purple-400 font-mono text-xs">\u{1F52E}Ward:${r.ward}</span>` : ""}
-              ${r.regen ? `<span class="text-green-400 font-mono text-xs">\u{1F49A}Regen:${r.regen}</span>` : ""}
-            </div>
-              ${
-                r.singleUseItems.length > 0
-                  ? `
+            ${
+              (r.assignedCharProfiles || []).length === 0
+                ? `
+                ${statRow(r.t, r.w, r.as, r.mr, r.ward, r.regen)}
+                ${renderSingleUseItems(r)}
                 <div class="mt-1">
-                  ${r.singleUseItems.map((item) => `<div class="text-xs"><span class="text-wh-accent">\u{1F6E1} ${item.name}</span> <span class="text-wh-muted">(single use)</span></div>`).join("")}
+                  ${renderUnitWeapons(r)}
+                  ${renderFooter(r)}
                 </div>
               `
-                  : ""
-              }
-              <div class="mt-1">
-                ${(r.champions || []).flatMap((ch) => ch.weapons.map((w) => renderWeaponLine(ch.i, ch.ws, ch.s, ch.a, w, ch.name, ch.tags !== null ? ch.tags : r.riderTags))).join("")}
-                ${r.riderWeapons.map((w) => renderWeaponLine(r.riderI, r.riderWS, r.riderS, r.riderA, w, r.riderName, r.riderTags)).join("")}
-                ${r.crew
-                  .map((c) =>
-                    c.weapons.length > 0
-                      ? c.weapons
-                          .map((w) =>
-                            renderWeaponLine(c.i, c.ws, c.s, c.a, w, c.name),
-                          )
-                          .join("")
-                      : renderWeaponLine(
-                          c.i,
-                          c.ws,
-                          c.s,
-                          c.a,
-                          HAND_WEAPON,
-                          c.name,
-                        ),
-                  )
-                  .join("")}
-                ${
-                  r.mountWeapons.length > 0
-                    ? renderMountWeapons(
-                        r.mountWeapons,
-                        r.mountA,
-                        r.mountS,
-                        r.mountI || r.riderI,
-                        r.mountWS || r.riderWS,
-                      )
-                    : r.mountA
-                      ? renderWeaponLine(
-                          r.mountI || r.riderI,
-                          r.mountWS || r.riderWS,
-                          r.mountS,
-                          r.mountA,
-                          {
-                            name: r.mountName || "Mount",
-                            s: "",
-                            ap: "—",
-                            rules: r.mountArmourBane
-                              ? `Armour Bane (${r.mountArmourBane})`
-                              : "",
-                          },
+                : `
+                ${renderSingleUseItems(r)}
+                <div class="mt-1">
+                  <div class="text-[9px] uppercase tracking-wide text-wh-muted mb-0.5">${r.unitName}</div>
+                  ${statRow(r.t, r.w, r.as, r.mr, r.ward, r.regen)}
+                  ${renderUnitWeapons(r)}
+                  ${(r.assignedCharProfiles || [])
+                    .map(
+                      (ch) => `
+                    <div class="border-t border-wh-border mt-1.5 pt-1.5">
+                      <div class="flex justify-between items-center">
+                        <div class="text-[9px] uppercase tracking-wide text-wh-muted">${ch.name}</div>
+                        <div class="text-[9px] text-wh-muted font-mono">${ch.points}pts</div>
+                      </div>
+                      ${statRow(ch.t, ch.w, ch.as, ch.mr, ch.ward, ch.regen)}
+                      ${ch.weapons
+                        .map((w) =>
+                          renderWeaponLine(
+                            ch.i,
+                            ch.ws,
+                            ch.s,
+                            ch.a,
+                            w,
+                            null,
+                            ch.tags,
+                            {
+                              apMod: r.apMod,
+                              conditionalSMods: r.conditionalStrengthMods,
+                            },
+                          ),
                         )
-                      : ""
-                }
-                ${r.stomp || r.impactHits ? `<div class="text-xs text-wh-phase-combat">${r.impactHits ? `\u{1F4A5} Impact ${r.impactHits}` : ""}${r.stomp && r.impactHits ? " | " : ""}${r.stomp ? `\u{1F9B6} Stomp ${r.stomp}` : ""}</div>` : ""}
-                ${r.itemNames.length > 0 ? `<div class="text-xs text-wh-muted mt-0.5">${r.itemNames.join(", ")}</div>` : ""}
-                ${r.combatRules.length > 0 ? `<div class="text-xs text-wh-accent mt-0.5">${r.combatRules.join(", ")}</div>` : ""}
-              </div>
+                        .join("")}
+                    </div>
+                  `,
+                    )
+                    .join("")}
+                  ${renderFooter(r)}
+                </div>
+              `
+            }
           </div>
         `,
           )

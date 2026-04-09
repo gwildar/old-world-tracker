@@ -17,12 +17,14 @@ import { renderGameScreen } from "./screens/game.js";
 import { renderFirstTurnScreen } from "./screens/first-turn.js";
 import { renderOpponentTurnScreen } from "./screens/opponent-turn.js";
 import { renderAboutScreen } from "./screens/about.js";
+import { renderUnitAssignmentScreen } from "./screens/unit-assignment.js";
 
 // Register screens for cross-navigation
 registerScreen("render", render);
 registerScreen("setupScreen", renderSetupScreen);
 registerScreen("gameScreen", renderGameScreen);
 registerScreen("firstTurnScreen", renderFirstTurnScreen);
+registerScreen("unitAssignmentScreen", renderUnitAssignmentScreen);
 registerScreen("opponentTurnScreen", renderOpponentTurnScreen);
 registerScreen("aboutScreen", renderAboutScreen);
 

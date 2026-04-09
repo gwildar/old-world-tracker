@@ -240,7 +240,7 @@ function bindArmyActions() {
   document.getElementById("start-game-btn").addEventListener("click", () => {
     const firstTurn = getFirstTurn();
     if (!firstTurn) {
-      navigate("firstTurnScreen", getArmy());
+      navigate("unitAssignmentScreen", getArmy());
     } else if (getIsOpponentTurn()) {
       navigate("opponentTurnScreen", getArmy());
     } else {

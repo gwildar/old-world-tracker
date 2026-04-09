@@ -1,7 +1,11 @@
 import { describe, it, expect, beforeEach } from "vitest";
 import { renderGameScreen } from "../../screens/game.js";
 import { loadArmy, startGame, getApp } from "../helpers.js";
-import { savePhaseIndex } from "../../state.js";
+import {
+  savePhaseIndex,
+  saveArmy,
+  saveCharacterAssignments,
+} from "../../state.js";
 
 describe("Game Screen", () => {
   let army;
@@ -52,6 +56,25 @@ describe("Game Screen", () => {
   it("shows New Game button", () => {
     renderGameScreen(army);
     expect(getApp().querySelector("#new-game-btn")).toBeTruthy();
+  });
+
+  it("New Game button navigates to setupScreen", async () => {
+    const { registerScreen } = await import("../../navigate.js");
+    let navigated = null;
+    registerScreen("setupScreen", () => {
+      navigated = "setupScreen";
+    });
+    registerScreen("render", () => {
+      navigated = "render";
+    });
+
+    renderGameScreen(army);
+    const origConfirm = window.confirm;
+    window.confirm = () => true;
+    document.getElementById("new-game-btn").click();
+    window.confirm = origConfirm;
+
+    expect(navigated).toBe("setupScreen");
   });
 
   it("shows Manage Army button", () => {
@@ -689,5 +712,526 @@ describe("Movement phase with Bretonnia charge army", () => {
     // Hippogryph: f=9, swiftstride (+3) → fly charge = 9 + 6 + 3 = 18"
     expect(getApp().textContent).toContain("Fly");
     expect(getApp().textContent).toContain('18"');
+  });
+});
+
+describe("Banner of Har Ganeth AP modifier", () => {
+  it("banner apMod field exists on Banner of Har Ganeth", async () => {
+    const { MAGIC_ITEMS } = await import("../../data/magic-items.js");
+    const banner = MAGIC_ITEMS.find((i) => i.name === "Banner of Har Ganeth");
+    expect(banner).toBeTruthy();
+    expect(banner.apMod).toBe(-1);
+  });
+});
+
+describe("Combat screen with assigned characters", () => {
+  function buildMinimalArmy() {
+    return {
+      name: "Test",
+      armySlug: "test",
+      faction: "Test",
+      points: 100,
+      composition: null,
+      units: [
+        {
+          id: "char.001",
+          name: "Lord Alaric",
+          category: "characters",
+          strength: 1,
+          points: 200,
+          stats: [
+            {
+              M: "4",
+              WS: "6",
+              BS: "3",
+              S: "4",
+              T: "3",
+              W: "3",
+              I: "5",
+              A: "3",
+              Ld: "9",
+              Name: "Lord Alaric",
+            },
+          ],
+          weapons: [
+            {
+              name: "Hand Weapon",
+              s: "S",
+              ap: "—",
+              rules: "",
+              magical: false,
+              attacks: null,
+              reservedAttacks: null,
+            },
+          ],
+          shootingWeapons: [],
+          magicItems: [
+            {
+              name: "Banner of Har Ganeth",
+              type: "banner",
+              points: 25,
+              effect: "",
+              phases: ["combat"],
+              apMod: -1,
+            },
+          ],
+          specialRules: [],
+          mount: null,
+          armourSave: null,
+          ward: null,
+          regen: null,
+          magicResistance: "-1",
+          poisonedAttacks: false,
+          stomp: null,
+          impactHits: null,
+          isGeneral: false,
+          isBSB: false,
+          hasStandard: false,
+          hasMusician: false,
+          isCaster: false,
+          lores: [],
+          activeLore: null,
+          factionLores: [],
+          champions: [],
+          crew: [],
+        },
+        {
+          id: "knights.002",
+          name: "Knights Errant",
+          category: "core",
+          strength: 5,
+          points: 150,
+          stats: [
+            {
+              M: "8",
+              WS: "3",
+              BS: "3",
+              S: "3",
+              T: "3",
+              W: "1",
+              I: "3",
+              A: "1",
+              Ld: "7",
+              Name: "Knight Errant",
+            },
+          ],
+          weapons: [
+            {
+              name: "Lance",
+              s: "S+2",
+              ap: "-2",
+              rules: "Armour Bane (1). Charge turn only.",
+              magical: false,
+              attacks: null,
+              reservedAttacks: null,
+            },
+          ],
+          shootingWeapons: [],
+          magicItems: [],
+          specialRules: [],
+          mount: null,
+          armourSave: "2+",
+          ward: null,
+          regen: null,
+          magicResistance: null,
+          poisonedAttacks: false,
+          stomp: null,
+          impactHits: null,
+          isGeneral: false,
+          isBSB: false,
+          hasStandard: false,
+          hasMusician: false,
+          isCaster: false,
+          lores: [],
+          activeLore: null,
+          factionLores: [],
+          champions: [],
+          crew: [],
+        },
+      ],
+    };
+  }
+
+  beforeEach(() => {
+    const army = buildMinimalArmy();
+    saveArmy(army);
+    saveCharacterAssignments({ "char.001": "knights.002" });
+    startGame(army);
+    savePhaseIndex(10); // choose-fight (combat phase)
+  });
+
+  it("assigned character does not appear as a standalone combat card", () => {
+    const army = buildMinimalArmy();
+    renderGameScreen(army);
+    const combatPanel = getApp().querySelector(".border-wh-phase-combat\\/30");
+    const cards = [...combatPanel.querySelectorAll(".bg-wh-card")];
+    const charCards = cards.filter(
+      (c) =>
+        c.textContent.includes("Lord Alaric") &&
+        !c.textContent.includes("Knights Errant"),
+    );
+    expect(charCards.length).toBe(0);
+  });
+
+  it("host unit card contains the assigned character's name", () => {
+    const army = buildMinimalArmy();
+    renderGameScreen(army);
+    const combatPanel = getApp().querySelector(".border-wh-phase-combat\\/30");
+    const knightsCard = [...combatPanel.querySelectorAll(".bg-wh-card")].find(
+      (c) => c.textContent.includes("Knights Errant"),
+    );
+    expect(knightsCard.textContent).toContain("Lord Alaric");
+  });
+
+  it("shows character MR inside the host unit card", () => {
+    const army = buildMinimalArmy();
+    renderGameScreen(army);
+    const combatPanel = getApp().querySelector(".border-wh-phase-combat\\/30");
+    const knightsCard = [...combatPanel.querySelectorAll(".bg-wh-card")].find(
+      (c) => c.textContent.includes("Knights Errant"),
+    );
+    expect(knightsCard.textContent).toContain("MR:-1");
+  });
+
+  it("shows modified AP on Lance when Banner of Har Ganeth is in unit", () => {
+    const army = buildMinimalArmy();
+    renderGameScreen(army);
+    const combatPanel = getApp().querySelector(".border-wh-phase-combat\\/30");
+    const knightsCard = [...combatPanel.querySelectorAll(".bg-wh-card")].find(
+      (c) => c.textContent.includes("Knights Errant"),
+    );
+    // Lance base AP is -2; with banner apMod -1 → should display AP-3
+    expect(knightsCard.textContent).toContain("AP-3");
+    expect(knightsCard.textContent).not.toContain("AP-2");
+  });
+});
+
+describe("Errantry Banner conditional strength display", () => {
+  function buildErrantryArmy() {
+    return {
+      name: "Test",
+      armySlug: "test",
+      faction: "Test",
+      points: 100,
+      composition: null,
+      units: [
+        {
+          id: "knights.003",
+          name: "Knights Errant",
+          category: "core",
+          strength: 5,
+          points: 180,
+          stats: [
+            {
+              M: "8",
+              WS: "3",
+              BS: "3",
+              S: "3",
+              T: "3",
+              W: "1",
+              I: "3",
+              A: "1",
+              Ld: "7",
+              Name: "Knight Errant",
+            },
+          ],
+          weapons: [
+            {
+              name: "Lance",
+              s: "S+2",
+              ap: "-2",
+              rules: "Armour Bane (1). Charge turn only.",
+              magical: false,
+              attacks: null,
+              reservedAttacks: null,
+            },
+          ],
+          shootingWeapons: [],
+          magicItems: [
+            {
+              name: "Errantry Banner",
+              type: "banner",
+              points: 30,
+              effect: "",
+              phases: ["combat"],
+              strengthMod: "+1 on charge",
+            },
+          ],
+          specialRules: [],
+          mount: null,
+          armourSave: "2+",
+          ward: null,
+          regen: null,
+          magicResistance: null,
+          poisonedAttacks: false,
+          stomp: null,
+          impactHits: null,
+          isGeneral: false,
+          isBSB: false,
+          hasStandard: false,
+          hasMusician: false,
+          isCaster: false,
+          lores: [],
+          activeLore: null,
+          factionLores: [],
+          champions: [],
+          crew: [],
+        },
+      ],
+    };
+  }
+
+  beforeEach(() => {
+    const army = buildErrantryArmy();
+    saveArmy(army);
+    saveCharacterAssignments({});
+    startGame(army);
+    savePhaseIndex(10); // choose-fight (combat phase)
+  });
+
+  it("shows conditional strength asterisk on Lance weapon line", () => {
+    const army = buildErrantryArmy();
+    renderGameScreen(army);
+    const combatPanel = getApp().querySelector(".border-wh-phase-combat\\/30");
+    const knightsCard = [...combatPanel.querySelectorAll(".bg-wh-card")].find(
+      (c) => c.textContent.includes("Knights Errant"),
+    );
+    // Lance with S+2 at unit S3: display is "S3+2+1*"
+    expect(knightsCard.textContent).toContain("3+2+1*");
+    // Footnote appears
+    expect(knightsCard.textContent).toContain("Errantry Banner");
+  });
+});
+
+describe("Combat phase — character assignment", () => {
+  let army;
+
+  beforeEach(() => {
+    saveCharacterAssignments({});
+    army = loadArmy("bretonnia");
+    startGame(army);
+    savePhaseIndex(10); // choose-fight
+  });
+
+  function assignFirstCharToFirstUnit(a) {
+    const chars = ["characters", "lords", "heroes"];
+    const char = a.units.find((u) => chars.includes(u.category));
+    const unit = a.units.find((u) => !chars.includes(u.category));
+    saveCharacterAssignments({ [char.id]: unit.id });
+    return { char, unit };
+  }
+
+  it("shows character name as a model label inside the host unit card", () => {
+    const { char, unit } = assignFirstCharToFirstUnit(army);
+    renderGameScreen(army);
+    const combatPanel = getApp().querySelector(".border-wh-phase-combat\\/30");
+    const hostCard = [...combatPanel.querySelectorAll(".bg-wh-card")].find(
+      (el) => el.textContent.includes(unit.name),
+    );
+    expect(hostCard).toBeTruthy();
+    expect(hostCard.textContent).toContain(char.name);
+  });
+
+  it("shows character points inside the host unit card", () => {
+    const { char, unit } = assignFirstCharToFirstUnit(army);
+    renderGameScreen(army);
+    const combatPanel = getApp().querySelector(".border-wh-phase-combat\\/30");
+    const hostCard = [...combatPanel.querySelectorAll(".bg-wh-card")].find(
+      (el) => el.textContent.includes(unit.name),
+    );
+    expect(hostCard.textContent).toContain(`${char.points}pts`);
+  });
+
+  it("shows character T and W in the host unit card", () => {
+    const { char, unit } = assignFirstCharToFirstUnit(army);
+    const charT = char.stats?.[0]?.T;
+    const charW = char.stats?.[0]?.W;
+    renderGameScreen(army);
+    const combatPanel = getApp().querySelector(".border-wh-phase-combat\\/30");
+    const hostCard = [...combatPanel.querySelectorAll(".bg-wh-card")].find(
+      (el) => el.textContent.includes(unit.name),
+    );
+    if (charT) expect(hostCard.textContent).toContain(`T:${charT}`);
+    if (charW) expect(hostCard.textContent).toContain(`W:${charW}`);
+  });
+
+  it("does not show assigned character as a standalone combat card", () => {
+    const { char } = assignFirstCharToFirstUnit(army);
+    renderGameScreen(army);
+    const combatPanel = getApp().querySelector(".border-wh-phase-combat\\/30");
+    const cards = [...combatPanel.querySelectorAll(".bg-wh-card")];
+    const standalone = cards.find(
+      (el) =>
+        el.querySelector(".text-wh-text.font-semibold")?.textContent.trim() ===
+        char.name,
+    );
+    expect(standalone).toBeFalsy();
+  });
+});
+
+describe("Charge ranges with assigned characters", () => {
+  function buildChargeArmy() {
+    return {
+      name: "Test",
+      armySlug: "test",
+      faction: "Test",
+      points: 290,
+      composition: null,
+      units: [
+        {
+          id: "paladin-001",
+          name: "Paladin",
+          category: "characters",
+          strength: 1,
+          points: 110,
+          stats: [
+            {
+              M: "7",
+              WS: "5",
+              BS: "3",
+              S: "4",
+              T: "4",
+              W: "2",
+              I: "4",
+              A: "2",
+              Ld: "8",
+              Name: "Paladin",
+            },
+          ],
+          weapons: [],
+          shootingWeapons: [],
+          magicItems: [
+            {
+              name: "Virtue of the Impetuous Knight",
+              type: "virtue",
+              points: 20,
+              effect:
+                'Gains Impetuous. Increases maximum charge range by 3" and may apply +D3 modifier to Charge roll.',
+              phases: [],
+              chargeMod: { range: 3, tag: "Virtue", color: "orange", order: 5 },
+            },
+          ],
+          specialRules: [],
+          mount: null,
+          armourSave: "3+",
+          ward: null,
+          regen: null,
+          magicResistance: null,
+          poisonedAttacks: false,
+          stomp: null,
+          impactHits: null,
+          isGeneral: false,
+          isBSB: false,
+          hasStandard: false,
+          hasMusician: false,
+          isCaster: false,
+          lores: [],
+          activeLore: null,
+          factionLores: [],
+          champions: [],
+          crew: [],
+        },
+        {
+          id: "knights-001",
+          name: "Knights Errant",
+          category: "core",
+          strength: 5,
+          points: 180,
+          stats: [
+            {
+              M: "8",
+              WS: "3",
+              BS: "3",
+              S: "3",
+              T: "3",
+              W: "1",
+              I: "3",
+              A: "1",
+              Ld: "7",
+              Name: "Knight Errant",
+            },
+          ],
+          weapons: [],
+          shootingWeapons: [],
+          magicItems: [],
+          specialRules: [],
+          mount: null,
+          armourSave: "2+",
+          ward: null,
+          regen: null,
+          magicResistance: null,
+          poisonedAttacks: false,
+          stomp: null,
+          impactHits: null,
+          isGeneral: false,
+          isBSB: false,
+          hasStandard: false,
+          hasMusician: false,
+          isCaster: false,
+          lores: [],
+          activeLore: null,
+          factionLores: [],
+          champions: [],
+          crew: [],
+        },
+      ],
+    };
+  }
+
+  beforeEach(() => {
+    saveCharacterAssignments({});
+    const army = buildChargeArmy();
+    saveArmy(army);
+    startGame(army);
+    savePhaseIndex(4); // declare-charges
+  });
+
+  it("merges virtue charge modifier into host unit card when character is assigned", () => {
+    const army = buildChargeArmy();
+    saveCharacterAssignments({ "paladin-001": "knights-001" });
+    renderGameScreen(army);
+
+    const chargePanel = getApp().querySelector(".border-wh-phase-combat\\/30");
+    const cards = [...chargePanel.querySelectorAll(".bg-wh-card")];
+
+    // Knights Errant host: M8 + 6 + 3 (virtue) = 17"
+    const knightsCard = cards.find((c) =>
+      c.textContent.includes("Knights Errant"),
+    );
+    expect(knightsCard).toBeTruthy();
+    expect(knightsCard.textContent).toContain('17"');
+    expect(knightsCard.textContent).toContain("Virtue");
+
+    // Paladin name shown inside the host card, not as a standalone row
+    expect(knightsCard.textContent).toContain("Paladin");
+    const paladinCard = cards.find(
+      (c) => c.querySelector(".text-wh-text")?.textContent.trim() === "Paladin",
+    );
+    expect(paladinCard).toBeFalsy();
+  });
+
+  it("unassigned character still shows its own charge card", () => {
+    const army = buildChargeArmy();
+    saveCharacterAssignments({});
+    renderGameScreen(army);
+
+    const chargePanel = getApp().querySelector(".border-wh-phase-combat\\/30");
+    const cards = [...chargePanel.querySelectorAll(".bg-wh-card")];
+
+    const paladinCard = cards.find((c) => c.textContent.includes("Paladin"));
+    expect(paladinCard).toBeTruthy();
+    // Paladin M7 + 6 + 3 (virtue own item) = 16"
+    expect(paladinCard.textContent).toContain('16"');
+  });
+});
+
+describe("Errantry Banner parsed from OWB command group", () => {
+  it("Errantry Banner on a BSB is not championOnly and shows in combat card", () => {
+    const army = loadArmy("forest-goblins");
+    const paladin = army.units.find((u) => u.name === "Paladin");
+    expect(paladin).toBeTruthy();
+    const banner = paladin.magicItems.find((i) => i.name === "Errantry Banner");
+    expect(banner).toBeTruthy();
+    expect(banner.championOnly).toBeFalsy();
   });
 });
