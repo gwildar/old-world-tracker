@@ -90,6 +90,6 @@ export function extractFlyMovement(unit, mountData) {
  * Resolve the base movement value (in inches) for charge/movement calculation.
  * Prefers mount.m; falls back to the unit's own M stat; returns null if unknown.
  */
-export function resolveBaseMv(mountData, mv) {
-  return mountData ? mountData.m : mv != null ? Number(mv) : null;
+export function resolveBaseMv(mountData, statMv) {
+  return mountData ? mountData.m : statMv != null ? Number(statMv) : null;
 }

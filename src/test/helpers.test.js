@@ -16,6 +16,11 @@ describe("extractFlyMovement", () => {
     const unit = { specialRules: [] };
     expect(extractFlyMovement(unit, null)).toBeNull();
   });
+
+  it("prefers Fly (N) special rule over mount.f", () => {
+    const unit = { specialRules: [{ displayName: "Fly (9)" }] };
+    expect(extractFlyMovement(unit, { f: 12 })).toBe(9);
+  });
 });
 
 describe("resolveBaseMv", () => {
