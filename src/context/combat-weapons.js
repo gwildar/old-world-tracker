@@ -505,6 +505,7 @@ export function renderCombatWeaponsContext(army) {
         regen: char.regen ?? null,
         weapons: charWeapons.length > 0 ? charWeapons : [HAND_WEAPON],
         tags: buildRiderTags(char),
+        combatRules: extractCombatRules(char),
       };
     });
 
@@ -920,6 +921,12 @@ export function renderCombatWeaponsContext(army) {
     ].join("");
   }
 
+  function renderCombatRulesHtml(rules) {
+    return rules.length > 0
+      ? `<div class="text-xs text-wh-accent mt-0.5">${rules.join(", ")}</div>`
+      : "";
+  }
+
   function renderFooter(r) {
     return [
       (r.conditionalStrengthMods || []).length > 0
@@ -932,9 +939,6 @@ export function renderCombatWeaponsContext(army) {
         : "",
       r.itemNames.length > 0
         ? `<div class="text-xs text-wh-muted mt-0.5">${r.itemNames.join(", ")}</div>`
-        : "",
-      r.combatRules.length > 0
-        ? `<div class="text-xs text-wh-accent mt-0.5">${r.combatRules.join(", ")}</div>`
         : "",
     ].join("");
   }
@@ -958,6 +962,7 @@ export function renderCombatWeaponsContext(army) {
                 ${renderSingleUseItems(r)}
                 <div class="mt-1">
                   ${renderUnitWeapons(r)}
+                  ${renderCombatRulesHtml(r.combatRules)}
                   ${renderFooter(r)}
                 </div>
               `
@@ -967,6 +972,7 @@ export function renderCombatWeaponsContext(army) {
                   <div class="text-[9px] uppercase tracking-wide text-wh-muted mb-0.5">${r.unitName}</div>
                   ${statRow(r.t, r.w, r.as, r.mr, r.ward, r.regen)}
                   ${renderUnitWeapons(r)}
+                  ${renderCombatRulesHtml(r.combatRules)}
                   ${(r.assignedCharProfiles || [])
                     .map(
                       (ch) => `
@@ -993,6 +999,7 @@ export function renderCombatWeaponsContext(army) {
                           ),
                         )
                         .join("")}
+                      ${renderCombatRulesHtml(ch.combatRules)}
                     </div>
                   `,
                     )

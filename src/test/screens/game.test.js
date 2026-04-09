@@ -1225,6 +1225,156 @@ describe("Charge ranges with assigned characters", () => {
   });
 });
 
+describe("Combat card special rules per section", () => {
+  function buildRulesArmy() {
+    return {
+      name: "Test",
+      armySlug: "test",
+      faction: "Test",
+      points: 290,
+      composition: null,
+      units: [
+        {
+          id: "char-001",
+          name: "Lord",
+          category: "lords",
+          strength: 1,
+          points: 150,
+          stats: [
+            {
+              M: "4",
+              WS: "6",
+              BS: "3",
+              S: "4",
+              T: "4",
+              W: "3",
+              I: "5",
+              A: "4",
+              Ld: "9",
+              Name: "Lord",
+            },
+          ],
+          weapons: [],
+          shootingWeapons: [],
+          magicItems: [],
+          specialRules: [{ id: "killing-blow", displayName: "Killing Blow" }],
+          mount: null,
+          armourSave: "3+",
+          ward: null,
+          regen: null,
+          magicResistance: null,
+          poisonedAttacks: false,
+          stomp: null,
+          impactHits: null,
+          isGeneral: true,
+          isBSB: false,
+          hasStandard: false,
+          hasMusician: false,
+          isCaster: false,
+          lores: [],
+          activeLore: null,
+          factionLores: [],
+          champions: [],
+          crew: [],
+        },
+        {
+          id: "unit-001",
+          name: "Swordsmen",
+          category: "core",
+          strength: 10,
+          points: 140,
+          stats: [
+            {
+              M: "4",
+              WS: "4",
+              BS: "3",
+              S: "3",
+              T: "3",
+              W: "1",
+              I: "4",
+              A: "1",
+              Ld: "7",
+              Name: "Swordsman",
+            },
+          ],
+          weapons: [
+            {
+              name: "Hand Weapon",
+              s: "S",
+              ap: "—",
+              rules: "",
+              magical: false,
+              attacks: null,
+              reservedAttacks: null,
+            },
+          ],
+          shootingWeapons: [],
+          magicItems: [],
+          specialRules: [{ id: "stubborn", displayName: "Stubborn" }],
+          mount: null,
+          armourSave: "5+",
+          ward: null,
+          regen: null,
+          magicResistance: null,
+          poisonedAttacks: false,
+          stomp: null,
+          impactHits: null,
+          isGeneral: false,
+          isBSB: false,
+          hasStandard: false,
+          hasMusician: false,
+          isCaster: false,
+          lores: [],
+          activeLore: null,
+          factionLores: [],
+          champions: [],
+          crew: [],
+        },
+      ],
+    };
+  }
+
+  beforeEach(() => {
+    saveCharacterAssignments({});
+    const army = buildRulesArmy();
+    saveArmy(army);
+    startGame(army);
+    savePhaseIndex(10); // choose-fight (combat phase)
+  });
+
+  it("shows unit combat rules on the unit card when no characters assigned", () => {
+    const army = buildRulesArmy();
+    renderGameScreen(army);
+    const combatPanel = getApp().querySelector(".border-wh-phase-combat\\/30");
+    const swordCard = [...combatPanel.querySelectorAll(".bg-wh-card")].find(
+      (c) => c.textContent.includes("Swordsmen"),
+    );
+    expect(swordCard.textContent).toContain("Stubborn");
+  });
+
+  it("shows unit combat rules in the unit section when characters are assigned", () => {
+    const army = buildRulesArmy();
+    saveCharacterAssignments({ "char-001": "unit-001" });
+    renderGameScreen(army);
+    const combatPanel = getApp().querySelector(".border-wh-phase-combat\\/30");
+    const hostCard = [...combatPanel.querySelectorAll(".bg-wh-card")].find(
+      (c) => c.textContent.includes("Swordsmen"),
+    );
+    expect(hostCard.textContent).toContain("Stubborn");
+  });
+
+  it("shows character combat rules in the character section when assigned", () => {
+    const army = buildRulesArmy();
+    saveCharacterAssignments({ "char-001": "unit-001" });
+    renderGameScreen(army);
+    const combatPanel = getApp().querySelector(".border-wh-phase-combat\\/30");
+    const hostCard = [...combatPanel.querySelectorAll(".bg-wh-card")].find(
+      (c) => c.textContent.includes("Swordsmen"),
+    );
+    expect(hostCard.textContent).toContain("Killing Blow");
+  });
+});
+
 describe("Errantry Banner parsed from OWB command group", () => {
   it("Errantry Banner on a BSB is not championOnly and shows in combat card", () => {
     const army = loadArmy("forest-goblins");
