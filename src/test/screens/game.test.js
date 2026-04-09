@@ -1202,7 +1202,8 @@ describe("Charge ranges with assigned characters", () => {
     expect(knightsCard.textContent).toContain('17"');
     expect(knightsCard.textContent).toContain("Virtue");
 
-    // Paladin should not appear as a standalone row
+    // Paladin name shown inside the host card, not as a standalone row
+    expect(knightsCard.textContent).toContain("Paladin");
     const paladinCard = cards.find(
       (c) => c.querySelector(".text-wh-text")?.textContent.trim() === "Paladin",
     );

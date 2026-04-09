@@ -106,7 +106,16 @@ export function renderChargeContext(army) {
     const flyCharge = hasFly ? flyMv + 6 + rangeBonus : null;
     const maxCharge = Math.max(groundCharge || 0, flyCharge || 0);
 
-    return { u, groundCharge, flyCharge, hasFly, chargeMods, maxCharge };
+    const assignedChars = charsByUnitId.get(u.id) || [];
+    return {
+      u,
+      groundCharge,
+      flyCharge,
+      hasFly,
+      chargeMods,
+      maxCharge,
+      assignedChars,
+    };
   });
 
   rows.sort((a, b) => b.maxCharge - a.maxCharge);
@@ -117,7 +126,14 @@ export function renderChargeContext(army) {
       <div class="space-y-1">
         ${rows
           .map(
-            ({ u, groundCharge, flyCharge, hasFly, chargeMods }) => `
+            ({
+              u,
+              groundCharge,
+              flyCharge,
+              hasFly,
+              chargeMods,
+              assignedChars,
+            }) => `
             <div class="text-sm py-1 px-2 rounded bg-wh-card">
               <div class="flex justify-between items-center">
                 <div class="flex flex-wrap items-center gap-1">
@@ -150,6 +166,11 @@ export function renderChargeContext(army) {
                   <span class="text-blue-400 font-mono text-xs">${flyCharge}"</span>
                 </div>
               `
+                  : ""
+              }
+              ${
+                assignedChars.length > 0
+                  ? `<div class="text-wh-muted text-[10px] mt-0.5">${assignedChars.map((c) => c.name).join(", ")}</div>`
                   : ""
               }
             </div>
