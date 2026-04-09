@@ -3,6 +3,7 @@ import { renderSetupScreen } from "../../screens/setup.js";
 import { renderUnitAssignmentScreen } from "../../screens/unit-assignment.js";
 import { registerScreen } from "../../navigate.js";
 import { loadArmy, getApp } from "../helpers.js";
+import { displayUnitName } from "../../utils/unit-name.js";
 
 describe("Setup Screen", () => {
   describe("without army", () => {
@@ -63,7 +64,7 @@ describe("Setup Screen", () => {
       renderSetupScreen();
       const text = getApp().textContent;
       for (const unit of army.units) {
-        expect(text).toContain(unit.name);
+        expect(text).toContain(displayUnitName(unit.name, unit.strength));
       }
     });
 
