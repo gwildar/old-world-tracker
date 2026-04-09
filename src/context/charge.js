@@ -1,5 +1,10 @@
 import { SPECIAL_RULES } from "../data/special-rules.js";
-import { resolveMovement, normaliseRuleName } from "../helpers.js";
+import {
+  resolveMovement,
+  normaliseRuleName,
+  extractFlyMovement,
+  resolveBaseMv,
+} from "../helpers.js";
 import { getCharacterAssignments } from "../state.js";
 import { displayUnitName } from "../utils/unit-name.js";
 
@@ -78,12 +83,7 @@ export function renderChargeContext(army) {
     const mv = resolveMovement(u);
     const mountData = u.mount ?? null;
 
-    // Fly: check specialRules array for "Fly (N)", then mount.fly
-    const flyRuleStr = (u.specialRules || [])
-      .map((r) => r.displayName || "")
-      .find((d) => /^fly\s*\(/i.test(d.trim()));
-    const flyMatch = flyRuleStr ? flyRuleStr.match(/\((\d+)\)/) : null;
-    const flyMv = flyMatch ? Number(flyMatch[1]) : (mountData?.f ?? null);
+    const flyMv = extractFlyMovement(u, mountData);
     const hasFly = flyMv != null;
 
     const chargeMods = detectChargeMods(u, mountData);
@@ -102,7 +102,7 @@ export function renderChargeContext(army) {
 
     const rangeBonus = chargeMods.reduce((sum, m) => sum + m.range, 0);
 
-    const baseMv = mountData ? mountData.m : mv != null ? Number(mv) : null;
+    const baseMv = resolveBaseMv(mountData, mv);
     const groundCharge = baseMv != null ? baseMv + 6 + rangeBonus : null;
     const flyCharge = hasFly ? flyMv + 6 + rangeBonus : null;
     const maxCharge = Math.max(groundCharge || 0, flyCharge || 0);

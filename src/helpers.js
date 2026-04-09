@@ -73,3 +73,23 @@ export function ruleMatches(rule, normName) {
   }
   return false;
 }
+
+/**
+ * Extract fly movement value from a unit's specialRules or mount data.
+ * Returns the numeric fly distance, or null if the unit cannot fly.
+ */
+export function extractFlyMovement(unit, mountData) {
+  const flyRuleStr = (unit.specialRules || [])
+    .map((r) => r.displayName || "")
+    .find((d) => /^fly\s*\(/i.test(d.trim()));
+  const flyMatch = flyRuleStr ? flyRuleStr.match(/\((\d+)\)/) : null;
+  return flyMatch ? Number(flyMatch[1]) : (mountData?.f ?? null);
+}
+
+/**
+ * Resolve the base movement value (in inches) for charge/movement calculation.
+ * Prefers mount.m; falls back to the unit's own M stat; returns null if unknown.
+ */
+export function resolveBaseMv(mountData, mv) {
+  return mountData ? mountData.m : mv != null ? Number(mv) : null;
+}

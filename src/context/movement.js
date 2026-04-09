@@ -1,4 +1,8 @@
-import { resolveMovement } from "../helpers.js";
+import {
+  resolveMovement,
+  extractFlyMovement,
+  resolveBaseMv,
+} from "../helpers.js";
 import { displayUnitName } from "../utils/unit-name.js";
 
 export function renderMovementStatsContext(army) {
@@ -6,15 +10,10 @@ export function renderMovementStatsContext(army) {
     .map((u) => {
       const mountData = u.mount ?? null;
       const mv = resolveMovement(u);
-      const baseMv = mountData ? mountData.m : mv != null ? Number(mv) : null;
+      const baseMv = resolveBaseMv(mountData, mv);
       const march = baseMv != null ? baseMv * 2 : null;
 
-      // Fly: check specialRules for "Fly (N)", then mount.f
-      const flyRuleStr = (u.specialRules || [])
-        .map((r) => r.displayName || "")
-        .find((d) => /^fly\s*\(/i.test(d.trim()));
-      const flyMatch = flyRuleStr ? flyRuleStr.match(/\((\d+)\)/) : null;
-      const flyMv = flyMatch ? Number(flyMatch[1]) : (mountData?.f ?? null);
+      const flyMv = extractFlyMovement(u, mountData);
 
       return { u, baseMv, march, flyMv };
     })
