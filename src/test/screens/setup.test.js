@@ -1,5 +1,7 @@
 import { describe, it, expect, beforeEach } from "vitest";
 import { renderSetupScreen } from "../../screens/setup.js";
+import { renderUnitAssignmentScreen } from "../../screens/unit-assignment.js";
+import { registerScreen } from "../../navigate.js";
 import { loadArmy, getApp } from "../helpers.js";
 
 describe("Setup Screen", () => {
@@ -123,6 +125,20 @@ describe("Setup Screen", () => {
     it("shows mount option points on setup screen", () => {
       renderSetupScreen();
       expect(getApp().textContent).toContain("346pts");
+    });
+  });
+
+  describe("start game navigation", () => {
+    beforeEach(() => {
+      registerScreen("unitAssignmentScreen", renderUnitAssignmentScreen);
+      loadArmy("bretonnia");
+    });
+
+    it("navigates to unit assignment screen on new game", () => {
+      renderSetupScreen();
+      const btn = getApp().querySelector("#start-game-btn");
+      btn.click();
+      expect(getApp().textContent).toContain("Place characters in units");
     });
   });
 });

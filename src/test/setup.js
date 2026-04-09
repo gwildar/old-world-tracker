@@ -7,6 +7,7 @@ registerScreen("render", noop);
 registerScreen("setupScreen", noop);
 registerScreen("gameScreen", noop);
 registerScreen("firstTurnScreen", noop);
+registerScreen("unitAssignmentScreen", noop);
 registerScreen("opponentTurnScreen", noop);
 registerScreen("aboutScreen", noop);
 
