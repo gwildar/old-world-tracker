@@ -366,7 +366,7 @@ function buildFilteredItems(u) {
       return false;
     return true;
   });
-  return { itemNames, bannerNames };
+  return { itemNames, bannerNames, singleUseItems: suItems };
 }
 
 function findChampions(unit) {
@@ -544,9 +544,11 @@ export function renderCombatWeaponsContext(army) {
 
     const stats = u.stats?.[0];
     if (!stats) {
-      const suItems = detectSingleUseItems(u);
-      const { itemNames: noStatsItemNames, bannerNames: noStatsBannerNames } =
-        buildFilteredItems(u);
+      const {
+        itemNames: noStatsItemNames,
+        bannerNames: noStatsBannerNames,
+        singleUseItems: noStatsSuItems,
+      } = buildFilteredItems(u);
       entries.push({
         unitName: u.name,
         points: u.points,
@@ -572,7 +574,7 @@ export function renderCombatWeaponsContext(army) {
         mountName: null,
         stomp: u.stomp ?? null,
         impactHits: u.impactHits ?? null,
-        singleUseItems: suItems,
+        singleUseItems: noStatsSuItems,
         itemNames: noStatsItemNames,
         bannerNames: noStatsBannerNames,
         riderTags: buildRiderTags(u),
@@ -712,8 +714,11 @@ export function renderCombatWeaponsContext(army) {
       mountArmourBane = embedded.mountData?.armourBane || null;
     }
 
-    const { itemNames: filteredItemNames, bannerNames: filteredBannerNames } =
-      buildFilteredItems(u);
+    const {
+      itemNames: filteredItemNames,
+      bannerNames: filteredBannerNames,
+      singleUseItems: filteredSuItems,
+    } = buildFilteredItems(u);
     entries.push({
       unitName: u.name,
       points: u.points,
@@ -743,7 +748,7 @@ export function renderCombatWeaponsContext(army) {
         mount?.impactHits ||
         embedded?.mountData?.impactHits ||
         (u.impactHits ?? null),
-      singleUseItems: detectSingleUseItems(u),
+      singleUseItems: filteredSuItems,
       itemNames: filteredItemNames,
       bannerNames: filteredBannerNames,
       riderTags: buildRiderTags(u),
