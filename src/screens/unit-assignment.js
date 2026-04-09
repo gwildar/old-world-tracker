@@ -78,7 +78,6 @@ export function renderUnitAssignmentScreen(army) {
     <div class="min-h-dvh flex flex-col">
       <header class="p-4 border-b border-wh-border">
         <div class="flex justify-between items-center max-w-4xl mx-auto">
-          <p class="text-sm text-wh-muted">Place characters in units (optional)</p>
           <h1 class="text-xl font-bold text-wh-accent">${army.name}</h1>
           <button id="save-assignments-btn"
             class="px-4 py-2 bg-wh-accent text-wh-bg rounded text-sm font-semibold hover:opacity-90">
@@ -86,21 +85,30 @@ export function renderUnitAssignmentScreen(army) {
           </button>
         </div>
       </header>
-      <main class="flex-1 p-4 max-w-4xl mx-auto w-full flex gap-4">
-        <div class="w-1/3 shrink-0">
-          <h2 class="text-xs font-bold text-wh-muted mb-2 uppercase tracking-wide">Characters</h2>
-          <div id="char-pool"
-            class="min-h-12 rounded border border-dashed border-wh-border p-2"
-            data-pool="true">
-            ${unassignedChars.map(renderCharCard).join("")}
-          </div>
+      <main class="flex-1 p-4 max-w-4xl mx-auto w-full">
+        <div class="mb-4">
+          <span class="text-xs uppercase tracking-wider text-wh-muted">Setup</span>
+          <h2 class="text-2xl font-bold text-wh-text">Place Characters in Units</h2>
+          <span class="text-xs text-wh-muted">Optional</span>
         </div>
-        <div class="flex-1">
-          <h2 class="text-xs font-bold text-wh-muted mb-2 uppercase tracking-wide">Units</h2>
-          <div id="units-list">
-            ${regularUnits
-              .map((unit) => renderUnitCard(unit, charsByUnitId[unit.id] || []))
-              .join("")}
+        <div class="flex gap-4">
+          <div class="w-1/3 shrink-0">
+            <h2 class="text-xs font-bold text-wh-muted mb-2 uppercase tracking-wide">Characters</h2>
+            <div id="char-pool"
+              class="min-h-12 rounded border border-dashed border-wh-border p-2"
+              data-pool="true">
+              ${unassignedChars.map(renderCharCard).join("")}
+            </div>
+          </div>
+          <div class="flex-1">
+            <h2 class="text-xs font-bold text-wh-muted mb-2 uppercase tracking-wide">Units</h2>
+            <div id="units-list">
+              ${regularUnits
+                .map((unit) =>
+                  renderUnitCard(unit, charsByUnitId[unit.id] || []),
+                )
+                .join("")}
+            </div>
           </div>
         </div>
       </main>

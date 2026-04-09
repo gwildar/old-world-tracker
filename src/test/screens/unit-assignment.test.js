@@ -68,4 +68,27 @@ describe("Unit assignment screen", () => {
       unitZone.querySelector(`[data-assigned-char="${char.id}"]`),
     ).toBeTruthy();
   });
+
+  it("shows page title in main content, not in header", () => {
+    renderUnitAssignmentScreen(army);
+    const header = getApp().querySelector("header");
+    const main = getApp().querySelector("main");
+    expect(header.textContent).not.toContain("Place Characters in Units");
+    expect(main.querySelector("h2").textContent).toContain(
+      "Place Characters in Units",
+    );
+  });
+
+  it("shows Optional subtitle below the h2 title", () => {
+    renderUnitAssignmentScreen(army);
+    const main = getApp().querySelector("main");
+    expect(main.textContent).toContain("Optional");
+  });
+
+  it("header still contains Save and Continue button and army name", () => {
+    renderUnitAssignmentScreen(army);
+    const header = getApp().querySelector("header");
+    expect(header.querySelector("#save-assignments-btn")).toBeTruthy();
+    expect(header.textContent).toContain(army.name);
+  });
 });

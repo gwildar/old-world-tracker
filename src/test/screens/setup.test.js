@@ -138,7 +138,7 @@ describe("Setup Screen", () => {
       renderSetupScreen();
       const btn = getApp().querySelector("#start-game-btn");
       btn.click();
-      expect(getApp().textContent).toContain("Place characters in units");
+      expect(getApp().textContent).toContain("Place Characters in Units");
     });
   });
 });
