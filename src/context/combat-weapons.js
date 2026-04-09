@@ -481,32 +481,35 @@ export function renderCombatWeaponsContext(army) {
 
     const assignedChars = charsByUnitId[u.id] || [];
     const allUnitsForBonuses = [u, ...assignedChars];
+
+    // Shared computation (applies to both stats and no-stats paths)
+    const unitMRNum = u.magicResistance ? parseInt(u.magicResistance) : 0;
+    const charMRNum = assignedChars.reduce(
+      (sum, c) => sum + (c.magicResistance ? parseInt(c.magicResistance) : 0),
+      0,
+    );
+    const mergedMR =
+      unitMRNum + charMRNum !== 0 ? `${unitMRNum + charMRNum}` : null;
+    const { apMod, conditionalStrengthMods } =
+      detectItemBonuses(allUnitsForBonuses);
+    const assignedCharProfiles = assignedChars.map((char) => {
+      const cStats = char.stats?.[0];
+      const { weapons: charWeapons } = matchRiderWeapons(char);
+      return {
+        name: char.name,
+        i: cStats?.I || "?",
+        ws: cStats?.WS || "?",
+        s: cStats?.S || "?",
+        a: cStats?.A || "?",
+        weapons: charWeapons.length > 0 ? charWeapons : [HAND_WEAPON],
+        tags: buildRiderTags(char),
+      };
+    });
+
     const stats = u.stats?.[0];
     if (!stats) {
       const suItems = detectSingleUseItems(u);
       const suNames = new Set(suItems.map((i) => i.name.toLowerCase()));
-      const unitMRNum = u.magicResistance ? parseInt(u.magicResistance) : 0;
-      const charMRNum = assignedChars.reduce(
-        (sum, c) => sum + (c.magicResistance ? parseInt(c.magicResistance) : 0),
-        0,
-      );
-      const totalMR = unitMRNum + charMRNum;
-      const mergedMR = totalMR !== 0 ? `${totalMR}` : null;
-      const { apMod, conditionalStrengthMods } =
-        detectItemBonuses(allUnitsForBonuses);
-      const assignedCharProfiles = assignedChars.map((char) => {
-        const cStats = char.stats?.[0];
-        const { weapons: charWeapons } = matchRiderWeapons(char);
-        return {
-          name: char.name,
-          i: cStats?.I || "?",
-          ws: cStats?.WS || "?",
-          s: cStats?.S || "?",
-          a: cStats?.A || "?",
-          weapons: charWeapons.length > 0 ? charWeapons : [HAND_WEAPON],
-          tags: buildRiderTags(char),
-        };
-      });
       entries.push({
         unitName: u.name,
         points: u.points,
@@ -689,29 +692,6 @@ export function renderCombatWeaponsContext(army) {
       mountStomp = embedded.mountData?.stomp || null;
       mountArmourBane = embedded.mountData?.armourBane || null;
     }
-
-    const unitMRNum = u.magicResistance ? parseInt(u.magicResistance) : 0;
-    const charMRNum = assignedChars.reduce(
-      (sum, c) => sum + (c.magicResistance ? parseInt(c.magicResistance) : 0),
-      0,
-    );
-    const totalMR = unitMRNum + charMRNum;
-    const mergedMR = totalMR !== 0 ? `${totalMR}` : null;
-    const { apMod, conditionalStrengthMods } =
-      detectItemBonuses(allUnitsForBonuses);
-    const assignedCharProfiles = assignedChars.map((char) => {
-      const cStats = char.stats?.[0];
-      const { weapons: charWeapons } = matchRiderWeapons(char);
-      return {
-        name: char.name,
-        i: cStats?.I || "?",
-        ws: cStats?.WS || "?",
-        s: cStats?.S || "?",
-        a: cStats?.A || "?",
-        weapons: charWeapons.length > 0 ? charWeapons : [HAND_WEAPON],
-        tags: buildRiderTags(char),
-      };
-    });
 
     entries.push({
       unitName: u.name,

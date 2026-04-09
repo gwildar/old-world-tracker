@@ -871,7 +871,7 @@ describe("Combat screen with assigned characters", () => {
     const knightsCard = [...combatPanel.querySelectorAll(".bg-wh-card")].find(
       (c) => c.textContent.includes("Knights Errant"),
     );
-    expect(knightsCard.textContent).toContain("MR:");
+    expect(knightsCard.textContent).toContain("MR:-1");
   });
 
   it("shows modified AP on Lance when Banner of Har Ganeth is in unit", () => {
