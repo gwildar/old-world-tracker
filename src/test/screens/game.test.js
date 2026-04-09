@@ -998,8 +998,9 @@ describe("Errantry Banner conditional strength display", () => {
     );
     // Lance with S+2 at unit S3: display is "S3+2+1*"
     expect(knightsCard.textContent).toContain("3+2+1*");
-    // Footnote appears
+    // Banner name and inline modifier appear in banner row
     expect(knightsCard.textContent).toContain("Errantry Banner");
+    expect(knightsCard.textContent).toContain("+1S on charge");
   });
 });
 

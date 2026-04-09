@@ -929,20 +929,25 @@ export function renderCombatWeaponsContext(army) {
   }
 
   function renderFooter(r) {
+    const bannerModMap = Object.fromEntries(
+      (r.conditionalStrengthMods || []).map((m) => [m.source, m]),
+    );
+    const bannerNameSet = new Set(r.bannerNames || []);
     return [
-      (r.conditionalStrengthMods || []).length > 0
-        ? r.conditionalStrengthMods
-            .map(
-              (m) =>
-                `<div class="text-[10px] text-wh-muted">* ${m.source}</div>`,
-            )
-            .join("")
-        : "",
-      (r.bannerNames || [])
+      (r.conditionalStrengthMods || [])
+        .filter((m) => !bannerNameSet.has(m.source))
         .map(
-          (name) =>
-            `<div class="text-xs mt-0.5 pl-2 border-l-2 border-wh-accent bg-wh-accent/8"><span class="text-[9px] uppercase tracking-wide text-wh-accent-dim mr-1">Banner</span><span class="text-wh-accent">${name}</span></div>`,
+          (m) => `<div class="text-[10px] text-wh-muted">* ${m.source}</div>`,
         )
+        .join(""),
+      (r.bannerNames || [])
+        .map((name) => {
+          const mod = bannerModMap[name];
+          const modHtml = mod
+            ? `<span class="text-[10px] text-wh-accent-dim ml-2">${mod.numeric}S ${mod.condition}</span>`
+            : "";
+          return `<div class="text-xs mt-0.5 pl-2 border-l-2 border-wh-accent bg-wh-accent/8"><span class="text-[9px] uppercase tracking-wide text-wh-accent-dim mr-1">Banner</span><span class="text-wh-accent">${name}</span>${modHtml}</div>`;
+        })
         .join(""),
       r.itemNames.length > 0
         ? `<div class="text-xs text-wh-muted mt-0.5">${r.itemNames.join(", ")}</div>`
