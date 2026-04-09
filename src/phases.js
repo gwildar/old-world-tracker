@@ -108,7 +108,7 @@ export const PHASES = [
     subPhases: [
       {
         id: "shoot",
-        name: "Shoot",
+        name: "Resolve Shooting",
         rules: [
           "Select a shooting unit, check range and line of sight, declare target.",
           "Cannot shoot: units that charged or marched, engaged in combat, or fleeing.",
@@ -120,7 +120,7 @@ export const PHASES = [
       },
       {
         id: "remove-casualties",
-        name: "Remove Casualties & Panic Tests",
+        name: "Reserve Moves",
         rules: [
           "Each unsaved wound removes one Wound from the target unit.",
           "Models reduced to zero Wounds are removed as casualties.",
