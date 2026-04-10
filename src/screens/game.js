@@ -151,19 +151,18 @@ export function renderGameScreen(army) {
   bindGameActions(army);
 }
 
+const PHASE_CASTER_RENDERERS = {
+  shoot: [(a) => renderCasterContext(a, ["magic-missile", "magical-vortex"])],
+  "remaining-moves": [(a) => renderCasterContext(a, ["conveyance"])],
+  "choose-fight": [(a) => renderCasterContext(a, ["assailment"])],
+};
+
 const PHASE_RENDERERS = {
   rally: [(a) => renderCombatLeadershipContext(a, "Rally Leadership")],
   "declare-charges": [renderChargeContext],
   "compulsory-moves": [renderRandomMoverContext],
-  shoot: [(a) => renderCasterContext(a, ["magic-missile", "magical-vortex"])],
-  "remaining-moves": [
-    (a) => renderCasterContext(a, ["conveyance"]),
-    renderMovementStatsContext,
-  ],
-  "choose-fight": [
-    renderCombatWeaponsContext,
-    (a) => renderCasterContext(a, ["assailment"]),
-  ],
+  "remaining-moves": [renderMovementStatsContext],
+  "choose-fight": [renderCombatWeaponsContext],
   "combat-result": [renderCombatResultContext],
   "break-test": [renderCombatLeadershipContext],
 };
@@ -173,6 +172,10 @@ function renderPhaseContext(army, phase, subPhase) {
 
   if (subPhase.showCasters)
     html += renderCasterContext(army, ["enchantment", "hex"]);
+  for (const renderer of PHASE_CASTER_RENDERERS[subPhase.id] || []) {
+    html += renderer(army);
+  }
+
   if (subPhase.showShooting) html += renderShootingContext(army);
 
   for (const renderer of PHASE_RENDERERS[subPhase.id] || []) {
